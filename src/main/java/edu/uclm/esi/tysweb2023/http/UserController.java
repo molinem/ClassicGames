@@ -31,68 +31,63 @@ public class UserController {
 	private UserService userService;
 	
 	@PutMapping("/login")
-	public void login(@RequestBody Map<String, String> info) {
-		String email = info.get("email").toString().trim();
-		String pwd = info.get("pwd").toString().trim();
-		
+	public void login(HttpSession session, @RequestBody Map<String, String> info) {
+		String email = info.get("email").trim();
+		String pwd = info.get("pwd").trim();
 		User user = this.userService.login(email, pwd);
-		if (user==null)
-		throw new ResponseStatusException(HttpStatus.FORBIDDEN,
-		"Credenciales inválidas");
+		if (user==null) 
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Credenciales inválidas");
+		session.setAttribute("idUser", user.getId());
 	}
 	
 	@PostMapping("/register")
-	public void register(@RequestBody Map<String, String> info) {
-		String nombre = info.get("nombre");
-		String email = info.get("email");
-		String pwd1 = info.get("pwd1");
-		String pwd2 = info.get("pwd2");
+	public void register(@RequestBody Map<String,String> info) {
+		String nombre = info.get("nombre").trim();
+		String email = info.get("email").trim();
+		String pwd1 = info.get("pwd1").trim();
+		String pwd2 = info.get("pwd2").trim();
 		
 		if (nombre.length()<5) {
-			throw new ResponseStatusException(HttpStatus.FORBIDDEN,"El nombre debe tener al menos 5 caracteres");
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "El nombre debe tener al menos 5 caracteres");
 		}
+
 		if (pwd1.length()<5) {
-			throw new ResponseStatusException(HttpStatus.FORBIDDEN,"La contraseña debe tener al menos 5 caracteres");
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "La contraseña debe tener al menos 5 caracteres");
 		}
-		if (!pwd2.equals(pwd2)) {
-			throw new ResponseStatusException(HttpStatus.FORBIDDEN,"La contraseña no coinciden");
+		
+		if (!pwd2.equals(pwd1)) {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Las contraseñas no coinciden");
 		}
+		
 		
 		try {
 			this.userService.register(nombre, email, pwd1);
 		} catch (Exception e) {
-			throw new ResponseStatusException(HttpStatus.FORBIDDEN,"Ese correo electrónico ya existe");
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Ese correo electrónico ya existe");
 		}
 		
-	
-
 	}
 	
-	@GetMapping ("/solicitarBorrado/{email}")
-	public String solicitarBorrado(HttpSession session,@PathVariable String email, @RequestParam String pwd) {
+	
+	@GetMapping("/solicitarBorrado/{email}")
+	public String solicitarBorrado(HttpSession session, @PathVariable String email,@RequestParam String pwd) {
 		User user = this.userService.login(email, pwd);
-		if (user==null) 
-			throw new ResponseStatusException(HttpStatus.FORBIDDEN,"Credenciales inválidos");
-		
-		
+		if (user == null) 
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Credenciales inválidos");
 		
 		session.setAttribute("userId", user.getId());
 		return "¿Estás seguro de que quieres eliminar tu cuenta?";
-		
-		
 	}
-		
-	@DeleteMapping("/borrarCuenta")
-	public void borrarCuenta(HttpSession session,@RequestParam boolean respuesta) {
-			
-			if (respuesta) {
-				String userId =session.getAttribute("userId").toString();
-				this.userService.borrarCuenta(userId);
-				session.invalidate();
-			}else {
-				session.removeAttribute("userId");
-			}
-		}
 	
-		
+	
+	@DeleteMapping("/borrarCuenta")
+	public void borrarCuenta(HttpSession session, @RequestParam boolean respuesta) {
+		if (respuesta) {
+			String userId = session.getAttribute("userId").toString();
+			this.userService.borrarCuenta(userId);
+			session.invalidate();
+		}else {
+			session.removeAttribute("userId");
+		}
+	}
 }

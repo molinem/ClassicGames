@@ -4,8 +4,7 @@ import org.springframework.data.repository.CrudRepository;
 
 import edu.uclm.esi.tysweb2023.model.User;
 
-public interface UserDao extends CrudRepository<User, String> {
-	
+public interface UserDAO extends CrudRepository<User, String> {
+ 
 	User findByEmailAndPwd(String email, String pwd);
-
 }
