@@ -1,0 +1,17 @@
+<p>register works!</p>
+
+<form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+    <label for="">Nombre completo:</label>
+    <input type="text" formControlname="Nombre">
+    <br>
+    <label for="">Email:</label>
+    <input type="text" formControlname="Email">
+    <br>
+    <label for="">Contrase&ntilde;1:</label>
+    <input type="text" formControlname="Pwd1">
+    <br>
+    <label for="">Contrase&ntilde;2:</label>
+    <input type="text" formControlname="Pwd2">
+    <br>
+    <button type="submit">Guardar datos</button>
+</form>

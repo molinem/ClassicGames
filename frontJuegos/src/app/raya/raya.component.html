@@ -1,0 +1,7 @@
+<p>raya works!</p>
+<div *ngFor="let row of partida.celdas; let i=index">
+    <button (click)="ocuparCelda(i,j)" *ngFor="let col of row; let j=index">
+       <span *ngIf="col">{{col}}</span>
+       <span *ngIf="!col">&nbsp;</span> 
+    </button>
+</div>
