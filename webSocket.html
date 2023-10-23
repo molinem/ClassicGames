@@ -1,0 +1,35 @@
+<html>
+    <body>
+        <span id="estado">Desconectado</span>
+        <br>
+        <input type="text" id="destinatario">
+        <input type="text" id="mensaje">
+        <button onclick="enviar()">Enviar</button>
+        <script>
+            let ws
+
+            function enviar(){
+                let msg = {
+                    tipo: "MENSAJE PRIVADO",
+                    destinatario: document.getElementById("destinatario").value,
+                    text: document.getElementById("mensaje").value
+                }
+                ws.send(JSON.stringify(msg))
+            }
+
+            function conectar(){
+                ws = new WebSocket("ws://localhost:8080/wsGames")
+                ws.onopen = function(){
+                    document.getElementById("estado").innerHTML = "Conectado"
+                    let msg = {
+                        tipo: "INDENT", nombre: "Macario"
+                    }
+                }
+                ws.onclose = function(){
+                    document.getElementById("estado").innerHTML = "Desconectado"
+                }
+            }
+            conectar()
+        </script>
+    </body>
+</html>
