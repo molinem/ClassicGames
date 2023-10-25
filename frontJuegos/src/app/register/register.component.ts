@@ -33,4 +33,8 @@ export class RegisterComponent {
     });
   }
 
+  bindeo(){
+    console.log(this.registerForm.value)
+  }
+
 }
