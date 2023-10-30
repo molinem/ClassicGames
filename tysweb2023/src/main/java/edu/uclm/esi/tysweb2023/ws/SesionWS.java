@@ -2,6 +2,9 @@ package edu.uclm.esi.tysweb2023.ws;
 
 import org.springframework.web.socket.WebSocketSession;
 
+/**
+ * Clase que actúa como wrapper
+ */
 public class SesionWS {
 	
 	private String nombre;
