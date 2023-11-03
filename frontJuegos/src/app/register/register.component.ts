@@ -17,6 +17,7 @@ export class RegisterComponent {
       Pwd2 : new FormControl('', {nonNullable:true})
     }
   );
+
   usuario:user;
 
   constructor(private userService : UserSService){

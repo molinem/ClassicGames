@@ -22,4 +22,13 @@ export class UserSService {
 
     return this.client.post<any>("http://localhost:8080/users/register",info)
   }
+
+  logearUsuario(usuario:user):Observable<undefined>{
+    let info = {
+      email : usuario.email,
+      pwd : usuario.pwd
+    }
+
+    return this.client.put<any>("http://localhost:8080/users/login",info)
+  }
 }
