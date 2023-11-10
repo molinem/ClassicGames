@@ -29,7 +29,6 @@ export class LoginComponent {
     this.userService.logearUsuario(this.usuario).subscribe((data)=>
     {
       console.log(JSON.stringify(data));
-      
     });
   }
 }

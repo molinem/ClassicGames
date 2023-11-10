@@ -1,19 +1,107 @@
-<p>register works!</p>
+<div class="container-fluid px-1 px-md-5 px-lg-1 px-xl-5 py-5 mx-auto">
+    <div class="card card0 border-0">
+        <div class="row d-flex">
+            <div class="col-lg-7">
+                <div class="card1 pb-5">
+                    <div class="row">
+                        <img src="https://i.imgur.com/CXQmsmF.png" class="logo">
+                    </div>
+                    <div class="row px-3 justify-content-center mt-4 mb-5 border-line">
+                        <img src="https://i.imgur.com/uNGdWHi.png" class="image">
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-5">
+                <div class="card2 card border-0 px-4 py-5">
+                  <div class="row px-3 mb-4">
+                    <p class="or">Registrar Usuario</p>
+                  </div>
+                  <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+                    <div class="row px-3">
+                        <div class="col-md-6">
+                            <label class="mb-1">
+                                <h5>Nombre Completo:</h5>
+                            </label>
+                            <input formControlName="Nombre" name="Nombre" placeholder="Introduce el nombre">
+                            <div *ngIf="this.registerForm.controls['Nombre'].errors">
+                                <div *ngIf="this.registerForm.controls['Nombre'].errors?.['required']" class="alert alert-warning" role="alert">
+                                  <p>El campo nombre es obligatorio</p>
+                                </div>
+                                <div *ngIf="this.registerForm.controls['Nombre'].errors?.['Nombre']">
+                                  El campo nombre debe seguir un formato....
+                                </div>
+                              </div>
+                        </div>
+                    </div>
+                    <div class="vacio10"></div>
+                    <div class="row px-3">
+                        <div class="col-md-6">
+                            <label class="mb-1">
+                                <h5>Email:</h5>
+                            </label>
+                            <input formControlName="Email" name="email" placeholder="Introduce el email">
+                            <div *ngIf="this.registerForm.controls['Email'].errors">
+                                <div *ngIf="this.registerForm.controls['Email'].errors?.['required']" class="alert alert-warning" role="alert">
+                                  <p>El campo email es obligatorio</p>
+                                </div>
+                                <div *ngIf="this.registerForm.controls['Email'].errors?.['email']">
+                                  El campo email debe seguir un formato....
+                                </div>
+                              </div>
+                        </div>
+                    </div>
+                    <div class="vacio10"></div>
+                    <div class="row px-3">
+                        <div class="col-md-6">
+                            <label class="mb-1">
+                                <h5>Contrase&ntilde;a:</h5>
+                            </label>
+                            <input type="password" formControlName="Pwd1" name="pwd1" placeholder="Introduce la contraseña">
+                        </div>
+                        <div *ngIf="this.registerForm.controls['Pwd1'].errors">
+                            <div *ngIf="this.registerForm.controls['Pwd1'].errors?.['required']">
+                              El campo contraseña es obligatorio
+                            </div>
+                            <div *ngIf="this.registerForm.controls['Pwd1'].errors?.['minlength']">
+                              El campo contraseña debe seguir un formato....
+                            </div>
+                        </div>
+                    </div>
+                    <div class="vacio10"></div>
+                    <div class="row px-3">
+                        <div class="col-md-6">
+                            <label class="mb-1">
+                                <h5>Repetir Contrase&ntilde;a:</h5>
+                            </label>
+                            <input type="password" formControlName="Pwd2" name="pwd2" placeholder="Repetir contraseña">
+                        </div>
+                        <div *ngIf="this.registerForm.controls['Pwd2'].errors">
+                            <div *ngIf="this.registerForm.controls['Pwd2'].errors?.['required']">
+                              El campo contraseña es obligatorio
+                            </div>
+                            <div *ngIf="this.registerForm.controls['Pwd2'].errors?.['minlength']">
+                              El campo contraseña debe seguir un formato....
+                            </div>
+                        </div>
+                    </div>
+                    <div class="vacio20"></div>
+                    <div class="row mb-3 px-3">
+                        <div class="col-md-6">
+                            <button type="submit" class="btn btn-blue text-center" [disabled]="registerForm.invalid">Registrar</button>
+                        </div>
+                    </div>
+                    <div class="row mb-4 px-3"></div>
+                  </form>
+                </div>
+              </div>
+              
+        </div>
+        <div class="bg-blue py-4">
+            <div class="row px-3">
+                <small class="ml-4 ml-sm-5 mb-2">Copyright &copy; 2024. Todos los derechos reservados.</small>
+            </div>
+        </div>
+    </div>
+</div>
 
-<form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
-    <label for="">Nombre completo:</label>
-    <input type="text" formControlName="Nombre">
-    <br>
-    <label for="">Email:</label>
-    <input type="text" formControlName="Email">
-    <br>
-    <label for="">Contrase&ntilde;1:</label>
-    <input type="text" formControlName="Pwd1">
-    <br>
-    <label for="">Contrase&ntilde;2:</label>
-    <input type="text" formControlName="Pwd2">
-    <br>
-    <button type="submit">Guardar datos</button>
-</form>
 
-<button (click)="bindeo()">Prueba Bindeo</button>

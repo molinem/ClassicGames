@@ -24,14 +24,21 @@ export class RegisterComponent {
     this.usuario = new user;
   }
 
+  passwordMatchValidator(form: FormGroup) {
+    return this.registerForm.controls['Pwd1'].value === this.registerForm.controls['Pwd2'].value
+      ? null : {'mismatch': true};
+  }
+
   onSubmit(){
     console.log(this.registerForm.value);
-    this.usuario.datosRegistro(this.registerForm.controls['Nombre'].value,this.registerForm.controls['Email'].value,this.registerForm.controls['Pwd1'].value,this.registerForm.controls['Pwd2'].value);
-    this.userService.registrarUsuario(this.usuario).subscribe((data)=>
-    {
-      console.log(JSON.stringify(data));
-      
-    });
+    if(this.registerForm.valid){
+      this.usuario.datosRegistro(this.registerForm.controls['Nombre'].value,this.registerForm.controls['Email'].value,this.registerForm.controls['Pwd1'].value,this.registerForm.controls['Pwd2'].value);
+      this.userService.registrarUsuario(this.usuario).subscribe((data)=>
+      {
+        console.log(JSON.stringify(data));
+        
+      });
+    }
   }
 
   bindeo(){
