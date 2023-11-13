@@ -25,12 +25,12 @@ body {
 .image {
     width: 360px;
     height: 280px;
+    border-radius: 20px;
 }
 
 .border-line {
     border-right: 1px solid #EEEEEE;
 }
-
 
 .line {
     height: 1px;
@@ -45,6 +45,14 @@ body {
     font-weight: bold;
 }
 
+.alert , .alert-warning{
+    height: 50px;
+}
+
+.alert2{
+    width: 350px;
+}
+
 .text-sm {
     font-size: 20px !important;
 }
@@ -56,6 +64,11 @@ body {
 
 .vacio20 {
     height: 20px;
+    clear: both;
+}
+
+.vacioTop {
+    height: 120px;
     clear: both;
 }
 

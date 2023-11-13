@@ -2,9 +2,11 @@ package edu.uclm.esi.tysweb2023.http;
 
 
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,7 +28,7 @@ import jakarta.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping("users")
-@CrossOrigin(origins="http://localhost:4200")
+@CrossOrigin(origins="http://localhost:4200", allowCredentials = "true", allowedHeaders = "*")
 public class UserController {
 	
 	@Autowired
@@ -40,6 +42,23 @@ public class UserController {
 		if (user==null) 
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Credenciales inválidas");
 		session.setAttribute("idUser", user.getId());
+	}
+	
+	@GetMapping("/api/session")
+	public ResponseEntity<?> checkSession(HttpSession session) {
+	    Long userId = (Long) session.getAttribute("idUser");
+	    if (userId != null) {
+	        // La sesión está activa
+	        Optional<User> user = userService.obtenerInformacion(userId);
+	        if (user != null) {
+	            return ResponseEntity.ok(user.get().getNombre());
+	        } else {
+	            session.invalidate(); // El ID del usuario no es válido, invalidar la sesión.
+	            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Sesión inválida");
+	        }
+	    } else {
+	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("No hay sesión activa");
+	    }
 	}
 	
 	@PostMapping("/register")

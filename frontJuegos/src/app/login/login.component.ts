@@ -30,5 +30,12 @@ export class LoginComponent {
     {
       console.log(JSON.stringify(data));
     });
+
+    /*
+    this.userService.comprobarSession().subscribe((data)=>
+    {
+      console.log(JSON.stringify(data));
+    });
+    */
   }
 }

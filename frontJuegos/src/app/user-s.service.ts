@@ -31,4 +31,8 @@ export class UserSService {
 
     return this.client.put<any>("http://localhost:8080/users/login",info)
   }
+
+  comprobarSession(){
+    return this.client.get<any>("http://localhost:8080/users/api/session")
+  }
 }

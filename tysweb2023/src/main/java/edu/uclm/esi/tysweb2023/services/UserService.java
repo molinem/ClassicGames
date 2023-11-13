@@ -1,6 +1,8 @@
 package edu.uclm.esi.tysweb2023.services;
 
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +32,9 @@ public class UserService {
 
 	public void borrarCuenta(String userId) {
 		this.userDAO.deleteById(userId);
-		
+	}
+	
+	public Optional<User> obtenerInformacion(Long idUser) {
+		return this.userDAO.findById(idUser);
 	}
 }
