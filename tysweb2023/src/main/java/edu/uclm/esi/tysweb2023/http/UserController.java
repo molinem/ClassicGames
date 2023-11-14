@@ -1,6 +1,7 @@
 package edu.uclm.esi.tysweb2023.http;
 
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -33,15 +34,20 @@ public class UserController {
 	
 	@Autowired
 	private UserService userService;
+	public static Map<String, HttpSession> httpSessions = new HashMap<>(); ///mirar..
 	
 	@PutMapping("/login")
-	public void login(HttpSession session, @RequestBody Map<String, String> info) {
+	public Map<String, Object> login(HttpSession session, @RequestBody Map<String, String> info) {
 		String email = info.get("email").trim();
 		String pwd = info.get("pwd").trim();
 		User user = this.userService.login(email, pwd);
 		if (user==null) 
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Credenciales inválidas");
-		session.setAttribute("idUser", user.getId());
+		session.setAttribute("user", user);
+		Map<String, Object> result = new HashMap<>();
+		result.put("httpId", session.getId());
+		httpSessions.put(session.getId(),session);
+		return result;
 	}
 	
 	@GetMapping("/api/session")

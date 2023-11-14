@@ -16,6 +16,10 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
+import edu.uclm.esi.tysweb2023.http.UserController;
+import edu.uclm.esi.tysweb2023.model.User;
+import jakarta.servlet.http.HttpSession;
+
 @Component
 public class WSGames extends TextWebSocketHandler {
 	
@@ -25,6 +29,18 @@ public class WSGames extends TextWebSocketHandler {
 	
 	@Override
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
+		String httpId = session.getUri().getQuery();
+		httpId = httpId.substring(7);
+		
+		
+		HttpSession httpSession = UserController.httpSessions.get(httpId);
+		
+		SesionWS sesionWs = new SesionWS(session,httpSession);
+		User user = (User) httpSession.getAttribute("user");
+		sesionWs.setNombre(user.getNombre());
+		user.setSesionWS(sesionWs);
+		
+		this.sessionsById.put(session.getId(), sesionWs);
 		this.sessions.add(session);
 	}
 
@@ -34,10 +50,11 @@ public class WSGames extends TextWebSocketHandler {
 		String tipo = jso.getString("tipo");
 		if (tipo.equals("IDENT")) {
 			String nombre = jso.getString("nombre");
-			SesionWS sesionWS = new SesionWS(nombre, session);
+			
+			SesionWS sesionWS = this.sessionsById.get(session.getId());
+			sesionWS.setNombre(nombre);
 			
 			this.sessionsByNombre.put(nombre, sesionWS);
-			this.sessionsById.put(session.getId(), sesionWS);
 			
 			this.difundir(session, "tipo", "NUEVO USUARIO", "nombre", nombre);
 			this.bienvenida(session);

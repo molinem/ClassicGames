@@ -6,6 +6,12 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'frontJuegosPrueba';
-  ws? :WebSocket
+  title = 'pruebaFrontWebsocket';
+}
+
+username:string = "pepe"
+pwd: string = "pepe1234"
+
+login(){
+  
 }

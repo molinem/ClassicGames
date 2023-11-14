@@ -13,6 +13,7 @@ export class LoginComponent {
   loginForm: FormGroup;
 
   usuario:user;
+  ws!: WebSocket;
   
   constructor(private formBuilder:FormBuilder,private userService : UserSService){
     this.loginForm = this.formBuilder.group({
@@ -26,10 +27,15 @@ export class LoginComponent {
   onSubmit(){
     console.log(this.loginForm.value);
     this.usuario.datosLogin(this.loginForm.controls['Email'].value,this.loginForm.controls['Pwd'].value);
-    this.userService.logearUsuario(this.usuario).subscribe((data)=>
-    {
-      console.log(JSON.stringify(data));
-    });
+    this.userService.logearUsuario(this.usuario).subscribe(
+      result =>{
+        this.ws = new WebSocket("ws://localhost:8080/wsGames?httpId="+ result.httpId); ///mirar
+        console.log(JSON.stringify(result));
+      },
+      error => {
+        alert(error)
+      }
+      
 
     /*
     this.userService.comprobarSession().subscribe((data)=>
