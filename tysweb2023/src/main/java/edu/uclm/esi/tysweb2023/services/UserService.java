@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import edu.uclm.esi.tysweb2023.dao.UserDAO;
+import edu.uclm.esi.tysweb2023.model.Email;
 import edu.uclm.esi.tysweb2023.model.User;
 
 @Service
@@ -23,6 +24,8 @@ public class UserService {
 		user.setPwd(pwd1);
 		
 		this.userDAO.save(user);
+		Email smtp = new Email();
+		smtp.send("Luis.Molina1@alu.uclm.es","Asunto","Hola");
 	}
 
 	public User login(String email, String pwd) {

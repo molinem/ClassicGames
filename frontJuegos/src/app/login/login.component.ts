@@ -29,12 +29,12 @@ export class LoginComponent {
     this.usuario.datosLogin(this.loginForm.controls['Email'].value,this.loginForm.controls['Pwd'].value);
     this.userService.logearUsuario(this.usuario).subscribe(
       result =>{
-        this.ws = new WebSocket("ws://localhost:8080/wsGames?httpId="+ result.httpId); ///mirar
+        this.ws = new WebSocket("ws://localhost:8080/wsGames?httpId="+ result); ///mirar result.httpId
         console.log(JSON.stringify(result));
       },
       error => {
         alert(error)
-      }
+      });
       
 
     /*
