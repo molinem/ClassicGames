@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { raya } from './raya';
+import { MatchService } from '../match-service.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-raya',
@@ -11,7 +13,7 @@ export class RayaComponent {
   columnaHover: number | null = null;
   jugadorActual: string = 'X';
 
-  constructor(){
+  constructor(private matchService : MatchService){
     this.partida = new raya
   }
 
@@ -35,6 +37,15 @@ export class RayaComponent {
     this.columnaHover = null;
   }
 
+  crearPartida():void{
+    this.matchService.prueba().subscribe(
+      result =>{
+        console.log(JSON.stringify(result));
+      },
+      error => {
+        alert(error)
+      });
+  }
 }
 
 

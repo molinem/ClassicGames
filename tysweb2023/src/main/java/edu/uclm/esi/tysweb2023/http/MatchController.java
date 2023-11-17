@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,6 +23,7 @@ import jakarta.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping("matches")
+@CrossOrigin(origins="http://localhost:4200", allowCredentials = "true", allowedHeaders = "*")
 public class MatchController {
 	
 	@Autowired
@@ -33,6 +35,7 @@ public class MatchController {
 	
 	@GetMapping("/start")
 	public Tablero4R start(HttpSession session) {
+		System.out.println("*****************************  "+session.getId());	
 		String idUser = session.getAttribute("idUser").toString();
 		Optional<User> optUser = this.userDAO.findById(idUser);
 		Tablero4R result = this.matchService.newMatch(optUser.get());
