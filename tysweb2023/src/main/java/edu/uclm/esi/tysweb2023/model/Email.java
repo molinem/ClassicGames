@@ -43,19 +43,20 @@ public class Email {
 				put("name").put(destinatario);
 		
 		//Faltan estos datos  //sender/to/subject/htmlContent
-		JSONArray jsonData = new JSONArray().
-				put("sender",JEmal.getJSOnObject,
+		/**JSONArray jsonData = new JSONArray().
+		put("sender",Jemail.getJSOnObject,
 		put("to").put(JSONArray().put(jsonTo)),
 		put("subject").put(asunto)
 		put("htmlContent").put(body)
-				
+		
+		 
 		JSONArray payload = new JSONArray().
 				put("url").put(jEmail.getString("end-point")).
 				put("headers").put(jsaHeaders).
 				put("data").put(jsoData);
-		
-		Client client = new Client();
-		client.sendCurlPost(payload, body);
+		**/
+		//Client client = new Client();
+		//client.sendCurlPost(payload, body);
 		
 	}
 

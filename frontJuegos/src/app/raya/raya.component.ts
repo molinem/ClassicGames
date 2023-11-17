@@ -8,22 +8,31 @@ import { raya } from './raya';
 })
 export class RayaComponent {
   partida:raya
+  columnaHover: number | null = null;
+  jugadorActual: string = 'X';
 
   constructor(){
     this.partida = new raya
   }
 
-  ocuparCelda(row:number, col:number){
-    //console.log("fila:" +row + "columna:" +col)
-    if(this.puedoPoner()){
-      this.partida.celdas[row][col]='X'
-    }else{
-
+  seleccionarColumna(columnaIndex: number): void {
+    for (let i = this.partida.celdas.length - 1; i >= 0; i--) {
+      if (this.partida.celdas[i][columnaIndex] === '.') {
+        this.partida.celdas[i][columnaIndex] = this.jugadorActual;
+        this.jugadorActual = this.jugadorActual === 'X' ? 'O' : 'X';
+        break;
+      }
     }
+    //Llamada back-end
+    console.log("Columna seleccionada:", columnaIndex);
   }
 
-  puedoPoner():boolean{
-    return true
+  mouseOverColumna(columnaIndex: number): void {
+    this.columnaHover = columnaIndex;
+  }
+
+  mouseOutColumna(): void {
+    this.columnaHover = null;
   }
 
 }

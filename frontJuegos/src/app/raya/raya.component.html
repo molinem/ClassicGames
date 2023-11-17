@@ -1,7 +1,17 @@
 <p>raya works!</p>
-<div *ngFor="let row of partida.celdas; let i=index">
-    <button (click)="ocuparCelda(i,j)" *ngFor="let col of row; let j=index">
-       <span *ngIf="col">{{col}}</span>
-       <span *ngIf="!col">&nbsp;</span> 
-    </button>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">           
+            <div class="tablero">
+                <div *ngFor="let fila of partida.celdas; let i = index" class="fila">
+                  <div *ngFor="let celda of fila; let j = index" 
+                       class="celda" 
+                       [class]="celda"
+                       [class.hover]="columnaHover === j"
+                       (click)="seleccionarColumna(j)">
+                  </div>
+                </div>
+              </div>
+        </div>
+    </div>
 </div>
