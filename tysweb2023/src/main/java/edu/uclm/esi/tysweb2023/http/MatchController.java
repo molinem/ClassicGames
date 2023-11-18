@@ -35,8 +35,8 @@ public class MatchController {
 	
 	@GetMapping("/start")
 	public Tablero4R start(HttpSession session) {
-		System.out.println("*****************************  "+session.getId());	
-		String idUser = session.getAttribute("idUser").toString();
+		User user = (User) session.getAttribute("user");	
+		String idUser = user.getId().toString();
 		Optional<User> optUser = this.userDAO.findById(idUser);
 		Tablero4R result = this.matchService.newMatch(optUser.get());
 		return result;

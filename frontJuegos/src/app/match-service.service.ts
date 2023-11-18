@@ -18,6 +18,6 @@ export class MatchService {
       pwd : usuario.pwd
     }
     */
-    return this.client.get<any>("http://localhost:8080/matches/start")
+    return this.client.get<any>("http://localhost:8080/matches/start",{withCredentials:true})
   }
 }
