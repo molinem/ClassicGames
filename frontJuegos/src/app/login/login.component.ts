@@ -29,19 +29,18 @@ export class LoginComponent {
     this.usuario.datosLogin(this.loginForm.controls['Email'].value,this.loginForm.controls['Pwd'].value);
     this.userService.logearUsuario(this.usuario).subscribe(
       result =>{
-        this.ws = new WebSocket("ws://localhost:8080/wsGames?httpId="+ result); ///mirar result.httpId
+        // Parseando la cadena JSON para obtener un objeto
+        const resultString = JSON.stringify(result) as string;
+        const resultObj = JSON.parse(resultString);
+
+        // Accediendo a la propiedad httpId
+        const httpId = resultObj.httpId;
+
+        this.ws = new WebSocket("ws://localhost:8080/wsGames?httpId="+ httpId);
         console.log(JSON.stringify(result));
       },
       error => {
         alert(error)
       });
-      
-
-    /*
-    this.userService.comprobarSession().subscribe((data)=>
-    {
-      console.log(JSON.stringify(data));
-    });
-    */
   }
 }

@@ -36,7 +36,7 @@ public class UserController {
 	private UserService userService;
 	public static Map<String, HttpSession> httpSessions = new HashMap<>(); ///mirar..
 	
-	@PutMapping("/login")
+	@PostMapping("/login")
 	public Map<String, Object> login(HttpSession session, @RequestBody Map<String, String> info) {
 		String email = info.get("email").trim();
 		String pwd = info.get("pwd").trim();

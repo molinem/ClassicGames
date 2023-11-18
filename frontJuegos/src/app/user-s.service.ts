@@ -29,7 +29,7 @@ export class UserSService {
       pwd : usuario.pwd
     }
 
-    return this.client.put<any>("http://localhost:8080/users/login",info, {withCredentials:true})
+    return this.client.post<any>("http://localhost:8080/users/login",info, {withCredentials:true})
   }
 
   comprobarSession(){
