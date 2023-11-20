@@ -1,29 +1,19 @@
 package edu.uclm.esi.tysweb2023.model;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.Map;
 import java.util.Random;
-import java.util.UUID;
-
 import edu.uclm.esi.tysweb2023.exceptions.MovimientoIlegalException;
-import lombok.Data;
 
 
-public class Tablero4R {
+public class Tablero4R extends Tablero{
 
 	private char[][] casillas = new char[6][7];
-	private String id;
 	private char ultimoColor;
 	private char ganador;
 
-	private List<User> players;
-	private User jugadorConElTurno;
-
 
 	public Tablero4R() {
-		this.id = UUID.randomUUID().toString();
-		this.players = new ArrayList<>();
+		super();
 	}
 	
 	
@@ -32,12 +22,9 @@ public class Tablero4R {
 	}
 
 
-	public String getId() {
-		return id;
-	}
-
-
-	public void poner(int columna, String idUser) throws MovimientoIlegalException {
+	public void poner(Map<String, Object> movimiento, String idUser) throws MovimientoIlegalException {
+		
+		int columna = (int) movimiento.get("col");
 		
 		if(this.ganador != Character.MIN_VALUE) {
 			throw new MovimientoIlegalException("La partida ha finalizado");
@@ -75,22 +62,6 @@ public class Tablero4R {
 	private void comprobarFin() {
 		//this.ganador = this.ultimoColor;
 		
-	}
-
-
-	public void addUser(User user) {
-		this.players.add(user);
-		
-	}
-	
-	
-	public List<User> getPlayers(){
-		return players;
-	}
-
-	
-	public User getJugadorConElTurno() {
-		return jugadorConElTurno;
 	}
 
 	

@@ -1,8 +1,8 @@
 package edu.uclm.esi.tysweb2023.services;
 
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -11,15 +11,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import edu.uclm.esi.tysweb2023.exceptions.MovimientoIlegalException;
-import edu.uclm.esi.tysweb2023.model.Tablero4R;
+import edu.uclm.esi.tysweb2023.model.Tablero;
 import edu.uclm.esi.tysweb2023.model.User;
 
 @Service
 public class MatchService {
 
-	private Map<String,Tablero4R> tableros = new HashMap<>();
-	private List<Tablero4R> tablerosPendientes = new ArrayList<>();
+	private Map<String,Tablero> tableros = new HashMap<>();
+	private List<Tablero> tablerosPendientes = new ArrayList<>();
 	
+	/*
 	public Tablero4R newMatch(User user) {
 		Tablero4R tablero;
 		if (this.tablerosPendientes.isEmpty()) {
@@ -34,15 +35,47 @@ public class MatchService {
 		}
 		
 		return tablero;
+	}*/
+	
+	public Tablero newMatch(User user,String juego) throws Exception {
+		Tablero tablero = null;
+		
+		if (this.tablerosPendientes.isEmpty()) {
+			
+			Class<?> clazz;
+			try {
+				juego = "package edu.uclm.esi.tysweb2023.model."+juego;
+				clazz = Class.forName(juego);
+			} catch (ClassNotFoundException e) {
+				throw new Exception("El juego indicado no existe");
+			}
+			//Instanciar la  clase
+			Constructor constructor = clazz.getConstructors()[0];
+			try {
+				tablero = (Tablero) constructor.newInstance();
+			} catch (Exception e) {
+				throw new Exception("Contacta con el administrador");
+			}
+			
+			tablero.addUser(user);
+			this.tablerosPendientes.add(tablero);
+		}else {
+			tablero = this.tablerosPendientes.remove(0);
+			tablero.addUser(user);
+			tablero.iniciar();
+			this.tableros.put(tablero.getId(),tablero);
+		}
+		
+		return tablero;
 	}
 
-	public Tablero4R poner(String id, int columna, String idUser) {
-		Tablero4R tablero = this.tableros.get(id);
+	public Tablero poner(String id, Map<String, Object> movimiento, String idUser) {
+		Tablero tablero = this.tableros.get(id);
 		if(tablero == null) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No encuentro esa partida");
 		}
 		try {
-			tablero.poner(columna, idUser);
+			tablero.poner(movimiento, idUser);
 		}catch(MovimientoIlegalException e) {
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
 		}
@@ -50,7 +83,7 @@ public class MatchService {
 		return tablero;
 	}
 
-	public Tablero4R findMatch(String id) {
+	public Tablero findMatch(String id) {
 		return this.tableros.get(id);
 	}
 

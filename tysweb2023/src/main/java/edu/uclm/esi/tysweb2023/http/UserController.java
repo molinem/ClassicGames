@@ -34,7 +34,7 @@ public class UserController {
 	
 	@Autowired
 	private UserService userService;
-	public static Map<String, HttpSession> httpSessions = new HashMap<>(); ///mirar..
+	public static Map<String, HttpSession> httpSessions = new HashMap<>();
 	
 	@PostMapping("/login")
 	public Map<String, Object> login(HttpSession session, @RequestBody Map<String, String> info) {
