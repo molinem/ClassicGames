@@ -25,7 +25,7 @@ export class RayaComponent {
         break;
       }
     }
-    //Llamada back-end
+    //Llamada back-end //to-be-continued
     console.log("Columna seleccionada:", columnaIndex);
   }
 
@@ -38,8 +38,8 @@ export class RayaComponent {
   }
 
 
-  crearPartida():void{
-    this.matchService.prueba().subscribe(
+  crearPartida4R():void{
+    this.matchService.iniciarPartida4R().subscribe(
       result =>{
         console.log(JSON.stringify(result));
       },

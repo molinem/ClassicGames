@@ -44,7 +44,7 @@ public class MatchService {
 			
 			Class<?> clazz;
 			try {
-				juego = "package edu.uclm.esi.tysweb2023.model."+juego;
+				juego = "edu.uclm.esi.tysweb2023.model."+juego;
 				clazz = Class.forName(juego);
 			} catch (ClassNotFoundException e) {
 				throw new Exception("El juego indicado no existe");

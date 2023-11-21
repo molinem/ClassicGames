@@ -11,13 +11,12 @@ export class MatchService {
 
   }
 
-  prueba():Observable<undefined>{
-    /*
+  iniciarPartida4R():Observable<any>{
     let info = {
-      email : usuario.email,
-      pwd : usuario.pwd
+      juego : "Tablero4R"
     }
-    */
-    return this.client.get<any>("http://localhost:8080/matches/start",{withCredentials:true})
+    
+    return this.client.get<any>("http://localhost:8080/matches/start?juego="+info.juego, {withCredentials:true})
   }
+  
 }
