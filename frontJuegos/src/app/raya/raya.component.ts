@@ -37,6 +37,7 @@ export class RayaComponent {
     this.columnaHover = null;
   }
 
+
   crearPartida():void{
     this.matchService.prueba().subscribe(
       result =>{

@@ -31,6 +31,7 @@ public class Email {
 		}
 		
 		//formatear json brevo
+		/**
 		JSONObject jEmail = getConfiguration().getJSONObject("email");
 		
 		JSONArray jsaHeaders = new JSONArray().
@@ -38,22 +39,20 @@ public class Email {
 				put("accept").put("application/json").
 				put("content-type").put(jEmail.getString("content-type"));
 		
-		JSONArray jsonTo = new JSONArray().
-				put("email").put(destinatario).
-				put("name").put(destinatario);
+		JSONObject jsoTo = new JSONObject().
+				put("email", destinatario).
+				put("name", destinatario);
 		
-		//Faltan estos datos  //sender/to/subject/htmlContent
-		/**JSONArray jsonData = new JSONArray().
-		put("sender",Jemail.getJSOnObject,
-		put("to").put(JSONArray().put(jsonTo)),
-		put("subject").put(asunto)
-		put("htmlContent").put(body)
-		
-		 
-		JSONArray payload = new JSONArray().
-				put("url").put(jEmail.getString("end-point")).
-				put("headers").put(jsaHeaders).
-				put("data").put(jsoData);
+		 JSONObject jsoData = new JSONObject().
+		        put("sender",jEmail.getJSONObject("sender")).
+		        put("to",new JSONArray().put(jsoTo)).
+		        put("subject", asunto).
+		        put("htmlContent", body);
+			    
+		 JSONObject payload = new JSONObject().
+		        put("url", jEmail.getString("endpoint")).
+		        put("headers", jsaHeaders).
+		        put("data", jsoData);
 		**/
 		//Client client = new Client();
 		//client.sendCurlPost(payload, body);
