@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import edu.uclm.esi.tysweb2023.dao.UserDAO;
+import edu.uclm.esi.tysweb2023.model.AnonymousUser;
 import edu.uclm.esi.tysweb2023.model.Tablero;
 import edu.uclm.esi.tysweb2023.model.User;
 import edu.uclm.esi.tysweb2023.services.MatchService;
@@ -33,6 +34,8 @@ public class MatchController {
 	@Autowired
 	private UserDAO userDAO;
 	
+	private int contador;
+	
 	/*
 	@GetMapping("/start")
 	public Tablero4R start(HttpSession session) {
@@ -48,10 +51,14 @@ public class MatchController {
 	public Tablero start(HttpSession session, @RequestParam String juego) {
 		try {
 			User user = (User) session.getAttribute("user");	
-			String idUser = user.getId().toString();
-			Optional<User> optUser = this.userDAO.findById(idUser);
+			if (user == null) {
+				user = new AnonymousUser();
+				contador++;
+				user.setNombre("Invitado_"+contador);
+				session.setAttribute("user", user);
+			}
 			Tablero result;
-			result = this.matchService.newMatch(optUser.get(),juego);
+			result = this.matchService.newMatch(user,juego);
 			return result;
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,e.getMessage());
@@ -61,15 +68,14 @@ public class MatchController {
 	@PostMapping("/poner")
 	public Tablero poner(HttpSession session,@RequestBody Map<String,Object> info) {
 		String id = info.get("id").toString();
-		
-		String idUser = session.getAttribute("idUser").toString();
-		return this.matchService.poner(id, info, idUser);
+		User user = (User) session.getAttribute("user");	
+		return this.matchService.poner(id, info, user.getId());
 	}
 	
 	@GetMapping("/meToca")
 	public boolean meToca(HttpSession session,@RequestParam String id) {
-		String idUser = session.getAttribute("idUser").toString();
+		User user = (User) session.getAttribute("user");	
 		Tablero result = this.matchService.findMatch(id);
-		return result.getJugadorConElTurno().getId().equals(idUser);
+		return result.getJugadorConElTurno().getId().equals(user.getId());
 	}
 }

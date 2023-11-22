@@ -50,23 +50,7 @@ public class UserController {
 		return result;
 	}
 	
-	@GetMapping("/api/session")
-	public ResponseEntity<?> checkSession(HttpSession session) {
-	    Long userId = (Long) session.getAttribute("idUser");
-	    if (userId != null) {
-	        // La sesión está activa
-	        Optional<User> user = userService.obtenerInformacion(userId);
-	        if (user != null) {
-	            return ResponseEntity.ok(user.get().getNombre());
-	        } else {
-	            session.invalidate(); // El ID del usuario no es válido, invalidar la sesión.
-	            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Sesión inválida");
-	        }
-	    } else {
-	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("No hay sesión activa");
-	    }
-	}
-	
+
 	@PostMapping("/register")
 	public void register(@RequestBody Map<String,String> info) {
 		String nombre = info.get("nombre").trim();

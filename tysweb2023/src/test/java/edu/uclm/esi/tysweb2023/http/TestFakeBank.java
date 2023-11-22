@@ -109,8 +109,6 @@ public class TestFakeBank {
 		cajaPwd1.click(); cajaPwd1.clear(); cajaPwd1.sendKeys(pwd1);
 		cajaPwd2.click(); cajaPwd2.clear(); cajaPwd2.sendKeys(pwd2);
 		boton.click();
-		
-		
 	}
 
 	@AfterEach
