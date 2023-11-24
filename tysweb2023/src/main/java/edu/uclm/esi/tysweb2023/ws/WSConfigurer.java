@@ -11,8 +11,15 @@ import org.springframework.web.socket.server.support.HttpSessionHandshakeInterce
 public class WSConfigurer implements WebSocketConfigurer {
 	@Override
 	public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
+		//WebSocket para chat
 		registry.
 		addHandler(new WSGames(), "/wsGames").
+		setAllowedOrigins("*").
+		addInterceptors(new HttpSessionHandshakeInterceptor());
+		
+		//WebSocket para tablero
+		registry.
+		addHandler(new WSTablero(), "/wsTablero").
 		setAllowedOrigins("*").
 		addInterceptors(new HttpSessionHandshakeInterceptor());
 	}

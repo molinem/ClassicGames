@@ -21,7 +21,7 @@ import edu.uclm.esi.tysweb2023.model.User;
 import jakarta.servlet.http.HttpSession;
 
 @Component
-public class WSGames extends TextWebSocketHandler {
+public class WSTablero extends TextWebSocketHandler {
 	
 	private List<WebSocketSession> sessions = new ArrayList<>();
 	private Map<String, SesionWS> sessionsByNombre = new HashMap<>();
@@ -29,16 +29,14 @@ public class WSGames extends TextWebSocketHandler {
 	
 	@Override
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-		String httpId = session.getUri().getQuery();
-		httpId = httpId.substring(7);
-		
-		HttpSession httpSession = UserController.httpSessions.get(httpId);
-		
-		SesionWS sesionWs = new SesionWS(session,httpSession);
-		User user = (User) httpSession.getAttribute("user");
+		String datos = session.getUri().getQuery();
+		datos = datos.substring(7); //idPartida
+				
+		SesionWS sesionWs = new SesionWS(session);
+		/*User user = (User) httpSession.getAttribute("user");
 		sesionWs.setNombre(user.getNombre());
 		user.setSesionWS(sesionWs);
-		
+		*/
 		this.sessionsById.put(session.getId(), sesionWs);
 		this.sessions.add(session);
 	}
@@ -47,6 +45,9 @@ public class WSGames extends TextWebSocketHandler {
 	protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
 		JSONObject jso = new JSONObject(message.getPayload());
 		String tipo = jso.getString("tipo");
+		
+		
+		
 		if (tipo.equals("IDENT")) {
 			String nombre = jso.getString("nombre");
 			

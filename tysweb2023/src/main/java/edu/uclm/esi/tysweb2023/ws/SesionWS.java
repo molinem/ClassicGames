@@ -18,6 +18,9 @@ public class SesionWS {
 		this.httpSession = httpSession;
 	}
 	
+	public SesionWS(WebSocketSession session) {
+		this.session = session;
+	}
 
 	public String getNombre() {
 		return nombre;

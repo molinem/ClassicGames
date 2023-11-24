@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { raya } from './raya';
 import { MatchService } from '../match-service.service';
 import { Observable } from 'rxjs';
+import { WebsocketService } from '../websocket.service';
 
 @Component({
   selector: 'app-raya',
@@ -12,9 +13,13 @@ export class RayaComponent {
   partida:raya
   columnaHover: number | null = null;
   jugadorActual: string = 'X';
+  id_partida: string="";
+
+  ws_tablero!: WebsocketService;
 
   constructor(private matchService : MatchService){
     this.partida = new raya
+    this.ws_tablero = new WebsocketService
   }
 
   seleccionarColumna(columnaIndex: number): void {
@@ -25,7 +30,15 @@ export class RayaComponent {
         break;
       }
     }
-    //Llamada back-end //to-be-continued
+
+    this.matchService.ponerFicha4R(this.id_partida,columnaIndex).subscribe(
+      result =>{
+      console.log(JSON.stringify(result));
+      },
+      error => {
+        alert(error)
+      });
+
     console.log("Columna seleccionada:", columnaIndex);
   }
 
@@ -37,15 +50,25 @@ export class RayaComponent {
     this.columnaHover = null;
   }
 
-
   crearPartida4R():void{
     this.matchService.iniciarPartida4R().subscribe(
       result =>{
+        const js = JSON.stringify(result)
+        const jsonObj = JSON.parse(js);
+        this.id_partida = jsonObj.id;
+        
+        console.log(this.id_partida);
         console.log(JSON.stringify(result));
+
+        this.ws_tablero.connect("ws://localhost:8080/wsTablero?idPartida="+ this.id_partida);
+        this.ws_tablero.messages.subscribe(msg => {
+          console.log(msg);
+        });
       },
       error => {
-        alert(error)
-      });
+          console.log("Se ha producido un error al obtener los mensajes del WebSocket")
+      },
+    );
   }
 }
 

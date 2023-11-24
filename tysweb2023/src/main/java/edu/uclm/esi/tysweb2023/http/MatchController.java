@@ -68,7 +68,7 @@ public class MatchController {
 	@PostMapping("/poner")
 	public Tablero poner(HttpSession session,@RequestBody Map<String,Object> info) {
 		String id = info.get("id").toString();
-		User user = (User) session.getAttribute("user");	
+		User user = (User) session.getAttribute("user");
 		return this.matchService.poner(id, info, user.getId());
 	}
 	
