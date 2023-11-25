@@ -4,6 +4,7 @@ package edu.uclm.esi.tysweb2023.http;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -34,7 +35,7 @@ public class UserController {
 	
 	@Autowired
 	private UserService userService;
-	public static Map<String, HttpSession> httpSessions = new HashMap<>();
+	public static ConcurrentHashMap<String, HttpSession> httpSessions = new ConcurrentHashMap<>();
 	
 	@PostMapping("/login")
 	public Map<String, Object> login(HttpSession session, @RequestBody Map<String, String> info) {

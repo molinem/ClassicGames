@@ -14,6 +14,7 @@ export class RayaComponent {
   columnaHover: number | null = null;
   jugadorActual: string = 'X';
   id_partida: string="";
+  http_id: string="";
 
   ws_tablero!: WebsocketService;
 
@@ -50,23 +51,26 @@ export class RayaComponent {
     this.columnaHover = null;
   }
 
+  // get-> /start
   crearPartida4R():void{
     this.matchService.iniciarPartida4R().subscribe(
       result =>{
         const js = JSON.stringify(result)
         const jsonObj = JSON.parse(js);
-        this.id_partida = jsonObj.id;
         
-        console.log(this.id_partida);
-        console.log(JSON.stringify(result));
+        this.http_id = jsonObj.httpId;
+        this.id_partida = jsonObj.tablero.id;
 
-        this.ws_tablero.connect("ws://localhost:8080/wsTablero?idPartida="+ this.id_partida);
+        console.log("http_id = " + this.http_id);
+        //console.log(JSON.stringify(result));
+
+        this.ws_tablero.connect("ws://localhost:8080/wsTablero?httpId="+ this.http_id +"?idPartida="+ this.id_partida);
         this.ws_tablero.messages.subscribe(msg => {
           console.log(msg);
         });
       },
       error => {
-          console.log("Se ha producido un error al obtener los mensajes del WebSocket")
+          console.log("Se ha producido un error al obtener los mensajes del WebSocket: "+ error)
       },
     );
   }

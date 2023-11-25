@@ -65,7 +65,6 @@ public class MatchService {
 			tablero.iniciar();
 			this.tableros.put(tablero.getId(),tablero);
 		}
-		
 		return tablero;
 	}
 

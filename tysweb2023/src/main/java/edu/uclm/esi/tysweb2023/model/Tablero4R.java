@@ -56,6 +56,7 @@ public class Tablero4R extends Tablero{
 				
 				break;
 		}
+		
 	}
 
 

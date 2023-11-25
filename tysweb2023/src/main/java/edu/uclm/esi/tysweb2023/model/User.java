@@ -68,10 +68,14 @@ public class User implements Serializable {
 		//Encriptar contraseña
 		this.pwd =  org.apache.commons.codec.digest.DigestUtils.sha512Hex(pwd);
 	}
-
+	
+	public SesionWS getSesionWS() {
+		return this.sesionWs;
+	}
+	
 	public void setSesionWS(SesionWS sesionWs) {
 		this.sesionWs = sesionWs;
-		
 	}
+	
 
 }

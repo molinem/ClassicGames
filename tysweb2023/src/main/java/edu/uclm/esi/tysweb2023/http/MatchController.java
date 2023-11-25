@@ -1,6 +1,7 @@
 package edu.uclm.esi.tysweb2023.http;
 
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -14,12 +15,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.socket.WebSocketSession;
 
 import edu.uclm.esi.tysweb2023.dao.UserDAO;
 import edu.uclm.esi.tysweb2023.model.AnonymousUser;
 import edu.uclm.esi.tysweb2023.model.Tablero;
 import edu.uclm.esi.tysweb2023.model.User;
 import edu.uclm.esi.tysweb2023.services.MatchService;
+import edu.uclm.esi.tysweb2023.ws.SesionWS;
+import edu.uclm.esi.tysweb2023.ws.WSTablero;
 import jakarta.servlet.http.HttpSession;
 
 
@@ -36,19 +40,9 @@ public class MatchController {
 	
 	private int contador;
 	
-	/*
-	@GetMapping("/start")
-	public Tablero4R start(HttpSession session) {
-		User user = (User) session.getAttribute("user");	
-		String idUser = user.getId().toString();
-		Optional<User> optUser = this.userDAO.findById(idUser);
-		Tablero result = this.matchService.newMatch(optUser.get());
-		return result;
-	}*/
-	
 	//start?juego=Cartas
 	@GetMapping("/start")
-	public Tablero start(HttpSession session, @RequestParam String juego) {
+	public Map<String, Object> start(HttpSession session, @RequestParam String juego) {
 		try {
 			User user = (User) session.getAttribute("user");	
 			if (user == null) {
@@ -57,8 +51,14 @@ public class MatchController {
 				user.setNombre("Invitado_"+contador);
 				session.setAttribute("user", user);
 			}
-			Tablero result;
-			result = this.matchService.newMatch(user,juego);
+			
+			Map<String, Object> result = new HashMap<>();
+			result.put("httpId", session.getId());
+			
+			Tablero tableroJuego = this.matchService.newMatch(user,juego);
+			result.put("tablero", tableroJuego);
+			UserController.httpSessions.put(session.getId(), session);
+			
 			return result;
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,e.getMessage());
@@ -69,6 +69,9 @@ public class MatchController {
 	public Tablero poner(HttpSession session,@RequestBody Map<String,Object> info) {
 		String id = info.get("id").toString();
 		User user = (User) session.getAttribute("user");
+		WebSocketSession ws =  user.getSesionWS().getSession();
+		WSTablero.send(ws, "Hola");
+		
 		return this.matchService.poner(id, info, user.getId());
 	}
 	
