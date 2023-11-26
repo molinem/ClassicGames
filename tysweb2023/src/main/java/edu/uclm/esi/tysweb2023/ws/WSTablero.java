@@ -26,14 +26,19 @@ import jakarta.servlet.http.HttpSession;
 public class WSTablero extends TextWebSocketHandler {
 	
 	private List<WebSocketSession> sessions = new ArrayList<>();
-	private Map<String, SesionWS> sessionsByNombre = new HashMap<>();
-	private Map<String, SesionWS> sessionsById = new HashMap<>();
+	private ConcurrentHashMap<String, SesionWS> sessionsByNombre = new ConcurrentHashMap<>();
+	private ConcurrentHashMap<String, SesionWS> sessionsById = new ConcurrentHashMap<>();
 	
 	@Override
-	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
+	public void afterConnectionEstablished(WebSocketSession session) throws Exception{
+		
+		String query = session.getUri().getQuery();
+		String httpSessionId = query.substring("httpId=".length());
 		
 		
-		String datos = session.getUri().getQuery();
+		ManagerWS.get().setWebsocketSession(httpSessionId, session);
+		
+		/**
 		ConcurrentHashMap<String, Object> datosProcesados = extraerCadenas(datos);
 		String httpId = (String) datosProcesados.get("httpId");
 		
@@ -41,13 +46,13 @@ public class WSTablero extends TextWebSocketHandler {
 		HttpSession httpSession = UserController.httpSessions.get(httpId);
 		
 		SesionWS sesionWs = new SesionWS(session);
+		
 		User user = (User) httpSession.getAttribute("user");
 		sesionWs.setNombre(user.getNombre());
 		user.setSesionWS(sesionWs);
 		
 		this.sessionsById.put(session.getId(), sesionWs);
-		this.sessions.add(session);
-		
+		this.sessions.add(session); **/
 	}
 	
 	private ConcurrentHashMap<String, Object> extraerCadenas(String cadena){
@@ -75,66 +80,11 @@ public class WSTablero extends TextWebSocketHandler {
 	
 	@Override
 	protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-		JSONObject jso = new JSONObject(message.getPayload());
-		String tipo = jso.getString("tipo");
 		
-		if (tipo.equals("IDENT")) {
-			String nombre = jso.getString("nombre");
-			
-			SesionWS sesionWS = this.sessionsById.get(session.getId());
-			sesionWS.setNombre(nombre);
-			
-			this.sessionsByNombre.put(nombre, sesionWS);
-			
-			this.difundir(session, "tipo", "NUEVO USUARIO", "nombre", nombre);
-			this.bienvenida(session);
-			return;
-		}
-		if (tipo.equals("MENSAJE PRIVADO")) {
-			String destinatario = jso.getString("destinatario");
-			String texto = jso.getString("texto");
-			
-			String remitente = this.sessionsById.get(session.getId()).getNombre();
-			
-			JSONObject respuesta = new JSONObject()
-				.put("tipo", "MENSAJE PRIVADO")
-				.put("texto", texto)
-				.put("remitente", remitente);
-			
-			SesionWS sesionDestinatario = this.sessionsByNombre.get(destinatario);
-			if (sesionDestinatario==null) {
-				respuesta.put("tipo", "SE FUE");
-				TextMessage messageRespuesta = new TextMessage(respuesta.toString());
-				session.sendMessage(messageRespuesta);
-			} else {
-				WebSocketSession sessionDestinatario = this.sessionsByNombre.get(destinatario).getSession();
-				TextMessage messageRespuesta = new TextMessage(respuesta.toString());
-				sessionDestinatario.sendMessage(messageRespuesta);
-			}
-			return;
-		}
-	
-		/*for (WebSocketSession s : this.sessions)
-			s.sendMessage(message);*/
 	}
 	
 	private void bienvenida(WebSocketSession sessionDelTipoQueAcabaDeLlegar) {
-		JSONObject jso = new JSONObject()
-				.put("tipo", "BIENVENIDA");
-		JSONArray jsaUsuarios = new JSONArray();
 		
-		Collection<SesionWS> usuariosConectados = this.sessionsByNombre.values();
-		for (SesionWS usuarioConectado : usuariosConectados) {
-			if (usuarioConectado.getSession()!=sessionDelTipoQueAcabaDeLlegar) {
-				jsaUsuarios.put(usuarioConectado.getNombre());
-			}
-		}
-		jso.put("usuarios", jsaUsuarios);
-		try {
-			sessionDelTipoQueAcabaDeLlegar.sendMessage(new TextMessage(jso.toString()));
-		} catch (IOException e) {
-			this.eliminarSesion(sessionDelTipoQueAcabaDeLlegar);
-		}
 	}
 	
 	public static void send(WebSocketSession sessionWs, Object... clavesyValores) {
@@ -154,22 +104,7 @@ public class WSTablero extends TextWebSocketHandler {
 	}
 
 	private void difundir(WebSocketSession remitente, Object... clavesyValores) {
-		// tipo, NUEVO USUARIO, nombre, Pepe, edad, 20, curso, 4º
-		JSONObject jso = new JSONObject();
-		for (int i=0; i<clavesyValores.length; i=i+2) {
-			String clave = clavesyValores[i].toString();
-			String valor = clavesyValores[i+1].toString();
-			jso.put(clave, valor);
-		}
-		for (WebSocketSession session : this.sessions) {
-			if (session!=remitente) {
-				try {
-					session.sendMessage(new TextMessage(jso.toString()));
-				} catch (IOException e) {
-					this.eliminarSesion(session);
-				}
-			}
-		}
+		
 	}
 
 	private void eliminarSesion(WebSocketSession session) {

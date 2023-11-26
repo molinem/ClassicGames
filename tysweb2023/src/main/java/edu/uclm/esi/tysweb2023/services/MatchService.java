@@ -19,24 +19,7 @@ public class MatchService {
 
 	private Map<String,Tablero> tableros = new HashMap<>();
 	private List<Tablero> tablerosPendientes = new ArrayList<>();
-	
-	/*
-	public Tablero4R newMatch(User user) {
-		Tablero4R tablero;
-		if (this.tablerosPendientes.isEmpty()) {
-			tablero = new Tablero4R();
-			tablero.addUser(user);
-			this.tablerosPendientes.add(tablero);
-		}else {
-			tablero = this.tablerosPendientes.remove(0);
-			tablero.addUser(user);
-			tablero.iniciar();
-			this.tableros.put(tablero.getId(),tablero);
-		}
 		
-		return tablero;
-	}*/
-	
 	public Tablero newMatch(User user,String juego) throws Exception {
 		Tablero tablero = null;
 		

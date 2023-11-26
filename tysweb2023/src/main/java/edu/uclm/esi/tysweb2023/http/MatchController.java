@@ -4,6 +4,7 @@ package edu.uclm.esi.tysweb2023.http;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,6 +23,7 @@ import edu.uclm.esi.tysweb2023.model.AnonymousUser;
 import edu.uclm.esi.tysweb2023.model.Tablero;
 import edu.uclm.esi.tysweb2023.model.User;
 import edu.uclm.esi.tysweb2023.services.MatchService;
+import edu.uclm.esi.tysweb2023.ws.ManagerWS;
 import edu.uclm.esi.tysweb2023.ws.SesionWS;
 import edu.uclm.esi.tysweb2023.ws.WSTablero;
 import jakarta.servlet.http.HttpSession;
@@ -42,7 +44,7 @@ public class MatchController {
 	
 	//start?juego=Cartas
 	@GetMapping("/start")
-	public Map<String, Object> start(HttpSession session, @RequestParam String juego) {
+	public ConcurrentHashMap<String, Object> start(HttpSession session, @RequestParam String juego) {
 		try {
 			User user = (User) session.getAttribute("user");	
 			if (user == null) {
@@ -52,12 +54,13 @@ public class MatchController {
 				session.setAttribute("user", user);
 			}
 			
-			Map<String, Object> result = new HashMap<>();
+			ConcurrentHashMap<String, Object> result = new ConcurrentHashMap<>();
 			result.put("httpId", session.getId());
 			
 			Tablero tableroJuego = this.matchService.newMatch(user,juego);
 			result.put("tablero", tableroJuego);
 			UserController.httpSessions.put(session.getId(), session);
+			ManagerWS.get().addSessionByUserId(session.getId(), session);
 			
 			return result;
 		} catch (Exception e) {
