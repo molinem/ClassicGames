@@ -32,6 +32,7 @@ export class RayaComponent {
       }
     }
 
+    /*
     this.matchService.ponerFicha4R(this.id_partida,columnaIndex).subscribe(
       result =>{
       console.log(JSON.stringify(result));
@@ -39,7 +40,7 @@ export class RayaComponent {
       error => {
         alert(error)
       });
-
+      */
     console.log("Columna seleccionada:", columnaIndex);
   }
 

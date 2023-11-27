@@ -38,6 +38,14 @@ public class WSTablero extends TextWebSocketHandler {
 		
 		ManagerWS.get().setWebsocketSession(httpSessionId, session);
 		
+		//prueba
+		JSONObject jso = new JSONObject();
+		jso.put("message", "prueba desde el servidor");
+		WebSocketMessage<?> message = new TextMessage(jso.toString());
+		session.sendMessage(message);
+		
+		
+		
 		/**
 		ConcurrentHashMap<String, Object> datosProcesados = extraerCadenas(datos);
 		String httpId = (String) datosProcesados.get("httpId");
@@ -55,29 +63,7 @@ public class WSTablero extends TextWebSocketHandler {
 		this.sessions.add(session); **/
 	}
 	
-	private ConcurrentHashMap<String, Object> extraerCadenas(String cadena){
-		cadena = cadena.replace("?", "&");
-
-		String[] parametros = cadena.split("&");
-
-		String httpId = "";
-		String idPartida = "";
-
-		for (String parametro : parametros) {
-		    if (parametro.startsWith("httpId=")) {
-		        httpId = parametro.split("=")[1];
-		    } else if (parametro.startsWith("idPartida=")) {
-		        idPartida = parametro.split("=")[1];
-		    }
-		}
-				
-		ConcurrentHashMap<String, Object> cadenaObtenida = new ConcurrentHashMap<>();
-		cadenaObtenida.put("httpId", httpId);
-		cadenaObtenida.put("idPartida", idPartida);
 		
-		return cadenaObtenida;
-	}
-	
 	@Override
 	protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
 		
