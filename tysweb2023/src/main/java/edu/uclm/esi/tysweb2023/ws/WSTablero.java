@@ -66,21 +66,12 @@ public class WSTablero extends TextWebSocketHandler {
 	protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
 		JSONObject jso = new JSONObject(message.getPayload());
 		String type = jso.getString("type");
-		/*
+		
 		if (type.equals("PLAYER READY")) {
 			String matchId = jso.getString("matchId");
-			MatchService
-			Match match = Manager.get().getMatch(matchId);
-			if (match!=null) {
-				synchronized (match) {
-					if (!match.isStarted()) {
-						match.setStarted(true);
-						match.notifyStart(); }
-					}
-				}
-			}
+			System.out.println("Estamos readyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy");
 		}
-		*/
+	
 	}
 	
 	

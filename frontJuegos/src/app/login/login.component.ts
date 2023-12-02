@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { user } from '../user/user';
 import { UserSService } from '../user-s.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -15,7 +16,7 @@ export class LoginComponent {
   usuario:user;
   ws!: WebSocket;
   
-  constructor(private formBuilder:FormBuilder,private userService : UserSService){
+  constructor(private formBuilder:FormBuilder,private userService : UserSService, private router: Router ){
     this.loginForm = this.formBuilder.group({
       Email : ['',[Validators.required, Validators.email]],
       Pwd : ['',[Validators.required, Validators.minLength(6)]]
@@ -29,18 +30,19 @@ export class LoginComponent {
     this.usuario.datosLogin(this.loginForm.controls['Email'].value,this.loginForm.controls['Pwd'].value);
     this.userService.logearUsuario(this.usuario).subscribe(
       result =>{
-        // Parseando la cadena JSON para obtener un objeto
+
         const resultString = JSON.stringify(result) as string;
         const resultObj = JSON.parse(resultString);
 
-        // Accediendo a la propiedad httpId
         const httpId = resultObj.httpId;
 
         this.ws = new WebSocket("ws://localhost:8080/wsGames?httpId="+ httpId);
         console.log(JSON.stringify(result));
+
+        this.router.navigate(['/4EnRaya']);
       },
       error => {
-        alert(error)
+        console.log("[Login] -> Se ha producido un error al iniciar sesión: "+error);
       });
   }
 }

@@ -58,4 +58,12 @@ export class WebsocketService {
         };
         return new AnonymousSubject<MessageEvent>(observer, observable);
     }
+
+    public sendMessage(message: any): void {
+        if (this.subject) {
+            this.subject.next(message);
+        } else {
+            console.warn('WebSocket not connected, cannot send message');
+        }
+    }
 }

@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { user } from '../user/user';
 import { UserSService } from '../user-s.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -20,7 +21,7 @@ export class RegisterComponent {
 
   usuario:user;
 
-  constructor(private userService : UserSService){
+  constructor(private userService : UserSService, private router : Router){
     this.usuario = new user;
   }
 
@@ -33,16 +34,16 @@ export class RegisterComponent {
     console.log(this.registerForm.value);
     if(this.registerForm.valid){
       this.usuario.datosRegistro(this.registerForm.controls['Nombre'].value,this.registerForm.controls['Email'].value,this.registerForm.controls['Pwd1'].value,this.registerForm.controls['Pwd2'].value);
-      this.userService.registrarUsuario(this.usuario).subscribe((data)=>
-      {
-        console.log(JSON.stringify(data));
-        
-      });
+      this.userService.registrarUsuario(this.usuario).subscribe(
+        result =>{
+          console.log(JSON.stringify(result));
+          this.router.navigate(['/Login']);
+        },
+        error =>{
+          console.log("[Register] -> Se ha producido un error al registrar el usuario: "+error);
+        });
     }
   }
 
-  bindeo(){
-    console.log(this.registerForm.value)
-  }
 
 }

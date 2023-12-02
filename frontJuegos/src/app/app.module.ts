@@ -9,6 +9,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { LoginComponent } from './login/login.component';
 import { ElegirJuegoComponent } from './elegir-juego/elegir-juego.component';
+import { SalaDeEsperaComponent } from './sala-de-espera/sala-de-espera.component';
 
 
 @NgModule({
@@ -17,7 +18,8 @@ import { ElegirJuegoComponent } from './elegir-juego/elegir-juego.component';
     RayaComponent,
     RegisterComponent,
     LoginComponent,
-    ElegirJuegoComponent
+    ElegirJuegoComponent,
+    SalaDeEsperaComponent
   ],
   imports: [
     BrowserModule,

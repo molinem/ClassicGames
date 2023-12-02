@@ -73,7 +73,6 @@ public class MatchController {
 		String id = info.get("id").toString();
 		User user = (User) session.getAttribute("user");
 		WebSocketSession ws =  user.getSesionWS().getSession();
-		WSTablero.send(ws, "Hola");
 		
 		return this.matchService.poner(id, info, user.getId());
 	}
