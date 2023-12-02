@@ -69,6 +69,5 @@ public class Tablero4R extends Tablero{
 	public void iniciar() {
 		this.jugadorConElTurno = this.players.get(new Random().nextInt(this.players.size()));
 		this.ultimoColor = 'R';
-		
 	}
 }

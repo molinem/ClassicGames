@@ -8,6 +8,7 @@ import { RegisterComponent } from './register/register.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { LoginComponent } from './login/login.component';
+import { ElegirJuegoComponent } from './elegir-juego/elegir-juego.component';
 
 
 @NgModule({
@@ -15,7 +16,8 @@ import { LoginComponent } from './login/login.component';
     AppComponent,
     RayaComponent,
     RegisterComponent,
-    LoginComponent
+    LoginComponent,
+    ElegirJuegoComponent
   ],
   imports: [
     BrowserModule,

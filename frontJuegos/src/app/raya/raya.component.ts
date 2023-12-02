@@ -52,30 +52,6 @@ export class RayaComponent {
     this.columnaHover = null;
   }
 
-  // get-> /start
-  crearPartida4R():void{
-    this.matchService.iniciarPartida4R().subscribe(
-      result =>{
-        const js = JSON.stringify(result)
-        const jsonObj = JSON.parse(js);
-        
-        this.http_id = jsonObj.httpId;
-        this.id_partida = jsonObj.tablero.id;
-
-        console.log("http_id = " + this.http_id);
-        //console.log(JSON.stringify(result));
-
-        //this.ws_tablero.connect("ws://localhost:8080/wsTablero?httpId="+ this.http_id +"?idPartida="+ this.id_partida);
-        this.ws_tablero.connect("ws://localhost:8080/wsTablero?httpId="+ this.http_id);
-        this.ws_tablero.messages.subscribe(msg => {
-          console.log(msg);
-        });
-      },
-      error => {
-          console.log("Se ha producido un error al obtener los mensajes del WebSocket: "+ error)
-      },
-    );
-  }
 }
 
 

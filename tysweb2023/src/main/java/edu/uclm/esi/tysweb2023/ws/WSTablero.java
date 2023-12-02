@@ -18,9 +18,7 @@ import org.springframework.web.socket.WebSocketMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
-import edu.uclm.esi.tysweb2023.http.UserController;
-import edu.uclm.esi.tysweb2023.model.User;
-import jakarta.servlet.http.HttpSession;
+import edu.uclm.esi.tysweb2023.services.MatchService;
 
 @Component
 public class WSTablero extends TextWebSocketHandler {
@@ -66,12 +64,25 @@ public class WSTablero extends TextWebSocketHandler {
 		
 	@Override
 	protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-		
+		JSONObject jso = new JSONObject(message.getPayload());
+		String type = jso.getString("type");
+		/*
+		if (type.equals("PLAYER READY")) {
+			String matchId = jso.getString("matchId");
+			MatchService
+			Match match = Manager.get().getMatch(matchId);
+			if (match!=null) {
+				synchronized (match) {
+					if (!match.isStarted()) {
+						match.setStarted(true);
+						match.notifyStart(); }
+					}
+				}
+			}
+		}
+		*/
 	}
 	
-	private void bienvenida(WebSocketSession sessionDelTipoQueAcabaDeLlegar) {
-		
-	}
 	
 	public static void send(WebSocketSession sessionWs, Object... clavesyValores) {
 		JSONObject objJson = new JSONObject();
@@ -89,9 +100,6 @@ public class WSTablero extends TextWebSocketHandler {
 	    }
 	}
 
-	private void difundir(WebSocketSession remitente, Object... clavesyValores) {
-		
-	}
 
 	private void eliminarSesion(WebSocketSession session) {
 		this.sessions.remove(session);
@@ -101,8 +109,10 @@ public class WSTablero extends TextWebSocketHandler {
 
 	@Override
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-		SesionWS sesionWS = this.sessionsById.remove(session.getId());
-		this.sessionsByNombre.remove(sesionWS.getNombre());
+		//SesionWS sesionWS = this.sessionsById.remove(session.getId());
+		//this.sessionsByNombre.remove(sesionWS.getNombre());
+		SesionWS hwSession = ManagerWS.get().getSessionByWebSocketId(session.getId());
+		hwSession.setWebsocketSession(null);
 	}
 
 	@Override
