@@ -39,9 +39,7 @@ public class MatchController {
 	
 	@Autowired
 	private UserDAO userDAO;
-	
-	private int contador;
-	
+		
 	//start?juego=Cartas
 	@GetMapping("/start")
 	public ConcurrentHashMap<String, Object> start(HttpSession session, @RequestParam String juego) {
@@ -49,8 +47,6 @@ public class MatchController {
 			User user = (User) session.getAttribute("user");	
 			if (user == null) {
 				user = new AnonymousUser();
-				contador++;
-				user.setNombre("Invitado_"+contador);
 				session.setAttribute("user", user);
 			}
 			

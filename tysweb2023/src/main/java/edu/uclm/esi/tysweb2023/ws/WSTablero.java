@@ -10,6 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.BinaryMessage;
 import org.springframework.web.socket.CloseStatus;
@@ -30,8 +31,21 @@ public class WSTablero extends TextWebSocketHandler {
 	@Override
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception{
 		
-		String query = session.getUri().getQuery();
-		String httpSessionId = query.substring("httpId=".length());
+		HttpHeaders headers = session.getHandshakeHeaders();
+		Collection<List<String>> values = headers.values();
+		String httpSessionId = null;
+		for (List<String> value : values) {
+			for (String cadena : value) {
+				if (cadena.startsWith("JSESSIONID")) {
+					httpSessionId = cadena.substring(11);
+					break;
+				}
+			}
+
+			if (httpSessionId!=null)
+				break;
+		}
+		
 		
 		
 		ManagerWS.get().setWebsocketSession(httpSessionId, session);
