@@ -17,7 +17,7 @@ export class WeatherService {
     navigator.geolocation.getCurrentPosition(
       position => {
         this.position = position
-        console.log("Latitud: " + position.coords.latitude + "Longitud: " + position.coords.longitude);
+        console.log("Latitud: " + position.coords.latitude + " Longitud: " + position.coords.longitude);
         let url = "https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/38.9903762%2C%20-3.9203192?unitGroup=metric&include=current&key=G94RAC9R3W3GNMLK7B9B8Q24B&contentType=json"
         //let url = "https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/"+ position.coords.latitude + "%2C%20" + position.coords.longitude + " ?unitGroup=metric&include=current&key=26B976WW76VUTJA8WNM3MBDRZ&contentType=json"
         let req = new XMLHttpRequest();

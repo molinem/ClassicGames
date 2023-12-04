@@ -10,13 +10,12 @@ export class AppComponent {
   title = 'frontJuegosPrueba';
   ws? :WebSocket
   position? : GeolocationPosition
-  weath! : WeatherService
 
-  constructor(){
+  constructor(private weath : WeatherService){
     
   }
 
   ngOnInit(){
-    //this.weath.obtenerElTiempo();
+    this.weath.obtenerElTiempo();
   }
 }
