@@ -38,7 +38,6 @@ export class WeatherService {
             }
           }
         }
-
         req.open("GET",url)
         req.send()
       },
