@@ -1,5 +1,6 @@
 package edu.uclm.esi.tysweb2023.model;
 
+import java.security.SecureRandom;
 import java.util.Map;
 import java.util.Random;
 import edu.uclm.esi.tysweb2023.exceptions.MovimientoIlegalException;
@@ -70,4 +71,12 @@ public class Tablero4R extends Tablero{
 		this.jugadorConElTurno = this.players.get(new Random().nextInt(this.players.size()));
 		this.ultimoColor = 'R';
 	}
+	
+	@Override
+	protected void comprobarListo() {
+		this.preparado = this.players.size()==2;
+		if (this.preparado)
+			this.jugadorConElTurno = new SecureRandom().nextBoolean() ? this.players.get(0) : this.players.get(1);
+	}
+
 }

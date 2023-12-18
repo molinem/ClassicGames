@@ -6,12 +6,16 @@ import java.util.Map;
 import java.util.UUID;
 
 import edu.uclm.esi.tysweb2023.exceptions.MovimientoIlegalException;
+import jakarta.persistence.Transient;
 
 public abstract class Tablero {
 	private String id;
-
+	@Transient
 	protected List<User> players;
+	@Transient
 	protected User jugadorConElTurno;
+	@Transient
+	protected boolean preparado;
 	
 	public Tablero() {
 		this.id = UUID.randomUUID().toString();
@@ -25,7 +29,13 @@ public abstract class Tablero {
 	
 	public void addUser(User user) {
 		this.players.add(user);
+		//¿Está listo?
 		
+		
+	}
+	
+	public boolean jugadorListo() {
+		return preparado;
 	}
 	
 	
@@ -38,6 +48,7 @@ public abstract class Tablero {
 		return jugadorConElTurno;
 	}
 	public abstract void iniciar();
+	protected abstract void comprobarListo();
 	
 	public abstract void poner(Map<String,Object> movimiento, String idUser) throws MovimientoIlegalException;
 }
