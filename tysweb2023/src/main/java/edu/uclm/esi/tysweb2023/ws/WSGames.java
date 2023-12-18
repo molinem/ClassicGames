@@ -9,6 +9,7 @@ import java.util.Map;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.BinaryMessage;
 import org.springframework.web.socket.CloseStatus;
@@ -29,10 +30,23 @@ public class WSGames extends TextWebSocketHandler {
 	
 	@Override
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-		String httpId = session.getUri().getQuery();
-		httpId = httpId.substring(7);
+
+		HttpHeaders headers = session.getHandshakeHeaders();
+		Collection<List<String>> values = headers.values();
+		String httpSessionId = null;
+		for (List<String> value : values) {
+			for (String cadena : value) {
+				if (cadena.startsWith("JSESSIONID")) {
+					httpSessionId = cadena.substring(11);
+					break;
+				}
+			}
+
+			if (httpSessionId!=null)
+				break;
+		}
 		
-		HttpSession httpSession = UserController.httpSessions.get(httpId);
+		HttpSession httpSession = UserController.httpSessions.get(httpSessionId);
 		
 		SesionWS sesionWs = new SesionWS(session,httpSession);
 		User user = (User) httpSession.getAttribute("user");
