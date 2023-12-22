@@ -28,16 +28,21 @@ public abstract class Tablero {
 	}
 	
 	public void addUser(User user) {
-		this.players.add(user);
-		//¿Está listo?
-		
-		
+		this.players.add(user);		
 	}
 	
-	public boolean jugadorListo() {
+	public boolean partidaLista() {
 		return preparado;
 	}
 	
+	public boolean checkPartidaLista() {
+		if (this.getPlayers().size() == 2) {
+			preparado = true;
+		}else {
+			preparado = false;
+		}
+		return preparado;
+	}
 	
 	public List<User> getPlayers(){
 		return players;

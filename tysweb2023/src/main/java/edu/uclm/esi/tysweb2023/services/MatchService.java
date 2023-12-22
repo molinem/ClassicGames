@@ -1,6 +1,7 @@
 package edu.uclm.esi.tysweb2023.services;
 
 import java.lang.reflect.Constructor;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,10 +20,12 @@ public class MatchService {
 
 	private Map<String,Tablero> tableros = new HashMap<>();
 	private List<Tablero> tablerosPendientes = new ArrayList<>();
+	private boolean partidaLista;
 		
 	public Tablero newMatch(User user,String juego) throws Exception {
 		Tablero tablero = null;
 		
+		//No hay tableros pendientes
 		if (this.tablerosPendientes.isEmpty()) {
 			
 			Class<?> clazz;
@@ -68,5 +71,8 @@ public class MatchService {
 	public Tablero findMatch(String id) {
 		return this.tableros.get(id);
 	}
-
+	
+	
+	
+	
 }

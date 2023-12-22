@@ -55,8 +55,15 @@ public class MatchController {
 			
 			Tablero tableroJuego = this.matchService.newMatch(user,juego);
 			result.put("tablero", tableroJuego);
+			
 			UserController.httpSessions.put(session.getId(), session);
 			ManagerWS.get().addSessionByUserId(session.getId(), session);
+			
+			//¿Partida lista?
+			if (tableroJuego.checkPartidaLista()) {
+				//Avisamos a los jugadores
+			}
+			
 			
 			return result;
 		} catch (Exception e) {

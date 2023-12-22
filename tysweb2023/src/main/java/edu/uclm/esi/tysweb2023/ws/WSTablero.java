@@ -55,24 +55,7 @@ public class WSTablero extends TextWebSocketHandler {
 		jso.put("message", "prueba desde el servidor");
 		WebSocketMessage<?> message = new TextMessage(jso.toString());
 		session.sendMessage(message);
-		
-		
-		
-		/**
-		ConcurrentHashMap<String, Object> datosProcesados = extraerCadenas(datos);
-		String httpId = (String) datosProcesados.get("httpId");
-		
-		//Establecemos la session websocket en el usuario
-		HttpSession httpSession = UserController.httpSessions.get(httpId);
-		
-		SesionWS sesionWs = new SesionWS(session);
-		
-		User user = (User) httpSession.getAttribute("user");
-		sesionWs.setNombre(user.getNombre());
-		user.setSesionWS(sesionWs);
-		
-		this.sessionsById.put(session.getId(), sesionWs);
-		this.sessions.add(session); **/
+
 	}
 	
 		
@@ -81,9 +64,8 @@ public class WSTablero extends TextWebSocketHandler {
 		JSONObject jso = new JSONObject(message.getPayload());
 		String type = jso.getString("type");
 		
-		if (type.equals("PLAYER READY")) {
+		if (type.equals("MOVEMENT")) {
 			String matchId = jso.getString("matchId");
-			System.out.println("Estamos readyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy");
 		}
 	
 	}
