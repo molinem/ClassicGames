@@ -22,13 +22,11 @@ public class ManagerWS {
 	private ConcurrentHashMap<String, SesionWS> sessionsByUserId;
 	private ConcurrentHashMap<String, SesionWS> sessionsByHttpId;
 	private ConcurrentHashMap<String, SesionWS> sessionsByWsId;
-	//private ConcurrentHashMap<String, Match> matches;
 	
 	private ManagerWS() {
 		this.sessionsByUserId = new ConcurrentHashMap<>();
 		this.sessionsByHttpId = new ConcurrentHashMap<>();
 		this.sessionsByWsId = new ConcurrentHashMap<>();
-		//this.matches = new ConcurrentHashMap<>();
 	}
 	
 	private static class ManagerHolder {
@@ -93,18 +91,6 @@ public class ManagerWS {
 		}
 	}
 	
-	/*
-	public void add(Match match) {
-		this.matches.put(match.getId(), match);
-	}
-	
-	public Match getMatch(String matchId) {
-		return this.matches.get(matchId);
-	}
-	
-	public Match removeMatch(String matchId) {
-		return this.matches.remove(matchId);
-	}*/
 	
 	
 }

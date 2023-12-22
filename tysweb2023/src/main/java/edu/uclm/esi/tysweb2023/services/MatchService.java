@@ -79,7 +79,10 @@ public class MatchService {
 		JSONObject jso = new JSONObject();
 		jso.put("type", tipoMensaje);
 		jso.put("matchId", idPartida);
-		
+		jso.put("player_1", jugadoresPartida.get(0).getNombre());
+		jso.put("player_2", jugadoresPartida.get(1).getNombre());
+		jso.put("playerWithTurn", this.findMatch(idPartida).getJugadorConElTurno().getNombre());
+
 		if (tipoMensaje.contentEquals("START")) {
 			try {
 				jugadoresPartida.get(0).sendMessage(jso);

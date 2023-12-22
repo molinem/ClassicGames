@@ -57,15 +57,13 @@ public class MatchController {
 			result.put("tablero", tableroJuego);
 			
 			UserController.httpSessions.put(session.getId(), session);
-			ManagerWS.get().addSessionByUserId(session.getId(), session);
+			ManagerWS.get().addSessionByUserId(user.getId(), session);
 			
 			//¿Partida lista?
 			if (tableroJuego.checkPartidaLista()) {
 				//Avisamos a los jugadores
 				this.matchService.notificarEstado("START", tableroJuego.getId());
 			}
-			
-			
 			return result;
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,e.getMessage());

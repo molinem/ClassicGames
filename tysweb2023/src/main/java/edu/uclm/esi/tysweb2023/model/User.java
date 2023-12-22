@@ -10,6 +10,7 @@ import org.springframework.web.socket.WebSocketSession;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import edu.uclm.esi.tysweb2023.ws.ManagerWS;
 import edu.uclm.esi.tysweb2023.ws.SesionWS;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -83,7 +84,7 @@ public class User implements Serializable {
 	}
 	
 	public void sendMessage(JSONObject jso) throws IOException {
-		WebSocketSession wsSession = this.getSesionWS().getWebsocketSession();
+		WebSocketSession wsSession = ManagerWS.get().getSessionByUserId(this.id).getWebsocketSession();
 		wsSession.sendMessage(new TextMessage(jso.toString()));
 	}
 	

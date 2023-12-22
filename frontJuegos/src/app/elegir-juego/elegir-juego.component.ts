@@ -33,13 +33,13 @@ export class ElegirJuegoComponent {
         //console.log(JSON.stringify(result));
 
         //this.ws_tablero.connect("ws://localhost:8080/wsTablero?httpId="+ this.http_id +"?idPartida="+ this.id_partida);
-        /*this.ws_tablero.connect("ws://localhost:8080/wsTablero?httpId="+ this.http_id);
+        this.ws_tablero.connect("ws://localhost:8080/wsTablero");
         this.ws_tablero.messages.subscribe(msg => {
           console.log(msg);
-        });*/ //IMPLEMENTADO EN EL BOTÓN READY
+        });
+        this.router.navigate(['4EnRaya']);
 
-
-        this.router.navigate(['/SalaDeEspera'],{ state: { http_id: this.http_id, id_partida: this.id_partida } });
+        //this.router.navigate(['/SalaDeEspera'],{ state: { http_id: this.http_id, id_partida: this.id_partida } });
       },
       error => {
         console.log("[CrearPartida] -> Se ha producido un error al crear la partida: "+error);
