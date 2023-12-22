@@ -1,7 +1,12 @@
 package edu.uclm.esi.tysweb2023.model;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.UUID;
+
+import org.json.JSONObject;
+import org.springframework.web.socket.TextMessage;
+import org.springframework.web.socket.WebSocketSession;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -75,6 +80,11 @@ public class User implements Serializable {
 	
 	public void setSesionWS(SesionWS sesionWs) {
 		this.sesionWs = sesionWs;
+	}
+	
+	public void sendMessage(JSONObject jso) throws IOException {
+		WebSocketSession wsSession = this.getSesionWS().getWebsocketSession();
+		wsSession.sendMessage(new TextMessage(jso.toString()));
 	}
 	
 
