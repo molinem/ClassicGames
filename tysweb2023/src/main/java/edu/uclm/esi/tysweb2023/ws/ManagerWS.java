@@ -91,6 +91,16 @@ public class ManagerWS {
 		}
 	}
 	
+	public ConcurrentHashMap<String, SesionWS> getListSessionsByUserId() {
+		return this.sessionsByUserId;
+	}
+
+	@Override
+	public String toString() {
+		return "ManagerWS [userDAO=" + userDAO + ", sessionsByUserId=" + sessionsByUserId + ", sessionsByHttpId="
+				+ sessionsByHttpId + ", sessionsByWsId=" + sessionsByWsId + "]";
+	}
+	
 	
 	
 }

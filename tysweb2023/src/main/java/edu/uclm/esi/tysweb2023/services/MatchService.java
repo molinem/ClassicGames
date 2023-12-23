@@ -35,14 +35,14 @@ public class MatchService {
 				juego = "edu.uclm.esi.tysweb2023.model."+juego;
 				clazz = Class.forName(juego);
 			} catch (ClassNotFoundException e) {
-				throw new Exception("El juego indicado no existe");
+				throw new Exception("[New Match] El juego no existe");
 			}
 			//Instanciar la  clase
 			Constructor constructor = clazz.getConstructors()[0];
 			try {
 				tablero = (Tablero) constructor.newInstance();
 			} catch (Exception e) {
-				throw new Exception("Contacta con el administrador");
+				throw new Exception("[New Match] Contacta con el administrador");
 			}
 			
 			tablero.addUser(user);
@@ -66,7 +66,6 @@ public class MatchService {
 		}catch(MovimientoIlegalException e) {
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
 		}
-		
 		return tablero;
 	}
 
@@ -74,7 +73,7 @@ public class MatchService {
 		return this.tableros.get(id);
 	}
 	
-	public void notificarEstado(String tipoMensaje, String idPartida) {
+	public void notificarEstado(String tipoMensaje, String idPartida) throws Exception {
 		List<User> jugadoresPartida = this.findMatch(idPartida).getPlayers();
 		JSONObject jso = new JSONObject();
 		jso.put("type", tipoMensaje);
@@ -83,6 +82,7 @@ public class MatchService {
 		jso.put("player_2", jugadoresPartida.get(1).getNombre());
 		jso.put("playerWithTurn", this.findMatch(idPartida).getJugadorConElTurno().getNombre());
 
+		
 		if (tipoMensaje.contentEquals("START")) {
 			try {
 				jugadoresPartida.get(0).sendMessage(jso);
@@ -94,7 +94,7 @@ public class MatchService {
 				try {
 					player.sendMessage(jso);
 				} catch (IOException e) {
-					e.printStackTrace();
+					throw new Exception("[Notificar Estado] Se ha producido el siguiente error: " + e.getMessage());
 				}
 			}	
 		}

@@ -45,16 +45,14 @@ public class WSTablero extends TextWebSocketHandler {
 			if (httpSessionId!=null)
 				break;
 		}
-		
-		
-		
+
 		ManagerWS.get().setWebsocketSession(httpSessionId, session);
 		
 		//prueba
-		JSONObject jso = new JSONObject();
+		/*JSONObject jso = new JSONObject();
 		jso.put("message", "prueba desde el servidor");
 		WebSocketMessage<?> message = new TextMessage(jso.toString());
-		session.sendMessage(message);
+		session.sendMessage(message);*/
 
 	}
 	

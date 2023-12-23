@@ -84,8 +84,17 @@ public class User implements Serializable {
 	}
 	
 	public void sendMessage(JSONObject jso) throws IOException {
-		WebSocketSession wsSession = ManagerWS.get().getSessionByUserId(this.id).getWebsocketSession();
-		wsSession.sendMessage(new TextMessage(jso.toString()));
+		SesionWS ws = ManagerWS.get().getSessionByUserId(this.id);
+		WebSocketSession wsSession = ws.getWebsocketSession();
+		
+		synchronized (wsSession) {
+			TextMessage message = new TextMessage(jso.toString());
+			try {
+				wsSession.sendMessage(message);
+			} catch (IOException e) {
+				System.err.println("In notify: " +	wsSession.getId() + "-> " + e.getMessage());
+			} 
+		}
 	}
 	
 

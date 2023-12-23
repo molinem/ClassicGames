@@ -23,7 +23,7 @@ export class WebsocketService {
             this.messages = <Subject<Message>>this.subject.pipe(
                 map(
                     (response: MessageEvent): Message => {
-                        console.log(response.data);
+                        //console.log(response.data);
                         const data = JSON.parse(response.data);
                         return data;
                     },

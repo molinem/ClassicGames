@@ -28,18 +28,17 @@ export class ElegirJuegoComponent {
         
         this.http_id = jsonObj.httpId;
         this.id_partida = jsonObj.tablero.id;
-
-        console.log("http_id = " + this.http_id);
-        //console.log(JSON.stringify(result));
-
-        //this.ws_tablero.connect("ws://localhost:8080/wsTablero?httpId="+ this.http_id +"?idPartida="+ this.id_partida);
+        
         this.ws_tablero.connect("ws://localhost:8080/wsTablero");
         this.ws_tablero.messages.subscribe(msg => {
-          console.log(msg);
+          const data = JSON.parse(JSON.stringify(msg));
+          
+          if(data.type = "START"){
+            console.log("Todo listo")
+          }
         });
         this.router.navigate(['4EnRaya']);
 
-        //this.router.navigate(['/SalaDeEspera'],{ state: { http_id: this.http_id, id_partida: this.id_partida } });
       },
       error => {
         console.log("[CrearPartida] -> Se ha producido un error al crear la partida: "+error);
