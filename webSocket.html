@@ -1,0 +1,113 @@
+<html>
+	<body>
+		<span id="estado">Desconectado</span>
+		<br>
+
+		Tu nombre: <input type="text" id="usuario" placeholder="Tu nombre">
+		<button id="btnConectar" onclick="conectar()">Conectar</button>
+
+		<div id="zonaDeChat" style="display:none">
+			<table border="1">
+				<tr>
+					<td id="usuarios"></td>
+					<td id="conversaciones">
+						
+					</td>
+				</tr>
+			</table>
+
+			<br>
+			<input type="text" id="destinatario" placeholder="destinatario">
+			<input type="text" id="mensaje" placeholder="Texto">
+			<button onclick="enviar()">Enviar</button>
+			<br>
+		</div>
+	</body>
+
+	<script>
+		let ws
+		let self = this
+
+		function conectar() {
+			ws = new WebSocket("ws://localhost:8080/wsGames")
+
+			ws.onopen = function() {
+				document.getElementById("estado").innerHTML = "Conectado"
+				document.getElementById("usuario").disabled = true
+				document.getElementById("btnConectar").innerHTML = "Desconectar"
+				document.getElementById("zonaDeChat").removeAttribute("style")
+
+				let msg = {
+					tipo : "IDENT", nombre : document.getElementById("usuario").value
+				}
+				ws.send(JSON.stringify(msg))
+			}
+
+			ws.onmessage = function(event) {
+				let data = event.data
+				data = JSON.parse(data)
+
+				if (data.tipo=="NUEVO USUARIO") {
+					let nombre = data.nombre
+					self._addUsuario(nombre)
+				}
+
+				if (data.tipo=="BIENVENIDA") {
+					let usuarios = data.usuarios
+					for (let i=0; i<usuarios.length; i++) {
+						let nombre = usuarios[i]
+						self._addUsuario(nombre)
+					}
+				}
+
+				if (data.tipo=="MENSAJE PRIVADO") {
+					let remitente = data.remitente
+					let texto = data.texto 
+
+					let divMensaje = document.createElement("div")
+					divMensaje.innerHTML = "<strong>" + remitente + "</strong>: " + texto
+
+					document.getElementById("conversaciones").appendChild(divMensaje)
+				}
+			}
+
+			ws.onclose = function() {
+				document.getElementById("estado").innerHTML = "Desconectado"
+			}
+		}
+
+		function _addUsuario(nombre) {
+			let a = document.createElement("a")
+			a.innerHTML = nombre + "<br>"
+			document.getElementById("usuarios").appendChild(a)
+
+			a.onclick = function() {
+				self._mostrarConversacion(nombre)
+			}
+		}
+
+		function _mostrarConversacion(nombre) {
+			let conversacion = document.getElementById("conversacionCon" + nombre)
+			if (conversacion==null) {
+				conversacion = document.createElement("div")
+				conversacion.id = "conversacionCon" + nombre
+				conversacion.innerHTML = "<strong>Conversación con " + nombre + "</strong><br>"
+				document.getElementById("conversaciones").appendChild(conversacion)
+			}
+
+			let hijos = document.getElementById("conversaciones").childNodes
+			for (let i=0; i<hijos.length; i++)
+				hijos[i].hidden = true
+			conversacion.removeAttribute("hidden")
+		}
+
+		function enviar() {
+			let msg = {
+				tipo : "MENSAJE PRIVADO",
+				destinatario : document.getElementById("destinatario").value,
+				texto : document.getElementById("mensaje").value
+			}
+			ws.send(JSON.stringify(msg))
+		}
+	</script>
+</html>

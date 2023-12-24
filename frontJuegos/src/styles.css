@@ -1,1 +1,28 @@
 /* You can add global styles to this file, and also import other style files */
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+/*TOAST*/
+.mat-mdc-simple-snack-bar, .ng-star-inserted, .mdc-snackbar__surface {
+    background: #007BFF !important;
+    color: white !important;
+}
+
+.mat-mdc-snack-bar-label, .mdc-snackbar__label{
+    color: white !important;
+    font-weight: 500 !important;
+}
+
+.mdc-button__label{
+    color: white !important;
+    font-weight: 500 !important;
+}
+
+.mat-mdc-focus-indicator{
+    background: rgb(151, 119, 180) !important;
+}
+
+.mat-mdc-focus-indicator:hover{
+    background: rgb(136, 87, 182) !important;
+}

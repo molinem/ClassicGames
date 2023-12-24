@@ -102,5 +102,24 @@
 		<groupId>mysql</groupId>
 		<artifactId>mysql-connector-java</artifactId>
 	</dependency>
+	
+	<dependency>
+	   <groupId>org.seleniumhq.selenium</groupId>
+	   <artifactId>selenium-java</artifactId>
+	   <version>4.13.0</version>
+	</dependency>
+	
+	<dependency>
+	    <groupId>org.seleniumhq.selenium</groupId>
+	    <artifactId>selenium-manager</artifactId>
+	    <version>4.13.0</version>
+	</dependency>
+	
+	<dependency>
+	    <groupId>com.stripe</groupId>
+	    <artifactId>stripe-java</artifactId>
+	    <version>22.5.1</version>
+	</dependency>
+	
   </dependencies>	
 </project>

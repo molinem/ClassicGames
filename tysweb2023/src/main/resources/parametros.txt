@@ -1,0 +1,11 @@
+{
+	"email": {
+		"api-key": "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",
+		"content-type": "application/json",
+		"endpoint": "https://api.brevo.com/v3/smtp/email",
+		"sender":{
+			"email": "Luis.Molina1@alu.uclm.es",
+			"name": "Grupo de TECYSYSWEB2324",
+		}
+	}
+}

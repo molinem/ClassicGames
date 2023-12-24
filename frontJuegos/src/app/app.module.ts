@@ -5,19 +5,30 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { RayaComponent } from './raya/raya.component';
 import { RegisterComponent } from './register/register.component';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-
+import { ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
+import { LoginComponent } from './login/login.component';
+import { ElegirJuegoComponent } from './elegir-juego/elegir-juego.component';
+import { SalaDeEsperaComponent } from './sala-de-espera/sala-de-espera.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [
     AppComponent,
     RayaComponent,
-    RegisterComponent
+    RegisterComponent,
+    LoginComponent,
+    ElegirJuegoComponent,
+    SalaDeEsperaComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    HttpClientModule,
+    BrowserAnimationsModule,
+    MatSnackBarModule
   ],
   providers: [],
   bootstrap: [AppComponent]

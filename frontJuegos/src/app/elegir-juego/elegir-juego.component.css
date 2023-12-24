@@ -1,0 +1,12 @@
+.btn { 
+    background-color: rgb(0, 81, 255);
+}
+
+.btn img {
+    max-width: 500px;
+    height: auto;
+}
+
+.btn:hover, .btn img:hover {
+    background-color: blueviolet;
+}

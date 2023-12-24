@@ -1,10 +1,15 @@
 package edu.uclm.esi.tysweb2023.http;
 
 
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,21 +30,28 @@ import jakarta.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping("users")
+@CrossOrigin(origins="http://localhost:4200", allowCredentials = "true", allowedHeaders = "*")
 public class UserController {
 	
 	@Autowired
 	private UserService userService;
+	public static ConcurrentHashMap<String, HttpSession> httpSessions = new ConcurrentHashMap<>();
 	
-	@PutMapping("/login")
-	public void login(HttpSession session, @RequestBody Map<String, String> info) {
+	@PostMapping("/login")
+	public Map<String, Object> login(HttpSession session, @RequestBody Map<String, String> info) {
 		String email = info.get("email").trim();
 		String pwd = info.get("pwd").trim();
 		User user = this.userService.login(email, pwd);
 		if (user==null) 
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Credenciales inválidas");
-		session.setAttribute("idUser", user.getId());
+		session.setAttribute("user", user);
+		Map<String, Object> result = new HashMap<>();
+		result.put("httpId", session.getId());
+		httpSessions.put(session.getId(),session);
+		return result;
 	}
 	
+
 	@PostMapping("/register")
 	public void register(@RequestBody Map<String,String> info) {
 		String nombre = info.get("nombre").trim();
