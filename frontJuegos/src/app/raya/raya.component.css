@@ -1,5 +1,5 @@
 .tablero, .chat {
-    background-color: #007BFF;
+    background-color: #007BFF !important;
     border: 15px solid #0056b3;
     border-radius: 15px;
     box-shadow: 0 0 20px rgba(0,0,0,0.5);
@@ -53,4 +53,9 @@
   
 .celda.O:before {
     background-color: rgb(0, 68, 255); /* Color para el jugador O */
+}
+
+.custom-snackbar {
+    background: blueviolet;
+    color: white;
 }

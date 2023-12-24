@@ -10,7 +10,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { LoginComponent } from './login/login.component';
 import { ElegirJuegoComponent } from './elegir-juego/elegir-juego.component';
 import { SalaDeEsperaComponent } from './sala-de-espera/sala-de-espera.component';
-
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,9 @@ import { SalaDeEsperaComponent } from './sala-de-espera/sala-de-espera.component
     BrowserModule,
     AppRoutingModule,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    BrowserAnimationsModule,
+    MatSnackBarModule
   ],
   providers: [],
   bootstrap: [AppComponent]

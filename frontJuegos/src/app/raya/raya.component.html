@@ -1,12 +1,12 @@
 <div class="container">
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-12 col-md-6">
             <div class="chat">
 
             </div>
         </div>
-        <div class="col-md-6">           
-            <div class="tablero">
+        <div class="col-12 col-md-6">           
+            <div class="tablero" id="tablero">
                 <div *ngFor="let fila of partida.celdas; let i = index" class="fila">
                   <div *ngFor="let celda of fila; let j = index" 
                        class="celda" 

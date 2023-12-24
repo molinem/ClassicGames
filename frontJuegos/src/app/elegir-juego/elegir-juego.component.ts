@@ -28,15 +28,7 @@ export class ElegirJuegoComponent {
         
         this.http_id = jsonObj.httpId;
         this.id_partida = jsonObj.tablero.id;
-        
-        this.ws_tablero.connect("ws://localhost:8080/wsTablero");
-        this.ws_tablero.messages.subscribe(msg => {
-          const data = JSON.parse(JSON.stringify(msg));
-          
-          if(data.type = "START"){
-            console.log("Todo listo")
-          }
-        });
+
         this.router.navigate(['4EnRaya']);
 
       },
