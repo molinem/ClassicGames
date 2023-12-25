@@ -77,7 +77,6 @@ public class MatchController {
 	public Tablero poner(HttpSession session, @RequestBody Map<String,Object> info) {
 		String id = info.get("id").toString();
 		User user = (User) session.getAttribute("user");
-		WebSocketSession ws =  user.getSesionWS().getSession();
 		return this.matchService.poner(id, info, user.getId());
 	}
 	

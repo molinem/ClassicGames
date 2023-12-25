@@ -22,22 +22,22 @@ export class RayaComponent implements AfterViewInit {
   partida:raya
   columnaHover: number | null = null;
   jugadorActual: string = 'X';
-  id_partida_curso: string="";
+  id_partida_curso: string;
   http_id: string="";
+  es_mi_turno: boolean;
 
   ws_tablero!: WebsocketService;
 
   constructor(private matchService : MatchService, private renderer: Renderer2, private el: ElementRef, private snackBar: MatSnackBar, private router: Router){
     this.partida = new raya
     this.ws_tablero = new WebsocketService
+    this.es_mi_turno = false;
+    this.id_partida_curso = "";
   }
 
   ngOnInit() : void {
     this.ws_tablero.connect("ws://localhost:8080/wsTablero");
-
-    const currentNavigation = this.router.getCurrentNavigation();
     const estado = history.state;
-    
     if (estado) {
       this.id_partida_curso = estado['id_partida'];
     }
@@ -62,6 +62,7 @@ export class RayaComponent implements AfterViewInit {
 
   
   seleccionarColumna(columnaIndex: number): void {
+
     /*
     for (let i = this.partida.celdas.length - 1; i >= 0; i--) {
       if (this.partida.celdas[i][columnaIndex] === '.') {
@@ -71,26 +72,36 @@ export class RayaComponent implements AfterViewInit {
       }
     }*/
 
-    /*
-    this.matchService.ponerFicha4R(this.id_partida,columnaIndex).subscribe(
+    this.matchService.obtenerTurnoPartida4R(this.id_partida_curso).subscribe(
       result =>{
-      console.log(JSON.stringify(result));
+        if(result){
+          this.es_mi_turno = true;
+        }
+        if(this.es_mi_turno == true){
+          this.matchService.ponerFicha4R(this.id_partida_curso,columnaIndex).subscribe(
+            result =>{
+            console.log(JSON.stringify(result));
+            },
+            error => {
+              alert(error)
+            }
+          );
+        }else{
+          const message = "No es tu turno";
+          this.enviarNotificacion(message, 5000);
+        }
       },
       error => {
-        alert(error)
-      });
-      */
+        console.log("[ObtenerTurnoPartida4R] > Se ha producido un error: "+ error);
+      }
+    );
 
-      this.matchService.obtenerTurnoPartida4R(this.id_partida_curso).subscribe(
-        result =>{
-        console.log(JSON.stringify(result));
-        },
-        error => {
-          alert(error)
-        });
+    
 
     console.log("Columna seleccionada:", columnaIndex);
   }
+
+
 
   mouseOverColumna(columnaIndex: number): void {
     this.columnaHover = columnaIndex;
