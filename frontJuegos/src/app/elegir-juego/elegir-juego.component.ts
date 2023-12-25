@@ -29,7 +29,14 @@ export class ElegirJuegoComponent {
         this.http_id = jsonObj.httpId;
         this.id_partida = jsonObj.tablero.id;
 
-        this.router.navigate(['4EnRaya']);
+        this.router.navigate(
+          ['4EnRaya'], 
+          { 
+            state: { 
+              id_partida: this.id_partida
+            } 
+          }
+        );
 
       },
       error => {

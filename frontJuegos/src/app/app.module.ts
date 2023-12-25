@@ -12,6 +12,7 @@ import { ElegirJuegoComponent } from './elegir-juego/elegir-juego.component';
 import { SalaDeEsperaComponent } from './sala-de-espera/sala-de-espera.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -25,6 +26,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
   imports: [
     BrowserModule,
     AppRoutingModule,
+    FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
     BrowserAnimationsModule,
