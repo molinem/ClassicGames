@@ -3,6 +3,9 @@ package edu.uclm.esi.tysweb2023.model;
 import java.security.SecureRandom;
 import java.util.Map;
 import java.util.Random;
+
+import org.json.JSONArray;
+
 import edu.uclm.esi.tysweb2023.exceptions.MovimientoIlegalException;
 
 
@@ -21,7 +24,18 @@ public class Tablero4R extends Tablero{
 	public char[][] getCasillas() {
 		return casillas;
 	}
-
+	
+	public JSONArray mostrarCasillas() {
+		JSONArray jso = new JSONArray();
+        for (int i = 0; i < casillas.length; i++) {
+            JSONArray jsonRow = new JSONArray();
+            for (int j = 0; j < casillas[i].length; j++) {
+                jsonRow.put(Character.toString(casillas[i][j]));
+            }
+            jso.put(jsonRow);
+        }
+        return jso;
+	}
 
 	public void poner(Map<String, Object> movimiento, String idUser) throws MovimientoIlegalException {
 		

@@ -100,6 +100,17 @@ public class MatchService {
 		}
 	}
 	
+	public void notificarMovimiento(String idPartida, JSONObject jso) throws Exception {	
+		List<User> jugadoresPartida = this.findMatch(idPartida).getPlayers();
+		
+		for (User player : jugadoresPartida) {
+			try {
+				player.sendMessage(jso);
+			} catch (IOException e) {
+				throw new Exception("[Notificar Estado] Se ha producido el siguiente error: " + e.getMessage());
+			}
+		}	
+	}
 	
 	
 }

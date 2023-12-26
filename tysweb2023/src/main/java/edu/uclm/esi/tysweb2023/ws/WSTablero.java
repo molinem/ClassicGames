@@ -10,6 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.BinaryMessage;
@@ -19,7 +20,10 @@ import org.springframework.web.socket.WebSocketMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
+import edu.uclm.esi.tysweb2023.http.UserController;
+import edu.uclm.esi.tysweb2023.model.User;
 import edu.uclm.esi.tysweb2023.services.MatchService;
+import jakarta.servlet.http.HttpSession;
 
 @Component
 public class WSTablero extends TextWebSocketHandler {
@@ -28,9 +32,7 @@ public class WSTablero extends TextWebSocketHandler {
 	private ConcurrentHashMap<String, SesionWS> sessionsByNombre = new ConcurrentHashMap<>();
 	private ConcurrentHashMap<String, SesionWS> sessionsById = new ConcurrentHashMap<>();
 	
-	@Override
-	public void afterConnectionEstablished(WebSocketSession session) throws Exception{
-		
+	public String obtenerHttpId(WebSocketSession session) {
 		HttpHeaders headers = session.getHandshakeHeaders();
 		Collection<List<String>> values = headers.values();
 		String httpSessionId = null;
@@ -41,11 +43,16 @@ public class WSTablero extends TextWebSocketHandler {
 					break;
 				}
 			}
-
 			if (httpSessionId!=null)
 				break;
 		}
-
+		return httpSessionId;
+	}
+	
+	@Override
+	public void afterConnectionEstablished(WebSocketSession session) throws Exception{
+				
+		String httpSessionId = obtenerHttpId(session);
 		ManagerWS.get().setWebsocketSession(httpSessionId, session);
 		
 		//prueba
@@ -53,7 +60,6 @@ public class WSTablero extends TextWebSocketHandler {
 		jso.put("message", "prueba desde el servidor");
 		WebSocketMessage<?> message = new TextMessage(jso.toString());
 		session.sendMessage(message);*/
-
 	}
 	
 		
@@ -64,6 +70,30 @@ public class WSTablero extends TextWebSocketHandler {
 		
 		if (type.equals("MOVEMENT")) {
 			String matchId = jso.getString("matchId");
+			int columna = jso.getInt("col");
+			
+			//Sacar de la session el nombre del jugador
+			String httpSessionId = obtenerHttpId(session);
+			HttpSession hs =  UserController.httpSessions.get(httpSessionId);
+			User user = (User) hs.getAttribute("user");
+			System.out.println("Movimiento realizado por: "+user.getNombre());
+			
+			//Match update
+			MatchService ms =  ManagerWS.get().getMatchService();
+			//System.out.println("Quien recibe la actualización "+obtenerSiguienteNombre(ms.findMatch(matchId).getPlayers(),user.getNombre()));
+			//System.out.println(ms.findMatch(matchId).mostrarCasillas());
+			
+			String personaActualizarTablero = obtenerSiguienteNombre(ms.findMatch(matchId).getPlayers(),user.getNombre());
+			JSONArray tablero = ms.findMatch(matchId).mostrarCasillas();
+			//ManagerWS.get().getMatchService().notificarEstado(type, matchId);
+			jso = new JSONObject();
+			jso.put("type", "MATCH UPDATE");
+			jso.put("player", personaActualizarTablero);
+			jso.put("matchId", matchId);
+			jso.put("board", tablero);
+			
+			ms.notificarMovimiento(matchId, jso);
+			
 		}
 	
 	}
@@ -107,4 +137,14 @@ public class WSTablero extends TextWebSocketHandler {
 	@Override
 	public void handleTransportError(WebSocketSession session, Throwable exception) throws Exception {
 	}
+	
+	private static String obtenerSiguienteNombre(List<User> list, String nombreBuscado) {
+		String nombre = "";
+        if (list.get(0).getNombre().equals(nombreBuscado)){
+        	nombre = list.get(1).getNombre();
+        }else {
+        	nombre = list.get(0).getNombre();
+        }
+        return nombre;
+    }
 }

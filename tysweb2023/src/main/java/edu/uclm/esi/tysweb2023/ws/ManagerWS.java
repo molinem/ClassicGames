@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketSession;
 
 import edu.uclm.esi.tysweb2023.dao.UserDAO;
+import edu.uclm.esi.tysweb2023.services.MatchService;
 import jakarta.servlet.http.HttpSession;
 
 /**
@@ -18,6 +19,9 @@ import jakarta.servlet.http.HttpSession;
 public class ManagerWS {
 	@Autowired
 	private UserDAO userDAO;
+	
+	@Autowired
+	private MatchService matchService;
 	
 	private ConcurrentHashMap<String, SesionWS> sessionsByUserId;
 	private ConcurrentHashMap<String, SesionWS> sessionsByHttpId;
@@ -38,20 +42,28 @@ public class ManagerWS {
 		return ManagerHolder.singleton;
 	}
 	
+	public MatchService getMatchService(){
+		return this.matchService;
+	}
+	
 	public UserDAO getUserDAO() {
 		return userDAO;
 	}
 	
 	public void addSessionByUserId(String userId, HttpSession httpSession) {
 		SesionWS hwSession = new SesionWS(httpSession);
-		this.sessionsByUserId.put(userId, hwSession);
-		this.sessionsByHttpId.put(httpSession.getId(), hwSession);
+		if(hwSession!= null) {
+			this.sessionsByUserId.put(userId, hwSession);
+			this.sessionsByHttpId.put(httpSession.getId(), hwSession);
+		}
 	}
 	
 	public void setWebsocketSession(String httpSessionId, WebSocketSession websocketSession) {
 		SesionWS hwSession = this.sessionsByHttpId.get(httpSessionId);
-		hwSession.setWebsocketSession(websocketSession);
-		this.sessionsByWsId.put(websocketSession.getId(), hwSession);
+		if(hwSession!= null) {
+			hwSession.setWebsocketSession(websocketSession);
+			this.sessionsByWsId.put(websocketSession.getId(), hwSession);
+		}
 	}
 	
 	public SesionWS getSessionByUserId(String userId) {

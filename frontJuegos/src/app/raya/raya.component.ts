@@ -25,13 +25,17 @@ export class RayaComponent implements AfterViewInit {
   id_partida_curso: string;
   http_id: string="";
   es_mi_turno: boolean;
+  notificado: boolean;
+  columnaSeleccionada: number = 0;
 
   ws_tablero!: WebsocketService;
+
 
   constructor(private matchService : MatchService, private renderer: Renderer2, private el: ElementRef, private snackBar: MatSnackBar, private router: Router){
     this.partida = new raya
     this.ws_tablero = new WebsocketService
     this.es_mi_turno = false;
+    this.notificado = false;
     this.id_partida_curso = "";
   }
 
@@ -53,9 +57,10 @@ export class RayaComponent implements AfterViewInit {
     this.ws_tablero.messages.subscribe(msg => {
       const data = JSON.parse(JSON.stringify(msg));
       console.log(msg)
-      if(data.type = "START"){
+      if(data.type = "START" && !this.notificado ){
         const message = "El jugador "+ data.player_2 + " ha entrado a la partida";
         this.enviarNotificacion(message, 5000);
+        this.notificado = true;
       }
     });
   }
@@ -71,16 +76,29 @@ export class RayaComponent implements AfterViewInit {
         break;
       }
     }*/
+    
+    this.columnaSeleccionada = columnaIndex;
 
     this.matchService.obtenerTurnoPartida4R(this.id_partida_curso).subscribe(
       result =>{
         if(result){
           this.es_mi_turno = true;
+        }else{
+          this.es_mi_turno = false;
         }
+
         if(this.es_mi_turno == true){
-          this.matchService.ponerFicha4R(this.id_partida_curso,columnaIndex).subscribe(
+          this.matchService.ponerFicha4R(this.id_partida_curso,this.columnaSeleccionada).subscribe(
             result =>{
-            console.log(JSON.stringify(result));
+              console.log(JSON.stringify(result));
+              
+              let msg_movimiento = {
+                type : "MOVEMENT",
+                col: this.columnaSeleccionada,
+                matchId : this.id_partida_curso
+              }
+              this.ws_tablero.sendMessage(msg_movimiento);
+              //Pintar movimiento de este jugador
             },
             error => {
               alert(error)
@@ -95,12 +113,7 @@ export class RayaComponent implements AfterViewInit {
         console.log("[ObtenerTurnoPartida4R] > Se ha producido un error: "+ error);
       }
     );
-
-    
-
-    console.log("Columna seleccionada:", columnaIndex);
   }
-
 
 
   mouseOverColumna(columnaIndex: number): void {
