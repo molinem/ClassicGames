@@ -93,7 +93,6 @@ public class WSTablero extends TextWebSocketHandler {
 			jso.put("board", tablero);
 			
 			ms.notificarMovimiento(matchId, jso);
-			
 		}
 	
 	}

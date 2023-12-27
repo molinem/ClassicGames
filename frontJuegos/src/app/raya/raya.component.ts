@@ -57,10 +57,9 @@ export class RayaComponent implements AfterViewInit {
     this.ws_tablero.messages.subscribe(msg => {
       const data = JSON.parse(JSON.stringify(msg));
       console.log(msg)
-      if(data.type = "START" && !this.notificado ){
+      if(data.type == "START"){
         const message = "El jugador "+ data.player_2 + " ha entrado a la partida";
         this.enviarNotificacion(message, 5000);
-        this.notificado = true;
       }
     });
   }
