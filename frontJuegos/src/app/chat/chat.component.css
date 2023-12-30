@@ -1,0 +1,22 @@
+.mensajes-container {
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.mensaje {
+  border-bottom: 1px solid #ccc;
+  padding: 10px;
+}
+
+.mensaje-autor {
+  font-weight: bold;
+}
+
+.mensaje-contenido {
+  margin-left: 20px;
+}
+
+.mensaje-timestamp {
+  text-align: right;
+  font-size: 0.8em;
+}
