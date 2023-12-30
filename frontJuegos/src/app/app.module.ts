@@ -13,6 +13,7 @@ import { SalaDeEsperaComponent } from './sala-de-espera/sala-de-espera.component
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { FormsModule } from '@angular/forms';
+import { ChatComponent } from './chat/chat.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import { FormsModule } from '@angular/forms';
     RegisterComponent,
     LoginComponent,
     ElegirJuegoComponent,
-    SalaDeEsperaComponent
+    SalaDeEsperaComponent,
+    ChatComponent
   ],
   imports: [
     BrowserModule,
