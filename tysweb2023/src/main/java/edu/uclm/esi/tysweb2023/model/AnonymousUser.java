@@ -9,4 +9,5 @@ public class AnonymousUser extends User {
 	 super();
 	 this.setNombre("Invitado"+ new Random().nextInt(101));
  }
+ 
 }

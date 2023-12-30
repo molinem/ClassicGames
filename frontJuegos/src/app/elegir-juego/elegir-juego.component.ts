@@ -14,6 +14,7 @@ export class ElegirJuegoComponent {
   ws_tablero!: WebsocketService;
   id_partida: string="";
   http_id: string="";
+  nick_jugador: string="";
 
   constructor(private matchService : MatchService, private router: Router){
     this.ws_tablero = new WebsocketService

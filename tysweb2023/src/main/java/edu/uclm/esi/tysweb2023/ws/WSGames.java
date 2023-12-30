@@ -60,7 +60,7 @@ public class WSGames extends TextWebSocketHandler {
 	@Override
 	protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
 		JSONObject jso = new JSONObject(message.getPayload());
-		String tipo = jso.getString("tipo");
+		String tipo = jso.getString("type");
 		if (tipo.equals("IDENT")) {
 			String nombre = jso.getString("nombre");
 			
@@ -102,8 +102,9 @@ public class WSGames extends TextWebSocketHandler {
 	}
 	
 	private void bienvenida(WebSocketSession sessionDelTipoQueAcabaDeLlegar) {
-		JSONObject jso = new JSONObject()
-				.put("tipo", "BIENVENIDA");
+		JSONObject jso = new JSONObject();
+		jso.put("tipo", "BIENVENIDA");
+		
 		JSONArray jsaUsuarios = new JSONArray();
 		
 		Collection<SesionWS> usuariosConectados = this.sessionsByNombre.values();

@@ -126,7 +126,7 @@ public class WSTablero extends TextWebSocketHandler {
 		//SesionWS sesionWS = this.sessionsById.remove(session.getId());
 		//this.sessionsByNombre.remove(sesionWS.getNombre());
 		SesionWS hwSession = ManagerWS.get().getSessionByWebSocketId(session.getId());
-		hwSession.setWebsocketSession(null);
+		//hwSession.setWebsocketSession(null);
 	}
 
 	@Override

@@ -57,7 +57,6 @@ public class MatchController {
 			result.put("tablero", tableroJuego);
 			
 			UserController.httpSessions.put(session.getId(), session);
-						
 			ManagerWS.get().addSessionByUserId(user.getId(), session);
 			
 			//¿Partida lista?

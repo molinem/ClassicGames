@@ -24,6 +24,7 @@ export class RayaComponent implements AfterViewInit {
   jugadorActual: string = 'X';
   id_partida_curso: string;
   http_id: string="";
+  nick_jugador: string;
   es_mi_turno: boolean;
   notificado: boolean;
   columnaSeleccionada: number = 0;
@@ -37,6 +38,7 @@ export class RayaComponent implements AfterViewInit {
     this.es_mi_turno = false;
     this.notificado = false;
     this.id_partida_curso = "";
+    this.nick_jugador = "";
   }
 
   ngOnInit() : void {
