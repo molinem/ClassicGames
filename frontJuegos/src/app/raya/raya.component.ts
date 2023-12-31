@@ -43,9 +43,11 @@ export class RayaComponent implements AfterViewInit {
   }
 
   ngOnInit() : void {
-    this.ws_tablero.connect("ws://localhost:8080/wsTablero");
     const estado = history.state;
-    if (estado) {
+    if (!estado || !estado['id_partida']) {
+      this.router.navigate(['/ElegirJuego']);
+    }else{
+      this.ws_tablero.connect("ws://localhost:8080/wsTablero");
       this.id_partida_curso = estado['id_partida'];
     }
   }
