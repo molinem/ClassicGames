@@ -60,7 +60,7 @@ public class ManagerWS {
 	
 	public void setWebsocketSession(String httpSessionId, WebSocketSession websocketSession) {
 		SesionWS hwSession = this.sessionsByHttpId.get(httpSessionId);
-		if(hwSession!= null) {
+		if(hwSession!= null && websocketSession != null) {
 			hwSession.setWebsocketSession(websocketSession);
 			this.sessionsByWsId.put(websocketSession.getId(), hwSession);
 		}

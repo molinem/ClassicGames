@@ -78,9 +78,21 @@ public class MatchController {
 	}
 	
 	@GetMapping("/meToca")
-	public boolean meToca(HttpSession session,@RequestParam String id) {
-		User user = (User) session.getAttribute("user");	
+	public int meToca(HttpSession session,@RequestParam String id) {
+		/* 0 -> Es tu turno
+		 * 1 -> No es tu turno
+		 * 2 -> Partida no lista   
+		*/
+		int control = 2; 
+		User user = (User) session.getAttribute("user");
 		Tablero result = this.matchService.findMatch(id);
-		return result.getJugadorConElTurno().getId().equals(user.getId());
+		if(result != null) {
+			if(result.getJugadorConElTurno().getId().equals(user.getId())) {
+				control = 0;
+			}else {
+				control = 1;
+			}
+		}
+		return control;
 	}
 }

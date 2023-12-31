@@ -25,9 +25,10 @@ export class RayaComponent implements AfterViewInit {
   id_partida_curso: string;
   http_id: string="";
   nick_jugador: string;
-  es_mi_turno: boolean;
+  es_mi_turno: number;
   notificado: boolean;
   columnaSeleccionada: number = 0;
+  mensaje_notificacion: string="";
 
   ws_tablero!: WebsocketService;
 
@@ -35,7 +36,7 @@ export class RayaComponent implements AfterViewInit {
   constructor(private matchService : MatchService, private renderer: Renderer2, private el: ElementRef, private snackBar: MatSnackBar, private router: Router){
     this.partida = new raya
     this.ws_tablero = new WebsocketService
-    this.es_mi_turno = false;
+    this.es_mi_turno = 0;
     this.notificado = false;
     this.id_partida_curso = "";
     this.nick_jugador = "";
@@ -68,7 +69,6 @@ export class RayaComponent implements AfterViewInit {
 
   
   seleccionarColumna(columnaIndex: number): void {
-
     /*
     for (let i = this.partida.celdas.length - 1; i >= 0; i--) {
       if (this.partida.celdas[i][columnaIndex] === '.') {
@@ -82,13 +82,14 @@ export class RayaComponent implements AfterViewInit {
 
     this.matchService.obtenerTurnoPartida4R(this.id_partida_curso).subscribe(
       result =>{
-        if(result){
-          this.es_mi_turno = true;
-        }else{
-          this.es_mi_turno = false;
-        }
-
-        if(this.es_mi_turno == true){
+        /* 0 -> Es tu turno
+		     * 1 -> No es tu turno
+		     * 2 -> Partida no lista   
+		    */
+        this.es_mi_turno = result;
+        
+        //Es mi turno
+        if(this.es_mi_turno == 0){
           this.matchService.ponerFicha4R(this.id_partida_curso,this.columnaSeleccionada).subscribe(
             result =>{
               console.log(JSON.stringify(result));
@@ -102,12 +103,19 @@ export class RayaComponent implements AfterViewInit {
               //Pintar movimiento de este jugador
             },
             error => {
-              alert(error)
+              console.log("[PonerFicha4R] Se ha producido el siguiente error: " + error);
             }
           );
         }else{
-          const message = "No es tu turno";
-          this.enviarNotificacion(message, 5000);
+          //No es mi turno
+          if(this.es_mi_turno == 1){
+            this.mensaje_notificacion = "No es tu turno";
+            this.enviarNotificacion(this.mensaje_notificacion, 5000);
+          }else{
+            this.mensaje_notificacion = "La partida no está lista";
+            this.enviarNotificacion(this.mensaje_notificacion, 5000);
+          }
+          
         }
       },
       error => {
