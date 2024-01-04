@@ -32,6 +32,8 @@ export class RayaComponent implements AfterViewInit {
 
   ws_tablero!: WebsocketService;
 
+  cadena: String="";
+  elementos: string[] = [];
 
   constructor(private matchService : MatchService, private renderer: Renderer2, private el: ElementRef, private snackBar: MatSnackBar, private router: Router){
     this.partida = new raya
@@ -62,9 +64,43 @@ export class RayaComponent implements AfterViewInit {
     this.ws_tablero.messages.subscribe(msg => {
       const data = JSON.parse(JSON.stringify(msg));
       console.log(msg)
+      /*
       if(data.type == "START"){
         const message = "El jugador "+ data.player_2 + " ha entrado a la partida";
         this.enviarNotificacion(message, 5000);
+      }
+      */
+      switch(data.type){
+        case "START":
+          const message = "El jugador "+ data.player_2 + " ha entrado a la partida";
+          this.enviarNotificacion(message, 5000);
+          break;
+        case "MATCH UPDATE":
+          console.log("Tablero actualizado: "+data.board);
+          this.cadena = String(data.board);
+          this.elementos = this.cadena.split(',').map(elemento => elemento);
+
+          this.elementos.forEach((elemento, index) => {
+            let valor: string;
+            switch(elemento) {
+              case ' ':
+                valor = '.';
+                break;
+              case 'R':
+                valor = 'X';
+                break;
+              case 'A':
+                valor = 'O';
+                break;
+              default:
+                valor = elemento;
+                break;
+            }
+            const fila = Math.floor(index / 7);
+            const columna = index % 7;
+            this.partida.celdas[fila][columna] = valor;
+          });
+          break;  
       }
     });
   }

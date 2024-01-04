@@ -81,9 +81,9 @@ public class MatchController {
 	public int meToca(HttpSession session,@RequestParam String id) {
 		/* 0 -> Es tu turno
 		 * 1 -> No es tu turno
-		 * 2 -> Partida no lista   
+		 * 2 -> Partida no lista
 		*/
-		int control = 2; 
+		int control = 2;
 		User user = (User) session.getAttribute("user");
 		Tablero result = this.matchService.findMatch(id);
 		if(result != null) {
