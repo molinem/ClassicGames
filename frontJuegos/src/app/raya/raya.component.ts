@@ -60,62 +60,49 @@ export class RayaComponent implements AfterViewInit {
     });
   }
 
+  actualizarTablero(data:any) : void{
+    this.cadena = String(data.board);
+    this.elementos = this.cadena.split(',').map(elemento => elemento);
+
+    this.elementos.forEach((elemento, index) => {
+      let valor: string;
+      switch(elemento) {
+        case ' ':
+          valor = '.';
+          break;
+        case 'R':
+          valor = 'X';
+          break;
+        case 'A':
+          valor = 'O';
+          break;
+        default:
+          valor = elemento;
+          break;
+      }
+      const fila = Math.floor(index / 7);
+      const columna = index % 7;
+      this.partida.celdas[fila][columna] = valor;
+    });
+  }
+
   ngAfterViewInit() {
     this.ws_tablero.messages.subscribe(msg => {
       const data = JSON.parse(JSON.stringify(msg));
-      console.log(msg)
-      /*
-      if(data.type == "START"){
-        const message = "El jugador "+ data.player_2 + " ha entrado a la partida";
-        this.enviarNotificacion(message, 5000);
-      }
-      */
+      console.log(msg);
       switch(data.type){
         case "START":
           const message = "El jugador "+ data.player_2 + " ha entrado a la partida";
           this.enviarNotificacion(message, 5000);
           break;
         case "MATCH UPDATE":
-          console.log("Tablero actualizado: "+data.board);
-          this.cadena = String(data.board);
-          this.elementos = this.cadena.split(',').map(elemento => elemento);
-
-          this.elementos.forEach((elemento, index) => {
-            let valor: string;
-            switch(elemento) {
-              case ' ':
-                valor = '.';
-                break;
-              case 'R':
-                valor = 'X';
-                break;
-              case 'A':
-                valor = 'O';
-                break;
-              default:
-                valor = elemento;
-                break;
-            }
-            const fila = Math.floor(index / 7);
-            const columna = index % 7;
-            this.partida.celdas[fila][columna] = valor;
-          });
+          this.actualizarTablero(data);
           break;  
       }
     });
   }
-
   
-  seleccionarColumna(columnaIndex: number): void {
-    /*
-    for (let i = this.partida.celdas.length - 1; i >= 0; i--) {
-      if (this.partida.celdas[i][columnaIndex] === '.') {
-        this.partida.celdas[i][columnaIndex] = this.jugadorActual;
-        this.jugadorActual = this.jugadorActual === 'X' ? 'O' : 'X';
-        break;
-      }
-    }*/
-    
+  seleccionarColumna(columnaIndex: number): void {   
     this.columnaSeleccionada = columnaIndex;
 
     this.matchService.obtenerTurnoPartida4R(this.id_partida_curso).subscribe(
@@ -129,16 +116,13 @@ export class RayaComponent implements AfterViewInit {
         //Es mi turno
         if(this.es_mi_turno == 0){
           this.matchService.ponerFicha4R(this.id_partida_curso,this.columnaSeleccionada).subscribe(
-            result =>{
-              console.log(JSON.stringify(result));
-              
+            result =>{             
               let msg_movimiento = {
                 type : "MOVEMENT",
                 col: this.columnaSeleccionada,
                 matchId : this.id_partida_curso
               }
               this.ws_tablero.sendMessage(msg_movimiento);
-              //Pintar movimiento de este jugador
             },
             error => {
               console.log("[PonerFicha4R] Se ha producido el siguiente error: " + error);
