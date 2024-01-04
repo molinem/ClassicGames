@@ -59,7 +59,7 @@ public class Tablero4R extends Tablero{
 			throw new MovimientoIlegalException("La columna está llena");
 		
 		for (int i=5; i>=0; i--) {
-			if(this.casillas[i][columna]=='\0')
+			if(this.casillas[i][columna]=='\0') {
 				this.casillas[i][columna] = this.ultimoColor;
 				this.ultimoColor = this.ultimoColor=='R' ? 'A' : 'R';
 				
@@ -68,8 +68,8 @@ public class Tablero4R extends Tablero{
 				} else {
 				    this.jugadorConElTurno = this.players.get(0);
 				}
-				
 				break;
+			}
 		}
 		
 	}
