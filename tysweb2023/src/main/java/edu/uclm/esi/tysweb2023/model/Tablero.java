@@ -59,4 +59,6 @@ public abstract class Tablero {
 	public abstract void poner(Map<String,Object> movimiento, String idUser) throws MovimientoIlegalException;
 	public abstract char[][] getCasillas();
 	public abstract JSONArray mostrarCasillas();
+	public abstract char getGanador();
+	public abstract char getUltimoColor();
 }

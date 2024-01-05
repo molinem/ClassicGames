@@ -63,6 +63,7 @@ public class MatchService {
 		}
 		try {
 			tablero.poner(movimiento, idUser);
+			
 		}catch(MovimientoIlegalException e) {
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
 		}
@@ -74,13 +75,15 @@ public class MatchService {
 	}
 	
 	public void notificarEstado(String tipoMensaje, String idPartida) throws Exception {
-		List<User> jugadoresPartida = this.findMatch(idPartida).getPlayers();
+		Tablero tb = this.findMatch(idPartida);
+		List<User> jugadoresPartida = tb.getPlayers();
 		JSONObject jso = new JSONObject();
+		
 		jso.put("type", tipoMensaje);
 		jso.put("matchId", idPartida);
 		jso.put("player_1", jugadoresPartida.get(0).getNombre());
 		jso.put("player_2", jugadoresPartida.get(1).getNombre());
-		jso.put("playerWithTurn", this.findMatch(idPartida).getJugadorConElTurno().getNombre());
+		jso.put("playerWithTurn", tb.getJugadorConElTurno().getNombre());
 
 		
 		if (tipoMensaje.contentEquals("START")) {
@@ -89,14 +92,31 @@ public class MatchService {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-		} else {
-			for (User player : jugadoresPartida) {
-				try {
-					player.sendMessage(jso);
-				} catch (IOException e) {
-					throw new Exception("[Notificar Estado] Se ha producido el siguiente error: " + e.getMessage());
-				}
-			}	
+		}else if(tipoMensaje.contentEquals("WINNER")) {
+			JSONObject jsoWinner = new JSONObject();
+			jsoWinner.put("type", tipoMensaje);
+			jsoWinner.put("winner", this.findMatch(idPartida).getGanador());
+			String nick_ganador="";
+			
+			if (tb.getUltimoColor() == 'R') {
+				nick_ganador = jugadoresPartida.get(0).getNombre();
+			}else {
+				nick_ganador = jugadoresPartida.get(1).getNombre();
+			}
+			jsoWinner.put("ganador", nick_ganador);
+			difundirMsg(jsoWinner,jugadoresPartida);
+		}else {
+			difundirMsg(jso,jugadoresPartida);
+		}
+	}
+	
+	private void difundirMsg(JSONObject jsa, List<User> jugadoresPartida ) throws Exception {
+		for (User player : jugadoresPartida) {
+			try {
+				player.sendMessage(jsa);
+			} catch (IOException e) {
+				throw new Exception("[Notificar Estado] Se ha producido el siguiente error: " + e.getMessage());
+			}
 		}
 	}
 	

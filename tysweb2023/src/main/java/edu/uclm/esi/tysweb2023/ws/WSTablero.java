@@ -50,16 +50,9 @@ public class WSTablero extends TextWebSocketHandler {
 	}
 	
 	@Override
-	public void afterConnectionEstablished(WebSocketSession session) throws Exception{
-				
+	public void afterConnectionEstablished(WebSocketSession session) throws Exception{				
 		String httpSessionId = obtenerHttpId(session);
 		ManagerWS.get().setWebsocketSession(httpSessionId, session);
-		
-		//prueba
-		/*JSONObject jso = new JSONObject();
-		jso.put("message", "prueba desde el servidor");
-		WebSocketMessage<?> message = new TextMessage(jso.toString());
-		session.sendMessage(message);*/
 	}
 	
 		
@@ -76,16 +69,12 @@ public class WSTablero extends TextWebSocketHandler {
 			String httpSessionId = obtenerHttpId(session);
 			HttpSession hs =  UserController.httpSessions.get(httpSessionId);
 			User user = (User) hs.getAttribute("user");
-			System.out.println("Movimiento realizado por: "+user.getNombre());
 			
 			//Match update
 			MatchService ms =  ManagerWS.get().getMatchService();
-			//System.out.println("Quien recibe la actualización "+obtenerSiguienteNombre(ms.findMatch(matchId).getPlayers(),user.getNombre()));
-			//System.out.println(ms.findMatch(matchId).mostrarCasillas());
 			
 			String personaActualizarTablero = obtenerSiguienteNombre(ms.findMatch(matchId).getPlayers(),user.getNombre());
 			JSONArray tablero = ms.findMatch(matchId).mostrarCasillas();
-			//ManagerWS.get().getMatchService().notificarEstado(type, matchId);
 			jso = new JSONObject();
 			jso.put("type", "MATCH UPDATE");
 			jso.put("player", personaActualizarTablero);

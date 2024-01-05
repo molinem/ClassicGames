@@ -55,6 +55,7 @@ public class MatchController {
 			
 			Tablero tableroJuego = this.matchService.newMatch(user,juego);
 			result.put("tablero", tableroJuego);
+			result.put("nickJugador", user.getNombre());
 			
 			UserController.httpSessions.put(session.getId(), session);
 			ManagerWS.get().addSessionByUserId(user.getId(), session);
@@ -74,7 +75,17 @@ public class MatchController {
 	public Tablero poner(HttpSession session, @RequestBody Map<String,Object> info) {
 		String id = info.get("id").toString();
 		User user = (User) session.getAttribute("user");
-		return this.matchService.poner(id, info, user.getId());
+		Tablero tb = null;
+		if(this.matchService.findMatch(id).getGanador() == Character.MIN_VALUE) {
+			tb = this.matchService.poner(id, info, user.getId());
+		}else {
+			try {
+				this.matchService.notificarEstado("WINNER",id);
+			} catch (Exception e) {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST,e.getMessage());
+			}
+		}
+		return tb;
 	}
 	
 	@GetMapping("/meToca")

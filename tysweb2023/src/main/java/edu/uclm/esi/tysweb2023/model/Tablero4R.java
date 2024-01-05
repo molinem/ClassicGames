@@ -37,6 +37,14 @@ public class Tablero4R extends Tablero{
         return jso;
 	}
 
+	public char getGanador() {
+		return this.ganador;
+	}
+	
+	public char getUltimoColor() {
+		return this.ultimoColor;
+	}
+	
 	public void poner(Map<String, Object> movimiento, String idUser) throws MovimientoIlegalException {
 		
 		int columna = (int) movimiento.get("col");
@@ -58,9 +66,11 @@ public class Tablero4R extends Tablero{
 		if (col[0]!='\0')
 			throw new MovimientoIlegalException("La columna está llena");
 		
+		int filaRecienColocada = -1;
 		for (int i=5; i>=0; i--) {
 			if(this.casillas[i][columna]=='\0') {
 				this.casillas[i][columna] = this.ultimoColor;
+				filaRecienColocada = i;
 				this.ultimoColor = this.ultimoColor=='R' ? 'A' : 'R';
 				
 				if (this.jugadorConElTurno == this.players.get(0)) {
@@ -72,13 +82,55 @@ public class Tablero4R extends Tablero{
 			}
 		}
 		
-	}
-
-
-	private void comprobarFin() {
-		//this.ganador = this.ultimoColor;
+		if (filaRecienColocada != -1 && comprobarGanador(filaRecienColocada, columna)) {
+	        this.ganador = this.ultimoColor == 'R' ? 'A' : 'R'; // Ajustamos el color porque se cambió después de colocar la ficha
+	    }
 		
 	}
+
+
+	private boolean comprobarGanador(int filaRecienColocada, int columnaRecienColocada) {
+	    final int NUMERO_PARA_GANAR = 4;
+	    char ficha = this.casillas[filaRecienColocada][columnaRecienColocada];
+
+	    // Verificación horizontal
+	    int contador = 0;
+	    for (int j = 0; j < this.casillas[0].length; j++) {
+	        contador = (this.casillas[filaRecienColocada][j] == ficha) ? contador + 1 : 0;
+	        if (contador >= NUMERO_PARA_GANAR) return true;
+	    }
+
+	    // Verificación vertical
+	    contador = 0;
+	    for (int i = 0; i < this.casillas.length; i++) {
+	        contador = (this.casillas[i][columnaRecienColocada] == ficha) ? contador + 1 : 0;
+	        if (contador >= NUMERO_PARA_GANAR) return true;
+	    }
+
+	    // Verificación diagonal (de arriba izquierda a abajo derecha)
+	    contador = 0;
+	    for (int i = 0; i < this.casillas.length; i++) {
+	        int j = columnaRecienColocada - filaRecienColocada + i;
+	        if (j >= 0 && j < this.casillas[0].length) {
+	            contador = (this.casillas[i][j] == ficha) ? contador + 1 : 0;
+	            if (contador >= NUMERO_PARA_GANAR) return true;
+	        }
+	    }
+
+	    // Verificación diagonal (de abajo izquierda a arriba derecha)
+	    contador = 0;
+	    for (int i = this.casillas.length - 1; i >= 0; i--) {
+	        int j = columnaRecienColocada + filaRecienColocada - i;
+	        if (j >= 0 && j < this.casillas[0].length) {
+	            contador = (this.casillas[i][j] == ficha) ? contador + 1 : 0;
+	            if (contador >= NUMERO_PARA_GANAR) return true;
+	        }
+	    }
+
+	    // No se encontró ganador
+	    return false;
+	}
+
 
 	
 	public void iniciar() {

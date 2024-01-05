@@ -51,6 +51,7 @@ export class RayaComponent implements AfterViewInit {
     }else{
       this.ws_tablero.connect("ws://localhost:8080/wsTablero");
       this.id_partida_curso = estado['id_partida'];
+      this.nick_jugador = estado['nick_jugador'];
     }
   }
 
@@ -90,14 +91,19 @@ export class RayaComponent implements AfterViewInit {
     this.ws_tablero.messages.subscribe(msg => {
       const data = JSON.parse(JSON.stringify(msg));
       console.log(msg);
+      let message="";
       switch(data.type){
         case "START":
-          const message = "El jugador "+ data.player_2 + " ha entrado a la partida";
+          message = "El jugador "+ data.player_2 + " ha entrado a la partida";
           this.enviarNotificacion(message, 5000);
           break;
         case "MATCH UPDATE":
           this.actualizarTablero(data);
-          break;  
+          break;
+        case "WINNER":
+          message = "El jugador "+ data.ganador + " ha ganado";
+          this.enviarNotificacion(message, 10000);
+          break;
       }
     });
   }
