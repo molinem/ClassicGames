@@ -98,6 +98,9 @@ public class WSTablero extends TextWebSocketHandler {
 				jso.put("nickWinner", nick_ganador);
 			}
 			ms.notificarMovimiento(matchId, jso);
+		}else if (type.equals("WEATHER")) {
+			String nickUser = jso.getString("user");
+			String cdTiempo = jso.getString("tiempo");
 		}
 	}
 	

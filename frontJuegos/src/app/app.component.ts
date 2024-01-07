@@ -11,9 +11,9 @@ export class AppComponent {
   ws? :WebSocket
   position? : GeolocationPosition
 
-  constructor(private weath : WeatherService){ }
+  constructor(){ }
 
   ngOnInit(){
-    this.weath.obtenerElTiempo();
+
   }
 }

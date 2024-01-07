@@ -1,52 +1,70 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable, map } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class WeatherService {
-  position? : GeolocationPosition;
-  tempMax ?: number
-  tempMin ?: number
+  private apiKeyWeather: string = '26B976WW76VUTJA8WNM3MBDRZ';
+  private apiKeyCity: string = '6fe339460ff84c099d208718a1886fa4';
 
-  constructor() {
+  constructor(private http: HttpClient) {}
 
-  }
-
-  public obtenerElTiempo() : void{
-    let self = this
-    navigator.geolocation.getCurrentPosition(
-      position => {
-        this.position = position
-        //console.log("Latitud: " + position.coords.latitude + " Longitud: " + position.coords.longitude);
-        let url = "https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/38.9903762%2C%20-3.9203192?unitGroup=metric&include=current&key=G94RAC9R3W3GNMLK7B9B8Q24B&contentType=json"
-        //let url = "https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/"+ position.coords.latitude + "%2C%20" + position.coords.longitude + " ?unitGroup=metric&include=current&key=26B976WW76VUTJA8WNM3MBDRZ&contentType=json"
-        let req = new XMLHttpRequest();
-
-        req.onreadystatechange = function (){
-          if(this.readyState == 4 ){
-            if(this.status >= 200 && this.status < 400){
-              //console.log("Ejecución correcta")
-              let response = req.response
-              response = JSON.parse(response)
-
-              self.tempMax = response.days[0].tempmax
-              self.tempMin = response.days[0].tempmin
-              console.log("TemperaturaMax: " + self.tempMax)
-              console.log("TemperaturaMin: " + self.tempMin)
-            }else{
-              console.log("Se ha producido un error en la petición al obtener el tiempo")
+  public obtenerCiudad(): Observable<string> {
+    return new Observable<string>(subscriber => {
+      navigator.geolocation.getCurrentPosition(
+        position => {
+          const url = `https://api.opencagedata.com/geocode/v1/json?q=${position.coords.latitude}+${position.coords.longitude}&key=${this.apiKeyCity}`;
+          this.http.get(url).pipe(
+            map((response: any) => {
+              const components = response.results[0].components;
+              const ciudad = components.city || components.town || components.village;
+              return 'En '+ciudad;
+            })
+          ).subscribe({
+            next: (result) => subscriber.next(result),
+            error: (err) => {
+              console.error('Se ha producido un error en la petición al obtener el tiempo', err);
+              subscriber.error(err);
             }
-          }
+          });
+        },
+        error => {
+          console.error(error);
+          subscriber.error(error);
         }
-        req.open("GET",url)
-        req.send()
-      },
-
-      error => {
-        console.log(error);
-      })
-
-    
+      );
+    });
   }
+
+  public obtenerElTiempo(): Observable<string> {
+    return new Observable<string>(subscriber => {
+      navigator.geolocation.getCurrentPosition(
+        position => {
+          const url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${position.coords.latitude},${position.coords.longitude}?unitGroup=metric&include=current&key=${this.apiKeyWeather}&contentType=json`;
+          this.http.get(url).pipe(
+            map((response: any) => {
+              const tempMax = response.days[0].tempmax;
+              const tempMin = response.days[0].tempmin;
+              return ` hace una máxima de ${tempMax} ºC y una mínima de ${tempMin} ºC`;
+            })
+          ).subscribe({
+            next: (result) => subscriber.next(result),
+            error: (err) => {
+              console.error('Se ha producido un error en la petición al obtener el tiempo', err);
+              subscriber.error(err);
+            }
+          });
+        },
+        error => {
+          console.error(error);
+          subscriber.error(error);
+        }
+      );
+    });
+  }
+
 
 }
+

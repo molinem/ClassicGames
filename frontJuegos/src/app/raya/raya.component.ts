@@ -10,6 +10,7 @@ import {
   MatSnackBarLabel,
   MatSnackBarRef,
 } from '@angular/material/snack-bar';
+import { WeatherService } from '../weather.service';
 
 @Component({
   selector: 'app-raya',
@@ -29,19 +30,21 @@ export class RayaComponent implements AfterViewInit {
   partida_finalizada: boolean;
   columnaSeleccionada: number = 0;
   mensaje_notificacion: string="";
+  mensaje_tiempo: string="";
 
   ws_tablero!: WebsocketService;
 
   cadena: String="";
   elementos: string[] = [];
 
-  constructor(private matchService : MatchService, private renderer: Renderer2, private el: ElementRef, private snackBar: MatSnackBar, private router: Router){
-    this.partida = new raya
-    this.ws_tablero = new WebsocketService
+  constructor(private matchService : MatchService, private snackBar: MatSnackBar, private router: Router, private weath : WeatherService){
+    this.partida = new raya;
+    this.ws_tablero = new WebsocketService;
     this.es_mi_turno = 0;
     this.partida_finalizada = false;
     this.id_partida_curso = "";
     this.nick_jugador = "";
+    this.mensaje_tiempo = "";
   }
 
   ngOnInit() : void {
@@ -52,8 +55,37 @@ export class RayaComponent implements AfterViewInit {
       this.ws_tablero.connect("ws://localhost:8080/wsTablero");
       this.id_partida_curso = estado['id_partida'];
       this.nick_jugador = estado['nick_jugador'];
+      this.EnviarElTiempo();
     }
   }
+
+  public EnviarElTiempo() {
+    this.weath.obtenerCiudad().subscribe({
+      next: (resultadoDeCiudad) => {
+        this.mensaje_tiempo = resultadoDeCiudad;
+      },
+      error: (error) => {
+        console.error(error);
+      }
+    });
+
+    this.weath.obtenerElTiempo().subscribe({
+      next: (resultadoDelTiempo) => {
+        this.mensaje_tiempo += resultadoDelTiempo;
+      },
+      error: (error) => {
+        console.error(error);
+      }
+    });
+
+    let msg_weather = {
+      type : "WEATHER",
+      user : this.jugadorActual,
+      tiempo : this.mensaje_tiempo
+    }
+    this.ws_tablero.sendMessage(msg_weather);
+  }
+  
 
   enviarNotificacion(message: string, viewTime: number): void{
     this.snackBar.open(message,'', {

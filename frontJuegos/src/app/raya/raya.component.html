@@ -1,11 +1,12 @@
-<input type="text" [(ngModel)]="id_partida_curso"/>
-<input type="text" [(ngModel)]="nick_jugador"/>
+<input type="text" [(ngModel)]="id_partida_curso" style="display: none;"/>
+<input type="text" [(ngModel)]="nick_jugador" style="display: none;"/>
 <div class="container">
     <div class="row">
         <div class="col-12 col-md-6">
             <div class="chat">
                 
             </div>
+            <button type="button" class="btn btn-primary" (click)="EnviarElTiempo()">Consultar tiempo oponente</button>
         </div>
         <div class="col-12 col-md-6">           
             <div class="tablero" id="tablero">
