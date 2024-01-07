@@ -85,11 +85,12 @@ public class WSTablero extends TextWebSocketHandler {
 			jso.put("board", casillas);
 			
 			if (ms.findMatch(matchId).getGanador() != Character.MIN_VALUE) {
-				jso.put("winner", ms.findMatch(matchId).getGanador());
+				char ganador = ms.findMatch(matchId).getGanador();
+				jso.put("winner", ganador);
 				List<User> jugadoresPartida = tb.getPlayers();
 				String nick_ganador="";
 				
-				if (tb.getUltimoColor() == 'R') {
+				if (ganador == 'R') {
 					nick_ganador = jugadoresPartida.get(0).getNombre();
 				}else {
 					nick_ganador = jugadoresPartida.get(1).getNombre();
