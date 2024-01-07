@@ -134,7 +134,7 @@ export class RayaComponent implements AfterViewInit {
           if(data.winner !== undefined){
             this.partida_finalizada = true;
             message = "El jugador "+ data.nickWinner + " ha ganado";
-            this.enviarNotificacion(message, 10000);
+            this.enviarNotificacion(message, 0);
           }
           break;
       }
