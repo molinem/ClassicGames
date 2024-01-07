@@ -78,12 +78,6 @@ public class MatchController {
 		Tablero tb = null;
 		if(this.matchService.findMatch(id).getGanador() == Character.MIN_VALUE) {
 			tb = this.matchService.poner(id, info, user.getId());
-		}else {
-			try {
-				this.matchService.notificarEstado("WINNER",id);
-			} catch (Exception e) {
-				throw new ResponseStatusException(HttpStatus.BAD_REQUEST,e.getMessage());
-			}
 		}
 		return tb;
 	}

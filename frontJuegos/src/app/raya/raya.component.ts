@@ -26,7 +26,7 @@ export class RayaComponent implements AfterViewInit {
   http_id: string="";
   nick_jugador: string;
   es_mi_turno: number;
-  notificado: boolean;
+  partida_finalizada: boolean;
   columnaSeleccionada: number = 0;
   mensaje_notificacion: string="";
 
@@ -39,7 +39,7 @@ export class RayaComponent implements AfterViewInit {
     this.partida = new raya
     this.ws_tablero = new WebsocketService
     this.es_mi_turno = 0;
-    this.notificado = false;
+    this.partida_finalizada = false;
     this.id_partida_curso = "";
     this.nick_jugador = "";
   }
@@ -99,10 +99,11 @@ export class RayaComponent implements AfterViewInit {
           break;
         case "MATCH UPDATE":
           this.actualizarTablero(data);
-          break;
-        case "WINNER":
-          message = "El jugador "+ data.ganador + " ha ganado";
-          this.enviarNotificacion(message, 10000);
+          if(data.winner !== undefined){
+            this.partida_finalizada = true;
+            message = "El jugador "+ data.nickWinner + " ha ganado";
+            this.enviarNotificacion(message, 10000);
+          }
           break;
       }
     });
@@ -111,45 +112,50 @@ export class RayaComponent implements AfterViewInit {
   seleccionarColumna(columnaIndex: number): void {   
     this.columnaSeleccionada = columnaIndex;
 
-    this.matchService.obtenerTurnoPartida4R(this.id_partida_curso).subscribe(
-      result =>{
-        /* 0 -> Es tu turno
-		     * 1 -> No es tu turno
-		     * 2 -> Partida no lista   
-		    */
-        this.es_mi_turno = result;
-        
-        //Es mi turno
-        if(this.es_mi_turno == 0){
-          this.matchService.ponerFicha4R(this.id_partida_curso,this.columnaSeleccionada).subscribe(
-            result =>{             
-              let msg_movimiento = {
-                type : "MOVEMENT",
-                col: this.columnaSeleccionada,
-                matchId : this.id_partida_curso
-              }
-              this.ws_tablero.sendMessage(msg_movimiento);
-            },
-            error => {
-              console.log("[PonerFicha4R] Se ha producido el siguiente error: " + error);
-            }
-          );
-        }else{
-          //No es mi turno
-          if(this.es_mi_turno == 1){
-            this.mensaje_notificacion = "No es tu turno";
-            this.enviarNotificacion(this.mensaje_notificacion, 5000);
-          }else{
-            this.mensaje_notificacion = "La partida no está lista";
-            this.enviarNotificacion(this.mensaje_notificacion, 5000);
-          }
+    if(!this.partida_finalizada){
+      this.matchService.obtenerTurnoPartida4R(this.id_partida_curso).subscribe(
+        result =>{
+          /* 0 -> Es tu turno
+           * 1 -> No es tu turno
+           * 2 -> Partida no lista   
+          */
+          this.es_mi_turno = result;
           
+          //Es mi turno
+          if(this.es_mi_turno == 0){
+            this.matchService.ponerFicha4R(this.id_partida_curso,this.columnaSeleccionada).subscribe(
+              result =>{             
+                let msg_movimiento = {
+                  type : "MOVEMENT",
+                  col: this.columnaSeleccionada,
+                  matchId : this.id_partida_curso
+                }
+                this.ws_tablero.sendMessage(msg_movimiento);
+              },
+              error => {
+                console.log("[PonerFicha4R] Se ha producido el siguiente error: " + error);
+              }
+            );
+          }else{
+            //No es mi turno
+            if(this.es_mi_turno == 1){
+              this.mensaje_notificacion = "No es tu turno";
+              this.enviarNotificacion(this.mensaje_notificacion, 5000);
+            }else{
+              this.mensaje_notificacion = "La partida no está lista";
+              this.enviarNotificacion(this.mensaje_notificacion, 5000);
+            }
+          }
+        },
+        error => {
+          console.log("[ObtenerTurnoPartida4R] > Se ha producido un error: "+ error);
         }
-      },
-      error => {
-        console.log("[ObtenerTurnoPartida4R] > Se ha producido un error: "+ error);
-      }
-    );
+      );
+    }else{
+      this.mensaje_notificacion = "La partida ha finalizado";
+      this.enviarNotificacion(this.mensaje_notificacion, 5000);
+    }
+    
   }
 
 

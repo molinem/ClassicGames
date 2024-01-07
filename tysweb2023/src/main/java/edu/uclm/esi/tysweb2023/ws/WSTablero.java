@@ -21,6 +21,7 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import edu.uclm.esi.tysweb2023.http.UserController;
+import edu.uclm.esi.tysweb2023.model.Tablero;
 import edu.uclm.esi.tysweb2023.model.User;
 import edu.uclm.esi.tysweb2023.services.MatchService;
 import jakarta.servlet.http.HttpSession;
@@ -74,16 +75,29 @@ public class WSTablero extends TextWebSocketHandler {
 			MatchService ms =  ManagerWS.get().getMatchService();
 			
 			String personaActualizarTablero = obtenerSiguienteNombre(ms.findMatch(matchId).getPlayers(),user.getNombre());
-			JSONArray tablero = ms.findMatch(matchId).mostrarCasillas();
+			Tablero tb = ms.findMatch(matchId);
+			
+			JSONArray casillas = tb.mostrarCasillas();
 			jso = new JSONObject();
 			jso.put("type", "MATCH UPDATE");
 			jso.put("player", personaActualizarTablero);
 			jso.put("matchId", matchId);
-			jso.put("board", tablero);
+			jso.put("board", casillas);
 			
+			if (ms.findMatch(matchId).getGanador() != Character.MIN_VALUE) {
+				jso.put("winner", ms.findMatch(matchId).getGanador());
+				List<User> jugadoresPartida = tb.getPlayers();
+				String nick_ganador="";
+				
+				if (tb.getUltimoColor() == 'R') {
+					nick_ganador = jugadoresPartida.get(0).getNombre();
+				}else {
+					nick_ganador = jugadoresPartida.get(1).getNombre();
+				}
+				jso.put("nickWinner", nick_ganador);
+			}
 			ms.notificarMovimiento(matchId, jso);
 		}
-	
 	}
 	
 	

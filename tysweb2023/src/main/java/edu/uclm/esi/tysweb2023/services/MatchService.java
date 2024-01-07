@@ -92,19 +92,6 @@ public class MatchService {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-		}else if(tipoMensaje.contentEquals("WINNER")) {
-			JSONObject jsoWinner = new JSONObject();
-			jsoWinner.put("type", tipoMensaje);
-			jsoWinner.put("winner", this.findMatch(idPartida).getGanador());
-			String nick_ganador="";
-			
-			if (tb.getUltimoColor() == 'R') {
-				nick_ganador = jugadoresPartida.get(0).getNombre();
-			}else {
-				nick_ganador = jugadoresPartida.get(1).getNombre();
-			}
-			jsoWinner.put("ganador", nick_ganador);
-			difundirMsg(jsoWinner,jugadoresPartida);
 		}else {
 			difundirMsg(jso,jugadoresPartida);
 		}
