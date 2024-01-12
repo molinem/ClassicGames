@@ -63,7 +63,7 @@ public class MatchService {
 		}
 		try {
 			tablero.poner(movimiento, idUser);
-			
+		//tablero.notificartablero	
 		}catch(MovimientoIlegalException e) {
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
 		}
