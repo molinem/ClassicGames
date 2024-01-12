@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
 })
 export class ElegirJuegoComponent {
 
+
   ws_tablero!: WebsocketService;
   id_partida: string="";
   http_id: string="";
@@ -43,7 +44,35 @@ export class ElegirJuegoComponent {
 
       },
       error => {
-        console.log("[CrearPartida] -> Se ha producido un error al crear la partida: "+error);
+        console.log("[CrearPartida4R] -> Se ha producido un error al crear la partida: "+error);
+      },
+    );
+  }
+
+  crearPartidaEscoba():void {
+    this.matchService.iniciarPartidaEscoba().subscribe(
+      result =>{
+        const js = JSON.stringify(result)
+        const jsonObj = JSON.parse(js);
+        
+        this.http_id = jsonObj.httpId;
+        this.id_partida = jsonObj.tablero.id;
+        console.log(jsonObj.tablero);
+        this.nick_jugador = jsonObj.nickJugador;
+
+        this.router.navigate(
+          ['Escoba'], 
+          { 
+            state: { 
+              id_partida: this.id_partida,
+              nick_jugador: this.nick_jugador
+            } 
+          }
+        );
+
+      },
+      error => {
+        console.log("[CrearPartidaEscoba] -> Se ha producido un error al crear la partida: "+error);
       },
     );
   }

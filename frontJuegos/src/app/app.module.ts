@@ -14,6 +14,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { FormsModule } from '@angular/forms';
 import { ChatComponent } from './chat/chat.component';
+import { MesaComponent } from './mesa/mesa.component';
+import { ManoComponent } from './mano/mano.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +25,9 @@ import { ChatComponent } from './chat/chat.component';
     LoginComponent,
     ElegirJuegoComponent,
     SalaDeEsperaComponent,
-    ChatComponent
+    ChatComponent,
+    MesaComponent,
+    ManoComponent
   ],
   imports: [
     BrowserModule,

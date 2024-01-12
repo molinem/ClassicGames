@@ -1,6 +1,7 @@
 package edu.uclm.esi.tysweb2023.model;
 
 import java.security.SecureRandom;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -143,6 +144,27 @@ public class Tablero4R extends Tablero{
 		this.preparado = this.players.size()==2;
 		if (this.preparado)
 			this.jugadorConElTurno = new SecureRandom().nextBoolean() ? this.players.get(0) : this.players.get(1);
+	}
+
+
+	@Override
+	public List<Carta> getCartas1() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public List<Carta> getCartas2() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public List<Carta> getCartasMesa() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

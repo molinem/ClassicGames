@@ -2,6 +2,7 @@ package edu.uclm.esi.tysweb2023.http;
 
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
@@ -20,6 +21,7 @@ import org.springframework.web.socket.WebSocketSession;
 
 import edu.uclm.esi.tysweb2023.dao.UserDAO;
 import edu.uclm.esi.tysweb2023.model.AnonymousUser;
+import edu.uclm.esi.tysweb2023.model.Carta;
 import edu.uclm.esi.tysweb2023.model.Tablero;
 import edu.uclm.esi.tysweb2023.model.User;
 import edu.uclm.esi.tysweb2023.services.MatchService;
@@ -53,13 +55,14 @@ public class MatchController {
 			ConcurrentHashMap<String, Object> result = new ConcurrentHashMap<>();
 			result.put("httpId", session.getId());
 			
+			
 			Tablero tableroJuego = this.matchService.newMatch(user,juego);
 			result.put("tablero", tableroJuego);
 			result.put("nickJugador", user.getNombre());
-			
+				
 			UserController.httpSessions.put(session.getId(), session);
 			ManagerWS.get().addSessionByUserId(user.getId(), session);
-			
+				
 			//¿Partida lista?
 			if (tableroJuego.checkPartidaLista()) {
 				//Avisamos a los jugadores
@@ -99,5 +102,23 @@ public class MatchController {
 			}
 		}
 		return control;
+	}
+	
+	/*Cartas*/
+	@GetMapping("/obtenerManoJugador")
+	public List<Carta> obtenerManoJugador(HttpSession session, @RequestParam String id){
+		User user = (User) session.getAttribute("user");
+		Tablero result = this.matchService.findMatch(id);
+		if(result.getPlayers().get(0).getNombre().equals(user.getNombre())) {
+			return result.getCartas1();
+		}else {
+			return result.getCartas2();
+		}
+	}
+	
+	@GetMapping("/obtenerCartasMesa")
+	public List<Carta> obtenerCartasMesa(HttpSession session, @RequestParam String id){
+		Tablero result = this.matchService.findMatch(id);
+		return result.getCartasMesa();
 	}
 }

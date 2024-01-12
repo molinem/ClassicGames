@@ -11,6 +11,7 @@ export class MatchService {
 
   }
 
+  //JUEGO 4 en RAYA
   iniciarPartida4R():Observable<any>{
     let info = {
       juego : "Tablero4R"
@@ -37,5 +38,21 @@ export class MatchService {
   }
 
 
+  //JUEGO ESCOBA
+  iniciarPartidaEscoba():Observable<any>{
+    let info = {
+      juego : "Escoba"
+    }
+    
+    return this.client.get<any>("http://localhost:8080/matches/start?juego="+info.juego, {withCredentials:true})
+  }
+
+  obtenerManoJugador(id_partida:string):Observable<any>{
+    let info1 = {
+      id : id_partida
+    }
+
+    return this.client.get<any>("http://localhost:8080/matches/obtenerManoJugador?id=" + info1.id, {withCredentials:true})
+  }
   
 }

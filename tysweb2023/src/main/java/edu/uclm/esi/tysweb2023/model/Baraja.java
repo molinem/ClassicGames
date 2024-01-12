@@ -10,7 +10,7 @@ public class Baraja {
 
 	public final static int OROS = 0, COPAS = 1, ESPADAS = 2, BASTOS = 3;
 
-public Baraja() {
+	public Baraja() {
 
 		for (int palo = OROS; palo <= BASTOS; palo++) {
 
@@ -30,7 +30,7 @@ public Baraja() {
 
 	}
 
-public void barajar() {
+	public void barajar() {
 
 		Random dado = new Random();
 
@@ -50,14 +50,12 @@ public void barajar() {
 
 	}
 
-public Carta pop() {
-
-	return this.cartas.pop();
-
+	public Carta pop() {
+		return this.cartas.pop();
 	}
 
-public boolean isEmpty() {
-         return this.cartas.isEmpty();
+	public boolean isEmpty() {
+		return this.cartas.isEmpty();
 
-        }
+	}
 }

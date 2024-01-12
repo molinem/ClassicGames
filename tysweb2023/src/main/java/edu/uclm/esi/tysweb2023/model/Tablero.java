@@ -61,4 +61,9 @@ public abstract class Tablero {
 	public abstract JSONArray mostrarCasillas();
 	public abstract char getGanador();
 	public abstract char getUltimoColor();
+	
+	public abstract List<Carta> getCartas1();
+	public abstract List<Carta> getCartas2();
+	public abstract List<Carta> getCartasMesa();
+	
 }
