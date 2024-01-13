@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
+import { AgGridModule } from 'ag-grid-angular';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { RayaComponent } from './raya/raya.component';
@@ -16,6 +16,8 @@ import { FormsModule } from '@angular/forms';
 import { ChatComponent } from './chat/chat.component';
 import { MesaComponent } from './mesa/mesa.component';
 import { ManoComponent } from './mano/mano.component';
+import { HistorialComponent } from './historial/historial.component';
+import { CurrencyPipe, UpperCasePipe } from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -27,7 +29,8 @@ import { ManoComponent } from './mano/mano.component';
     SalaDeEsperaComponent,
     ChatComponent,
     MesaComponent,
-    ManoComponent
+    ManoComponent,
+    HistorialComponent
   ],
   imports: [
     BrowserModule,
@@ -36,9 +39,13 @@ import { ManoComponent } from './mano/mano.component';
     ReactiveFormsModule,
     HttpClientModule,
     BrowserAnimationsModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    AgGridModule
   ],
-  providers: [],
+  providers: [
+    UpperCasePipe,
+  CurrencyPipe   
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
