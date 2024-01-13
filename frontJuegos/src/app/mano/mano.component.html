@@ -1,13 +1,31 @@
-<div id="mano">
-    <div *ngFor="let carta of cartas1" class="carta">
-        <p>Palo: {{ carta.palo }}</p>
-        <p>Valor: {{ carta.valor }}</p>
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div *ngFor="let carta of cartas1" class="carta">
+                <button type="button" class="btn btn-primary" disabled>
+                    Palo: {{ "**" }}, Valor: {{ "**" }}
+                </button>
+            </div>
+        </div>
+    </div><br>
+    <div class="row">
+        <div class="col-12">
+            <div *ngFor="let cartaM of cartasMesa" class="carta">
+                <button type="button" class="btn btn-secondary" disabled>
+                    Palo: {{ cartaM.palo }}, Valor: {{ cartaM.valor }}
+                </button>
+            </div>
+        </div>
+    </div><br>
+    <div class="row">
+        <div class="col-12">
+            <div *ngFor="let cartaMano of cartas1" class="carta">
+                <button type="button" class="btn btn-success" (click)="usarCarta(cartaMano.palo, cartaMano.valor)">
+                    Palo: {{ cartaMano.palo }}, Valor: {{ cartaMano.valor }}
+                </button>
+            </div>
+        </div>        
     </div>
 </div>
 
-<div id="mano">
-    <div *ngFor="let carta of cartas1" class="carta">
-        <p>Palo: {{ carta.palo }}</p>
-        <p>Valor: {{ carta.valor }}</p>
-    </div>
-</div>

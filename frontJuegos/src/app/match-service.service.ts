@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { Carta } from './models/carta.model';
 
 @Injectable({
   providedIn: 'root'
@@ -53,6 +54,32 @@ export class MatchService {
     }
 
     return this.client.get<any>("http://localhost:8080/matches/obtenerManoJugador?id=" + info1.id, {withCredentials:true})
+  }
+
+  obtenerManoMesa(id_partida:string):Observable<any>{
+    let info1 = {
+      id : id_partida
+    }
+
+    return this.client.get<any>("http://localhost:8080/matches/obtenerCartasMesa?id=" + info1.id, {withCredentials:true})
+  }
+
+  queJugadorSoy(id_partida:string):Observable<any>{
+    let info1 = {
+      id : id_partida
+    }
+
+    return this.client.get<any>("http://localhost:8080/matches/queJugadorSoy?id=" + info1.id, {withCredentials:true})
+  }
+
+  ponerCarta(id_partida:string,miaC:Carta[], mesaC:Carta[]):Observable<any>{
+    let infoCarta = {
+      id : id_partida,
+      mia : miaC,
+      mesa: mesaC
+    }
+
+    return this.client.post<any>("http://localhost:8080/matches/poner",infoCarta, {withCredentials:true})
   }
   
 }

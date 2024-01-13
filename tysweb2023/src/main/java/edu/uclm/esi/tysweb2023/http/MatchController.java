@@ -121,4 +121,27 @@ public class MatchController {
 		Tablero result = this.matchService.findMatch(id);
 		return result.getCartasMesa();
 	}
+	
+	@GetMapping("/checkPartidaLista")
+	public boolean checkPartida(HttpSession session, @RequestParam String id){
+		Tablero result = this.matchService.findMatch(id);
+		return result.checkPartidaLista();
+	}
+	
+	@GetMapping("/queJugadorSoy")
+	public int queJugadorSoy(HttpSession session, @RequestParam String id){
+		int jugador = 0;
+		User user = (User) session.getAttribute("user");
+		Tablero result = this.matchService.findMatch(id);
+		if(result != null) {
+			if(result.getPlayers().get(0).getNombre().equals(user.getNombre())) {
+				jugador = 1;
+			}else {
+				jugador = 2;
+			}
+		}
+		return jugador;
+	}
+	
+	
 }

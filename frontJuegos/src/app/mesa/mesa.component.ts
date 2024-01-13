@@ -15,16 +15,23 @@ export class MesaComponent {
   ws_tablero!: WebsocketService;
   id_partida_curso: string;
   nick_jugador: string;
-
+  mostrarCartasMano: boolean;
 
   constructor(private matchService : MatchService, private snackBar: MatSnackBar, private router: Router, private dataService: DataService){
     this.ws_tablero = new WebsocketService;
     this.id_partida_curso = "";
     this.nick_jugador = "";
+    this.mostrarCartasMano = false;
   }
 
   enviarDato() {
     this.dataService.cambiarDato(this.id_partida_curso);
+  }
+
+  enviarNotificacion(message: string, viewTime: number): void {
+    this.snackBar.open(message, '', {
+      duration: viewTime,
+    });
   }
 
   ngOnInit() : void {
@@ -39,5 +46,31 @@ export class MesaComponent {
     }
   }
 
+  ngAfterViewInit() {
+    this.ws_tablero.messages.subscribe(msg => {
+      const data = JSON.parse(JSON.stringify(msg));
+      console.log(msg);
+      let message = "";
+      switch (data.type) {
+        case "START":
+          message = "El jugador " + data.player_2 + " ha entrado a la partida";
+          this.enviarNotificacion(message, 5000);
+          this.mostrarCartasMano = true;
+          break;
+        
+      }
+    });
+    this.matchService.queJugadorSoy(this.id_partida_curso).subscribe(
+      result => {
+        if(result == 2){
+          this.mostrarCartasMano = true;
+        }
+      },
+      error => {
+        console.log("[QueJugadorSoy] Se ha producido el siguiente error: " + error);
+      }
+    );
+
+  }
 
 }

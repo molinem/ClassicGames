@@ -1,3 +1,8 @@
-<p>mesa works!</p>
-<!-- Meter if de comprobación para que solo salga cuando están todos los jugadores-->
-<app-mano></app-mano>
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <app-mano *ngIf="mostrarCartasMano"></app-mano>
+        </div>
+    </div>
+</div>
+

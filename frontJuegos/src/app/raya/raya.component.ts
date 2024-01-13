@@ -77,6 +77,7 @@ export class RayaComponent implements AfterViewInit {
       this.EnviarElTiempo();
     }
   }
+
   verHistorialPartidas() {
     
 
@@ -168,7 +169,6 @@ export class RayaComponent implements AfterViewInit {
             message = "El jugador " + data.nickWinner + " ha ganado";
             this.enviarNotificacion(message, 0);
             this.saveToLocalStorage("Ganador",message);
-            console.log("++++++");
           }
           break;
       }
