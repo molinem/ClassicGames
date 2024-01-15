@@ -21,7 +21,7 @@ export class MatchService {
     return this.client.get<any>("http://localhost:8080/matches/start?juego="+info.juego, {withCredentials:true})
   }
 
-  obtenerTurnoPartida4R(id_partida:string):Observable<any>{
+  obtenerTurnoPartida(id_partida:string):Observable<any>{
     let info = {
       id : id_partida
     }
@@ -72,7 +72,7 @@ export class MatchService {
     return this.client.get<any>("http://localhost:8080/matches/queJugadorSoy?id=" + info1.id, {withCredentials:true})
   }
 
-  ponerCarta(id_partida:string,miaC:Carta[], mesaC:Carta[]):Observable<any>{
+  ponerCarta(id_partida:string, miaC:Carta[], mesaC:Carta[]):Observable<any>{
     let infoCarta = {
       id : id_partida,
       mia : miaC,

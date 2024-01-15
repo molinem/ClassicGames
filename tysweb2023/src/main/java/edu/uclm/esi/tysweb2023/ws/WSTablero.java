@@ -62,45 +62,76 @@ public class WSTablero extends TextWebSocketHandler {
 		JSONObject jso = new JSONObject(message.getPayload());
 		String type = jso.getString("type");
 		
-		if (type.equals("MOVEMENT")) {
-			String matchId = jso.getString("matchId");
-			int columna = jso.getInt("col");
-			
-			//Sacar de la session el nombre del jugador
-			String httpSessionId = obtenerHttpId(session);
-			HttpSession hs =  UserController.httpSessions.get(httpSessionId);
-			User user = (User) hs.getAttribute("user");
-			
-			//Match update
-			MatchService ms =  ManagerWS.get().getMatchService();
-			
-			String personaActualizarTablero = obtenerSiguienteNombre(ms.findMatch(matchId).getPlayers(),user.getNombre());
-			Tablero tb = ms.findMatch(matchId);
-			
-			JSONArray casillas = tb.mostrarCasillas();
-			jso = new JSONObject();
-			jso.put("type", "MATCH UPDATE");
-			jso.put("player", personaActualizarTablero);
-			jso.put("matchId", matchId);
-			jso.put("board", casillas);
-			
-			if (ms.findMatch(matchId).getGanador() != Character.MIN_VALUE) {
-				char ganador = ms.findMatch(matchId).getGanador();
-				jso.put("winner", ganador);
-				List<User> jugadoresPartida = tb.getPlayers();
-				String nick_ganador="";
+		switch(type) {
+			case "MOVEMENT":
+				String matchId = jso.getString("matchId");
+				int columna = jso.getInt("col");
 				
-				if (ganador == 'R') {
-					nick_ganador = jugadoresPartida.get(0).getNombre();
-				}else {
-					nick_ganador = jugadoresPartida.get(1).getNombre();
+				//Sacar de la session el nombre del jugador
+				String httpSessionId = obtenerHttpId(session);
+				HttpSession hs =  UserController.httpSessions.get(httpSessionId);
+				User user = (User) hs.getAttribute("user");
+				
+				//Match update
+				MatchService ms =  ManagerWS.get().getMatchService();
+				
+				String personaActualizarTablero = obtenerSiguienteNombre(ms.findMatch(matchId).getPlayers(),user.getNombre());
+				Tablero tb = ms.findMatch(matchId);
+				
+				JSONArray casillas = tb.mostrarCasillas();
+				jso = new JSONObject();
+				jso.put("type", "MATCH UPDATE");
+				jso.put("player", personaActualizarTablero);
+				jso.put("matchId", matchId);
+				jso.put("board", casillas);
+				
+				if (ms.findMatch(matchId).getGanador() != Character.MIN_VALUE) {
+					char ganador = ms.findMatch(matchId).getGanador();
+					jso.put("winner", ganador);
+					List<User> jugadoresPartida = tb.getPlayers();
+					String nick_ganador="";
+					
+					if (ganador == 'R') {
+						nick_ganador = jugadoresPartida.get(0).getNombre();
+					}else {
+						nick_ganador = jugadoresPartida.get(1).getNombre();
+					}
+					jso.put("nickWinner", nick_ganador);
 				}
-				jso.put("nickWinner", nick_ganador);
-			}
-			ms.notificarMovimiento(matchId, jso);
-		}else if (type.equals("WEATHER")) {
-			String nickUser = jso.getString("user");
-			String cdTiempo = jso.getString("tiempo");
+				ms.notificarMovimiento(matchId, jso);
+				break;
+			case "MOVEMENTCARTA":
+				String matchId_Cartas = jso.getString("matchId");
+				
+				//Sacar de la session el nombre del jugador
+				String httpSessionIdCartas = obtenerHttpId(session);
+				HttpSession hsCartas =  UserController.httpSessions.get(httpSessionIdCartas);
+				User userCartas = (User) hsCartas.getAttribute("user");
+				
+				//Match update
+				MatchService msCartas =  ManagerWS.get().getMatchService();
+				
+				String personaActualizarTableroCartas = obtenerSiguienteNombre(msCartas.findMatch(matchId_Cartas).getPlayers(),userCartas.getNombre());
+				Tablero tbCartas = msCartas.findMatch(matchId_Cartas);
+				
+				jso = new JSONObject();
+				jso.put("type", "MATCH UPDATE");
+				jso.put("player", personaActualizarTableroCartas);
+				jso.put("matchId", matchId_Cartas);
+				jso.put("cartas1", tbCartas.getCartas1());
+				jso.put("cartas2", tbCartas.getCartas2());
+				jso.put("cartasMesa", tbCartas.getCartasMesa());
+				
+				msCartas.notificarMovimiento(matchId_Cartas, jso);
+				break;
+			case "WEATHER":
+				String nickUser = jso.getString("user");
+				String idPartida = jso.getString("idPartida");
+				String cdTiempo = jso.getString("tiempo");
+				MatchService msTiempo =  ManagerWS.get().getMatchService();
+				
+				List<User> lis = msTiempo.findMatch(idPartida).getPlayers();
+				msTiempo.notificarMovimiento(idPartida, jso);
 		}
 	}
 	

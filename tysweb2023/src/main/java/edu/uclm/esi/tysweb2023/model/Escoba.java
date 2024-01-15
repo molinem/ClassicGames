@@ -2,7 +2,7 @@
 package edu.uclm.esi.tysweb2023.model;
 
 import java.util.ArrayList;
-
+import java.util.HashMap;
 import java.util.List;
 
 import java.util.Map;
@@ -45,9 +45,9 @@ public class Escoba extends Tablero {
 	@Override
 	public void poner(Map<String, Object> movimiento, String idUser) throws MovimientoIlegalException {
 
-		Map<String, Object> mia = (Map<String, Object>) movimiento.get("mia");
+		Map<String, Object> mia = convertirListaAMap((ArrayList<Map<String, Object>>)movimiento.get("mia"));
 		List<Map<String, Object>> cartasMesa = (List<Map<String, Object>>) movimiento.get("mesa");
-
+		System.out.println(cartasMesa.toString());
 		Carta cartaQuitada = this.quitar(idUser, mia);
 		ArrayList<Carta> cartasQuitadasDeMesa = this.quitarDeMesa(cartasMesa);
 
@@ -57,8 +57,15 @@ public class Escoba extends Tablero {
 		} else {
 			this.actualizarCuentas(idUser, cartaQuitada, cartasQuitadasDeMesa);
 		}
-
 	}
+	
+	public static Map<String, Object> convertirListaAMap(ArrayList<Map<String, Object>> lista) {
+        if (lista != null && !lista.isEmpty()) {
+            return lista.get(0);
+        } else {
+            return new HashMap<>();
+        }
+    }
 
 	private int numeroDeOros(Carta cartaQuitada, ArrayList<Carta> cartasQuitadasDeMesa) {
 		int contadorOros = 0;
@@ -134,6 +141,7 @@ public class Escoba extends Tablero {
 				}
 			}
 		}
+		System.out.println(cartasQuitadas.toString());
 		return cartasQuitadas;
 	}
 

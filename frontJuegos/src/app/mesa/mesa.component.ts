@@ -12,13 +12,11 @@ import { BehaviorSubject } from 'rxjs';
   styleUrls: ['./mesa.component.css']
 })
 export class MesaComponent {
-  ws_tablero!: WebsocketService;
   id_partida_curso: string;
   nick_jugador: string;
   mostrarCartasMano: boolean;
 
-  constructor(private matchService : MatchService, private snackBar: MatSnackBar, private router: Router, private dataService: DataService){
-    this.ws_tablero = new WebsocketService;
+  constructor(private matchService : MatchService, private snackBar: MatSnackBar, private router: Router, private dataService: DataService, private websocketService: WebsocketService){
     this.id_partida_curso = "";
     this.nick_jugador = "";
     this.mostrarCartasMano = false;
@@ -26,6 +24,7 @@ export class MesaComponent {
 
   enviarDato() {
     this.dataService.cambiarDato(this.id_partida_curso);
+    
   }
 
   enviarNotificacion(message: string, viewTime: number): void {
@@ -39,7 +38,7 @@ export class MesaComponent {
     if (!estado || !estado['id_partida']) {
       this.router.navigate(['/ElegirJuego']);
     }else{
-      this.ws_tablero.connect("ws://localhost:8080/wsTablero");
+      this.websocketService.connect("ws://localhost:8080/wsTablero");
       this.id_partida_curso = estado['id_partida'];
       this.nick_jugador = estado['nick_jugador'];
       this.enviarDato();
@@ -47,7 +46,7 @@ export class MesaComponent {
   }
 
   ngAfterViewInit() {
-    this.ws_tablero.messages.subscribe(msg => {
+    this.websocketService.messages.subscribe(msg => {
       const data = JSON.parse(JSON.stringify(msg));
       console.log(msg);
       let message = "";
@@ -69,8 +68,7 @@ export class MesaComponent {
       error => {
         console.log("[QueJugadorSoy] Se ha producido el siguiente error: " + error);
       }
-    );
-
+    )
   }
 
 }

@@ -14,6 +14,7 @@ export interface Message {
 export class WebsocketService {
   private subject!: AnonymousSubject<MessageEvent>;
   public messages!: Subject<Message>;
+  private ws!: AnonymousSubject<MessageEvent>;
   
   constructor() { }
 
@@ -31,6 +32,7 @@ export class WebsocketService {
             );
             console.log('Conexión realizada correctamente: ' + url);
         }
+        this.ws = this.subject;
         return this.subject;
     }
 

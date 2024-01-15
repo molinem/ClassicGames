@@ -62,8 +62,7 @@ public class MatchService {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No encuentro esa partida");
 		}
 		try {
-			tablero.poner(movimiento, idUser);
-		//tablero.notificartablero	
+			tablero.poner(movimiento, idUser);	
 		}catch(MovimientoIlegalException e) {
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
 		}

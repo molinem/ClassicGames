@@ -22,8 +22,6 @@ import { IRow } from '../irow';
 })
 export class RayaComponent implements AfterViewInit {
 
-  @ViewChild('tablero') miDiv!: ElementRef<HTMLDivElement>;
-
   partida: raya
   columnaHover: number | null = null;
   jugadorActual: string = 'X';
@@ -45,8 +43,7 @@ export class RayaComponent implements AfterViewInit {
   localStorageService: LocalStorageService;
   public dataRow!:IRow[];
 
-  constructor(private matchService: MatchService, private snackBar: MatSnackBar, private router: Router, private weath: WeatherService
-    , localStorageService: LocalStorageService) {
+  constructor(private matchService: MatchService, private snackBar: MatSnackBar, private router: Router, private weath: WeatherService, localStorageService: LocalStorageService) {
     this.partida = new raya;
     this.ws_tablero = new WebsocketService;
     this.es_mi_turno = 0;
@@ -113,8 +110,9 @@ export class RayaComponent implements AfterViewInit {
 
     let msg_weather = {
       type: "WEATHER",
-      user: this.jugadorActual,
-      tiempo: this.mensaje_tiempo
+      idPartida: this.id_partida_curso,
+      user: this.nick_jugador,
+      tiempo: this.mensaje_tiempo,
     }
     this.ws_tablero.sendMessage(msg_weather);
   }
@@ -179,7 +177,7 @@ export class RayaComponent implements AfterViewInit {
     this.columnaSeleccionada = columnaIndex;
 
     if (!this.partida_finalizada) {
-      this.matchService.obtenerTurnoPartida4R(this.id_partida_curso).subscribe(
+      this.matchService.obtenerTurnoPartida(this.id_partida_curso).subscribe(
         result => {
           /* 0 -> Es tu turno
            * 1 -> No es tu turno
@@ -221,28 +219,11 @@ export class RayaComponent implements AfterViewInit {
       this.mensaje_notificacion = "La partida ha finalizado";
       this.ws_tablero.messages.subscribe(msg => {
         const data = JSON.parse(JSON.stringify(msg));
-        console.log("----->"+msg);
         let message = "";
         message = "El jugador " + data.nickWinner + " ha ganado";
         this.saveToLocalStorage("Ganador", message);
-        console.log("ganador guardado++++++");
-        //message = "El jugador "+ data.player_2 + " ha entrado a la partida";
-        //this.enviarNotificacion(message, 5000);
-        //if (data.winner !== undefined) {
-          //this.partida_finalizada = true;
-          message = "El jugador " + data.nickWinner + " ha ganado";
-          //this.localStorageService.setItem("Ganador",message);
-          this.saveToLocalStorage("Ganador", message);
-          this.localStorageService.setItem("Partida", this.id_partida_curso);
-          console.log("ganador guardado------");
-        //}
+        this.localStorageService.setItem("Partida", this.id_partida_curso);
       });
-
-    
-
-
-    //this.localStorageService.setItem("Player",nombre);
-    //this.localStorageService.setItem("Ganador",ganador);
     this.enviarNotificacion(this.mensaje_notificacion, 5000);
     }
 
