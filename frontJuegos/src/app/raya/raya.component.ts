@@ -51,8 +51,7 @@ export class RayaComponent implements AfterViewInit {
     this.id_partida_curso = "";
     this.nick_jugador = "";
     this.mensaje_tiempo = "";
-    this.localStorageService = new LocalStorageService
-    this.saveToLocalStorage("myKey", "holaaaaa");
+    this.localStorageService = new LocalStorageService;
   }
 
   saveToLocalStorage(clave: string, valor: string) {
@@ -68,16 +67,17 @@ export class RayaComponent implements AfterViewInit {
     if (!estado || !estado['id_partida']) {
       this.router.navigate(['/ElegirJuego']);
     } else {
-      this.ws_tablero.connect("ws://localhost:8080/wsTablero");
       this.id_partida_curso = estado['id_partida'];
       this.nick_jugador = estado['nick_jugador'];
-      this.EnviarElTiempo();
     }
   }
 
-  verHistorialPartidas() {
-    
+  public desconectar() {
+    this.ws_tablero.disconnect();
+    this.router.navigate(['/ElegirJuego']);
+  }
 
+  public verHistorialPartidas() {
     this.router.navigate(
       ['Historial'], 
       { 
@@ -89,7 +89,7 @@ export class RayaComponent implements AfterViewInit {
     );
   }
 
-  public EnviarElTiempo() {
+  public enviarElTiempo() {
     this.weath.obtenerCiudad().subscribe({
       next: (resultadoDeCiudad) => {
         this.mensaje_tiempo = resultadoDeCiudad;
@@ -151,6 +151,8 @@ export class RayaComponent implements AfterViewInit {
   }
 
   ngAfterViewInit() {
+    this.ws_tablero.connect("ws://localhost:8080/wsTablero");//-------------------------------------
+    this.enviarElTiempo();
     this.ws_tablero.messages.subscribe(msg => {
       const data = JSON.parse(JSON.stringify(msg));
       console.log(msg);
@@ -166,7 +168,7 @@ export class RayaComponent implements AfterViewInit {
             this.partida_finalizada = true;
             message = "El jugador " + data.nickWinner + " ha ganado";
             this.enviarNotificacion(message, 0);
-            this.saveToLocalStorage("Ganador",message);
+            //this.saveToLocalStorage("Ganador",message);
           }
           break;
       }

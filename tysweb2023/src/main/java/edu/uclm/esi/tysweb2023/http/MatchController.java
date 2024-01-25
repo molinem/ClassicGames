@@ -55,14 +55,13 @@ public class MatchController {
 			ConcurrentHashMap<String, Object> result = new ConcurrentHashMap<>();
 			result.put("httpId", session.getId());
 			
+			UserController.httpSessions.put(session.getId(), session);
+			ManagerWS.get().addSessionByUserId(user.getId(), session);
 			
 			Tablero tableroJuego = this.matchService.newMatch(user,juego);
 			result.put("tablero", tableroJuego);
 			result.put("nickJugador", user.getNombre());
-				
-			UserController.httpSessions.put(session.getId(), session);
-			ManagerWS.get().addSessionByUserId(user.getId(), session);
-				
+	
 			//¿Partida lista?
 			if (tableroJuego.checkPartidaLista()) {
 				//Avisamos a los jugadores

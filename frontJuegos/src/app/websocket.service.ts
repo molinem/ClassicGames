@@ -12,6 +12,7 @@ export interface Message {
 })
 
 export class WebsocketService {
+  
   private subject!: AnonymousSubject<MessageEvent>;
   public messages!: Subject<Message>;
   private ws!: AnonymousSubject<MessageEvent>;
@@ -66,6 +67,15 @@ export class WebsocketService {
             this.subject.next(message);
         } else {
             console.warn('WebSocket not connected, cannot send message');
+        }
+    }
+
+    public disconnect():void {
+        if (this.subject) {
+            this.subject.complete();
+            this.subject = new AnonymousSubject<MessageEvent>();
+        } else {
+            console.warn('WebSocket not connected, cannot disconnect');
         }
     }
 }

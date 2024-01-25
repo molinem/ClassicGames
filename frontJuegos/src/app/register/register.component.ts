@@ -36,7 +36,6 @@ export class RegisterComponent {
       this.usuario.datosRegistro(this.registerForm.controls['Nombre'].value,this.registerForm.controls['Email'].value,this.registerForm.controls['Pwd1'].value,this.registerForm.controls['Pwd2'].value);
       this.userService.registrarUsuario(this.usuario).subscribe(
         result =>{
-          console.log(JSON.stringify(result));
           this.router.navigate(['/Login']);
         },
         error =>{
