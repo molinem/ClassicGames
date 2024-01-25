@@ -19,7 +19,7 @@ export class WebsocketService {
   
   constructor() { }
 
-  public connect(url: string): AnonymousSubject<MessageEvent> {
+    public connect(url: string): AnonymousSubject<MessageEvent> {
         if (!this.subject) {
             this.subject = this.create(url);
             this.messages = <Subject<Message>>this.subject.pipe(

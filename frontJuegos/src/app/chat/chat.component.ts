@@ -14,30 +14,27 @@ export class ChatComponent implements AfterViewInit {
   ];
 
   txtMessage: any;
-  ws_chat!: WebsocketService;
-  
   ngOnInit() : void {
-    this.ws_chat.connect("ws://localhost:8080/wsGames");
+    
   }
 
-  constructor(private chatService: ChatService){
+  constructor(private chatService: ChatService, private websocketService: WebsocketService){
     let nuevoMensaje1: Mensaje = {
       autor: "Nombre del Autor1",
       contenido: "Este es el contenido del mensaje",
       timestamp: new Date()
     };
 
-    this.ws_chat = new WebsocketService;
   }
 
   ngAfterViewInit() {
-    this.ws_chat.messages.subscribe(msg => {
-      const data = JSON.parse(JSON.stringify(msg));
-      console.log(msg)
-      if(data.type == ""){
-        
-      }
-    });
+    setTimeout(() => {
+      this.websocketService.messages.subscribe((msg: any) => {
+        const data = JSON.parse(JSON.stringify(msg));
+        console.log(data);
+      });
+    }, 5000);
+
   }
 
 
@@ -47,7 +44,7 @@ export class ChatComponent implements AfterViewInit {
       nombre : "Pepe"
     }
 
-    this.ws_chat.sendMessage(msg);
+    this.websocketService.sendMessage(msg);
   }
 
 }

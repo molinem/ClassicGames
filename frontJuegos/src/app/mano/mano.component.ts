@@ -25,7 +25,6 @@ export class ManoComponent implements OnInit{
   
   localStorageService: LocalStorageService;
   public dataRow!:IRow[];
-  ws_tablero!: WebsocketService;
 
   constructor(private matchService : MatchService, private snackBar: MatSnackBar, private router: Router, private dataService: DataService, private websocketService: WebsocketService) {
     this.id_partida_curso = "";
@@ -46,8 +45,7 @@ export class ManoComponent implements OnInit{
     this.partida_finalizada = false;
     this.es_mi_turno = 0;
     
-    this.localStorageService = new LocalStorageService
-    this.saveToLocalStorage("myKey", "holaaaaa");
+    this.localStorageService = new LocalStorageService;
   }
 
 
@@ -138,8 +136,6 @@ export class ManoComponent implements OnInit{
           const data = JSON.parse(JSON.stringify(msg));
           let message = "";
           message = "El jugador " + data.nickWinner + " ha ganado";
-          this.saveToLocalStorage("Ganador", message);
-          this.localStorageService.setItem("Partida", this.id_partida_curso);
         });
       this.enviarNotificacion(this.mensaje_notificacion, 5000);
     }

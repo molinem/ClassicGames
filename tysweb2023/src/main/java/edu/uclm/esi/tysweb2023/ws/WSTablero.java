@@ -63,6 +63,7 @@ public class WSTablero extends TextWebSocketHandler {
 		String type = jso.getString("type");
 		
 		switch(type) {
+			//JUEGOS
 			case "MOVEMENT":
 				String matchId = jso.getString("matchId");
 				int columna = jso.getInt("col");
@@ -132,6 +133,18 @@ public class WSTablero extends TextWebSocketHandler {
 				
 				List<User> lis = msTiempo.findMatch(idPartida).getPlayers();
 				msTiempo.notificarMovimiento(idPartida, jso);
+				break;
+			//CHAT
+			case "IDENT":
+				String nombre = jso.getString("nombre");
+				
+				SesionWS sesionWS = this.sessionsById.get(session.getId());
+				sesionWS.setNombre(nombre);
+				
+				this.sessionsByNombre.put(nombre, sesionWS);
+				this.difundir(session, "tipo", "NUEVO USUARIO", "nombre", nombre);
+				this.bienvenida(session);
+				break;
 		}
 	}
 	
@@ -152,7 +165,45 @@ public class WSTablero extends TextWebSocketHandler {
 	    }
 	}
 
-
+	private void bienvenida(WebSocketSession sessionDelTipoQueAcabaDeLlegar) {
+		JSONObject jso = new JSONObject();
+		jso.put("tipo", "BIENVENIDA");
+		
+		JSONArray jsaUsuarios = new JSONArray();
+		
+		Collection<SesionWS> usuariosConectados = this.sessionsByNombre.values();
+		for (SesionWS usuarioConectado : usuariosConectados) {
+			if (usuarioConectado.getSession()!=sessionDelTipoQueAcabaDeLlegar) {
+				jsaUsuarios.put(usuarioConectado.getNombre());
+			}
+		}
+		jso.put("usuarios", jsaUsuarios);
+		try {
+			sessionDelTipoQueAcabaDeLlegar.sendMessage(new TextMessage(jso.toString()));
+		} catch (IOException e) {
+			this.eliminarSesion(sessionDelTipoQueAcabaDeLlegar);
+		}
+	}
+	
+	private void difundir(WebSocketSession remitente, Object... clavesyValores) {
+		// tipo, NUEVO USUARIO, nombre, Pepe, edad, 20, curso, 4º
+		JSONObject jso = new JSONObject();
+		for (int i=0; i<clavesyValores.length; i=i+2) {
+			String clave = clavesyValores[i].toString();
+			String valor = clavesyValores[i+1].toString();
+			jso.put(clave, valor);
+		}
+		for (WebSocketSession session : this.sessions) {
+			if (session!=remitente) {
+				try {
+					session.sendMessage(new TextMessage(jso.toString()));
+				} catch (IOException e) {
+					this.eliminarSesion(session);
+				}
+			}
+		}
+	}
+	
 	private void eliminarSesion(WebSocketSession session) {
 		this.sessions.remove(session);
 		SesionWS sesionWS = this.sessionsById.remove(session.getId());

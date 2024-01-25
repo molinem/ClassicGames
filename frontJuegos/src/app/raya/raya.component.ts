@@ -35,6 +35,7 @@ export class RayaComponent implements AfterViewInit {
   mensaje_tiempo: string = "";
 
   ws_tablero!: WebsocketService;
+  mostrarChat:boolean;
 
   cadena: String = "";
   elementos: string[] = [];
@@ -52,6 +53,7 @@ export class RayaComponent implements AfterViewInit {
     this.nick_jugador = "";
     this.mensaje_tiempo = "";
     this.localStorageService = new LocalStorageService;
+    this.mostrarChat = false;
   }
 
   saveToLocalStorage(clave: string, valor: string) {
@@ -151,28 +153,31 @@ export class RayaComponent implements AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.ws_tablero.connect("ws://localhost:8080/wsTablero");//-------------------------------------
-    this.enviarElTiempo();
-    this.ws_tablero.messages.subscribe(msg => {
-      const data = JSON.parse(JSON.stringify(msg));
-      console.log(msg);
-      let message = "";
-      switch (data.type) {
-        case "START":
-          message = "El jugador " + data.player_2 + " ha entrado a la partida";
-          this.enviarNotificacion(message, 5000);
-          break;
-        case "MATCH UPDATE":
-          this.actualizarTablero(data);
-          if (data.winner !== undefined) {
-            this.partida_finalizada = true;
-            message = "El jugador " + data.nickWinner + " ha ganado";
-            this.enviarNotificacion(message, 0);
-            //this.saveToLocalStorage("Ganador",message);
-          }
-          break;
-      }
-    });
+    setTimeout(() => {
+      this.ws_tablero.connect("ws://localhost:8080/wsTablero");
+      this.enviarElTiempo();
+      this.mostrarChat = true;
+      this.ws_tablero.messages.subscribe(msg => {
+        const data = JSON.parse(JSON.stringify(msg));
+        console.log(msg);
+        let message = "";
+        switch (data.type) {
+          case "START":
+            message = "El jugador " + data.player_2 + " ha entrado a la partida";
+            this.enviarNotificacion(message, 5000);
+            break;
+          case "MATCH UPDATE":
+            this.actualizarTablero(data);
+            if (data.winner !== undefined) {
+              this.partida_finalizada = true;
+              message = "El jugador " + data.nickWinner + " ha ganado";
+              this.enviarNotificacion(message, 0);
+            }
+            break;
+        }
+      });
+    }, 2000);
+    
   }
 
   seleccionarColumna(columnaIndex: number): void {
@@ -223,8 +228,6 @@ export class RayaComponent implements AfterViewInit {
         const data = JSON.parse(JSON.stringify(msg));
         let message = "";
         message = "El jugador " + data.nickWinner + " ha ganado";
-        this.saveToLocalStorage("Ganador", message);
-        this.localStorageService.setItem("Partida", this.id_partida_curso);
       });
     this.enviarNotificacion(this.mensaje_notificacion, 5000);
     }
