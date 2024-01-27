@@ -14,6 +14,8 @@ import {
 import { WeatherService } from '../weather.service';
 import { LocalStorageService } from '../local-storage.service';
 import { IRow } from '../irow';
+import { DataService } from '../data.service';
+import { Mensaje } from '../models/mensaje.model';
 
 @Component({
   selector: 'app-raya',
@@ -43,7 +45,7 @@ export class RayaComponent implements AfterViewInit {
   localStorageService: LocalStorageService;
   public dataRow!:IRow[];
 
-  constructor(private matchService: MatchService, private snackBar: MatSnackBar, private router: Router, private weath: WeatherService, localStorageService: LocalStorageService, private websocketService: WebsocketService) {
+  constructor(private matchService: MatchService, private snackBar: MatSnackBar, private router: Router, private weath: WeatherService, localStorageService: LocalStorageService, private websocketService: WebsocketService, private dataService: DataService) {
     this.partida = new raya;
     this.es_mi_turno = 0;
     this.partida_finalizada = false;
@@ -69,6 +71,8 @@ export class RayaComponent implements AfterViewInit {
     } else {
       this.id_partida_curso = estado['id_partida'];
       this.nick_jugador = estado['nick_jugador'];
+      this.dataService.compartirNickJugador(this.nick_jugador);
+      this.dataService.compartirMatchId(this.id_partida_curso);
       this.websocketService.connect("ws://localhost:8080/wsTablero");
     }
   }
@@ -169,6 +173,14 @@ export class RayaComponent implements AfterViewInit {
             message = "El jugador " + data.nickWinner + " ha ganado";
             this.enviarNotificacion(message, 5000);
           }
+          break;
+        case "MSG":
+          let nuevoMensaje: Mensaje = {
+            autor: data.nombre,
+            contenido: data.msg,
+            timestamp: new Date()
+          };
+          this.dataService.addMensaje(nuevoMensaje);
           break;
       }
     });

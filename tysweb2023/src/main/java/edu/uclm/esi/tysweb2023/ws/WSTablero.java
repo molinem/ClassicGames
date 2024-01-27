@@ -54,6 +54,11 @@ public class WSTablero extends TextWebSocketHandler {
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception{				
 		String httpSessionId = obtenerHttpId(session);
 		ManagerWS.get().setWebsocketSession(httpSessionId, session);
+		/*
+		HttpSession hs =  UserController.httpSessions.get(httpSessionId);
+		User user = (User) hs.getAttribute("user");
+		ManagerWS.get().addSessionByUserId(user.getId(),hs);
+		*/
 	}
 	
 		
@@ -61,7 +66,8 @@ public class WSTablero extends TextWebSocketHandler {
 	protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
 		JSONObject jso = new JSONObject(message.getPayload());
 		String type = jso.getString("type");
-		
+		//Match update
+		MatchService ms = ManagerWS.get().getMatchService();
 		switch(type) {
 			//JUEGOS
 			case "MOVEMENT":
@@ -72,10 +78,7 @@ public class WSTablero extends TextWebSocketHandler {
 				String httpSessionId = obtenerHttpId(session);
 				HttpSession hs =  UserController.httpSessions.get(httpSessionId);
 				User user = (User) hs.getAttribute("user");
-				
-				//Match update
-				MatchService ms =  ManagerWS.get().getMatchService();
-				
+
 				String personaActualizarTablero = obtenerSiguienteNombre(ms.findMatch(matchId).getPlayers(),user.getNombre());
 				Tablero tb = ms.findMatch(matchId);
 				
@@ -108,12 +111,9 @@ public class WSTablero extends TextWebSocketHandler {
 				String httpSessionIdCartas = obtenerHttpId(session);
 				HttpSession hsCartas =  UserController.httpSessions.get(httpSessionIdCartas);
 				User userCartas = (User) hsCartas.getAttribute("user");
-				
-				//Match update
-				MatchService msCartas =  ManagerWS.get().getMatchService();
-				
-				String personaActualizarTableroCartas = obtenerSiguienteNombre(msCartas.findMatch(matchId_Cartas).getPlayers(),userCartas.getNombre());
-				Tablero tbCartas = msCartas.findMatch(matchId_Cartas);
+
+				String personaActualizarTableroCartas = obtenerSiguienteNombre(ms.findMatch(matchId_Cartas).getPlayers(),userCartas.getNombre());
+				Tablero tbCartas = ms.findMatch(matchId_Cartas);
 				
 				jso = new JSONObject();
 				jso.put("type", "MATCH UPDATE");
@@ -123,27 +123,26 @@ public class WSTablero extends TextWebSocketHandler {
 				jso.put("cartas2", tbCartas.getCartas2());
 				jso.put("cartasMesa", tbCartas.getCartasMesa());
 				
-				msCartas.notificarMovimiento(matchId_Cartas, jso);
+				ms.notificarMovimiento(matchId_Cartas, jso);
 				break;
 			case "WEATHER":
 				String nickUser = jso.getString("user");
 				String idPartida = jso.getString("idPartida");
 				String cdTiempo = jso.getString("tiempo");
-				MatchService msTiempo =  ManagerWS.get().getMatchService();
 				
-				List<User> lis = msTiempo.findMatch(idPartida).getPlayers();
-				msTiempo.notificarMovimiento(idPartida, jso);
+				List<User> lis = ms.findMatch(idPartida).getPlayers();
+				ms.notificarMovimiento(idPartida, jso);
 				break;
 			//CHAT
-			case "IDENT":
+			case "MSG":
 				String nombre = jso.getString("nombre");
-				
-				SesionWS sesionWS = this.sessionsById.get(session.getId());
-				sesionWS.setNombre(nombre);
-				
-				this.sessionsByNombre.put(nombre, sesionWS);
-				this.difundir(session, "tipo", "NUEVO USUARIO", "nombre", nombre);
-				this.bienvenida(session);
+				String matchIdChat = jso.getString("matchId");
+				String msg = jso.getString("contenido");
+				Tablero game = ms.findMatch(matchIdChat);
+
+				jso.put("nombre", nombre);
+				jso.put("msg", msg);
+				ms.difundirMsg(jso, game.getPlayers());
 				break;
 		}
 	}

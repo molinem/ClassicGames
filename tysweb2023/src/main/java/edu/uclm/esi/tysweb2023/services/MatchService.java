@@ -86,17 +86,18 @@ public class MatchService {
 
 		
 		if (tipoMensaje.contentEquals("START")) {
+			
 			try {
 				jugadoresPartida.get(0).sendMessage(jso);
 			} catch (IOException e) {
 				e.printStackTrace();
-			}
+			} 
 		}else {
 			difundirMsg(jso,jugadoresPartida);
 		}
 	}
 	
-	private void difundirMsg(JSONObject jsa, List<User> jugadoresPartida ) throws Exception {
+	public void difundirMsg(JSONObject jsa, List<User> jugadoresPartida ) throws Exception {
 		for (User player : jugadoresPartida) {
 			try {
 				player.sendMessage(jsa);
