@@ -9,31 +9,31 @@ import { WebsocketService } from '../websocket.service';
   styleUrls: ['./chat.component.css']
 })
 export class ChatComponent implements AfterViewInit {
-  mensajes: Mensaje[] = [
+  mensajes: Mensaje[] = [];
 
-  ];
+  txtMessage: String;
 
-  txtMessage: any;
   ngOnInit() : void {
     
   }
 
   constructor(private chatService: ChatService, private websocketService: WebsocketService){
+    this.txtMessage = "";
+
+  }
+
+  ngAfterViewInit() {
     let nuevoMensaje1: Mensaje = {
       autor: "Nombre del Autor1",
       contenido: "Este es el contenido del mensaje",
       timestamp: new Date()
     };
 
-  }
-
-  ngAfterViewInit() {
-    setTimeout(() => {
-      this.websocketService.messages.subscribe((msg: any) => {
-        const data = JSON.parse(JSON.stringify(msg));
-        console.log(data);
-      });
-    }, 5000);
+    
+    this.websocketService.messages.subscribe((msg: any) => {
+      const datas = JSON.parse(JSON.stringify(msg));
+    });
+    
 
   }
 

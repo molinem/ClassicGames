@@ -52,11 +52,11 @@ public class MatchController {
 				session.setAttribute("user", user);
 			}
 			
-			ConcurrentHashMap<String, Object> result = new ConcurrentHashMap<>();
-			result.put("httpId", session.getId());
-			
 			UserController.httpSessions.put(session.getId(), session);
 			ManagerWS.get().addSessionByUserId(user.getId(), session);
+			
+			ConcurrentHashMap<String, Object> result = new ConcurrentHashMap<>();
+			result.put("httpId", session.getId());
 			
 			Tablero tableroJuego = this.matchService.newMatch(user,juego);
 			result.put("tablero", tableroJuego);

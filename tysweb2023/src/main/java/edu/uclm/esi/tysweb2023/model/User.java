@@ -87,15 +87,16 @@ public class User implements Serializable {
 		SesionWS ws = ManagerWS.get().getSessionByUserId(this.id);
 		WebSocketSession wsSession = ws.getWebsocketSession();
 		if (wsSession != null) {
-			synchronized (wsSession) {
-				TextMessage message = new TextMessage(jso.toString());
-				try {
-					wsSession.sendMessage(message);
-				} catch (IOException e) {
-					System.err.println("In notify: " +	wsSession.getId() + "-> " + e.getMessage());
-				} 
-			}
-		}		
+			TextMessage message = new TextMessage(jso.toString());
+			try {
+				wsSession.sendMessage(message);
+			} catch (IOException e) {
+				System.err.println("In notify: " +	wsSession.getId() + "-> " + e.getMessage());
+			} 
+			
+		}else {
+			System.out.println("User -> SendMessage: WebSocketSession nula");
+		}	
 	}
 
 }

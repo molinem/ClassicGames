@@ -19,8 +19,8 @@
              
           <div class="type-msg">  
             <div class="input-msg-write ">  
-              <input type="text" [value]="txtMessage"  
-              (keydown.enter)="enviarMensajeChat()" placeholder="Type a message" />  
+              <input type="text" [(ngModel)]="txtMessage"  
+              (keydown.enter)="enviarMensajeChat()" placeholder=""/>
               <button class="msg-send-btn mr-4" type="button"  (click)="enviarMensajeChat()"><i class="fa fa-paper-plane-o" aria-hidden="true">Enviar</i></button>  
             </div>  
           </div>  

@@ -34,7 +34,6 @@ export class RayaComponent implements AfterViewInit {
   mensaje_notificacion: string = "";
   mensaje_tiempo: string = "";
 
-  ws_tablero!: WebsocketService;
   mostrarChat:boolean;
 
   cadena: String = "";
@@ -44,9 +43,8 @@ export class RayaComponent implements AfterViewInit {
   localStorageService: LocalStorageService;
   public dataRow!:IRow[];
 
-  constructor(private matchService: MatchService, private snackBar: MatSnackBar, private router: Router, private weath: WeatherService, localStorageService: LocalStorageService) {
+  constructor(private matchService: MatchService, private snackBar: MatSnackBar, private router: Router, private weath: WeatherService, localStorageService: LocalStorageService, private websocketService: WebsocketService) {
     this.partida = new raya;
-    this.ws_tablero = new WebsocketService;
     this.es_mi_turno = 0;
     this.partida_finalizada = false;
     this.id_partida_curso = "";
@@ -71,11 +69,12 @@ export class RayaComponent implements AfterViewInit {
     } else {
       this.id_partida_curso = estado['id_partida'];
       this.nick_jugador = estado['nick_jugador'];
+      this.websocketService.connect("ws://localhost:8080/wsTablero");
     }
   }
 
   public desconectar() {
-    this.ws_tablero.disconnect();
+    this.websocketService.disconnect();
     this.router.navigate(['/ElegirJuego']);
   }
 
@@ -116,7 +115,7 @@ export class RayaComponent implements AfterViewInit {
       user: this.nick_jugador,
       tiempo: this.mensaje_tiempo,
     }
-    this.ws_tablero.sendMessage(msg_weather);
+    this.websocketService.sendMessage(msg_weather);
   }
 
 
@@ -153,30 +152,27 @@ export class RayaComponent implements AfterViewInit {
   }
 
   ngAfterViewInit() {
-    setTimeout(() => {
-      this.ws_tablero.connect("ws://localhost:8080/wsTablero");
-      this.enviarElTiempo();
-      this.mostrarChat = true;
-      this.ws_tablero.messages.subscribe(msg => {
-        const data = JSON.parse(JSON.stringify(msg));
-        console.log(msg);
-        let message = "";
-        switch (data.type) {
-          case "START":
-            message = "El jugador " + data.player_2 + " ha entrado a la partida";
+    this.enviarElTiempo();
+    this.websocketService.messages.subscribe(msg => {
+      const data = JSON.parse(JSON.stringify(msg));
+      console.log(msg);
+      let message = "";
+      switch (data.type) {
+        case "START":
+          message = "El jugador " + data.player_2 + " ha entrado a la partida";
+          this.enviarNotificacion(message, 5000);
+          break;
+        case "MATCH UPDATE":
+          this.actualizarTablero(data);
+          if (data.winner !== undefined) {
+            this.partida_finalizada = true;
+            message = "El jugador " + data.nickWinner + " ha ganado";
             this.enviarNotificacion(message, 5000);
-            break;
-          case "MATCH UPDATE":
-            this.actualizarTablero(data);
-            if (data.winner !== undefined) {
-              this.partida_finalizada = true;
-              message = "El jugador " + data.nickWinner + " ha ganado";
-              this.enviarNotificacion(message, 0);
-            }
-            break;
-        }
-      });
-    }, 2000);
+          }
+          break;
+      }
+    });
+    
     
   }
 
@@ -201,7 +197,7 @@ export class RayaComponent implements AfterViewInit {
                   col: this.columnaSeleccionada,
                   matchId: this.id_partida_curso
                 }
-                this.ws_tablero.sendMessage(msg_movimiento);
+                this.websocketService.sendMessage(msg_movimiento);
               },
               error => {
                 console.log("[PonerFicha4R] Se ha producido el siguiente error: " + error);
@@ -224,7 +220,7 @@ export class RayaComponent implements AfterViewInit {
       );
     } else {
       this.mensaje_notificacion = "La partida ha finalizado";
-      this.ws_tablero.messages.subscribe(msg => {
+      this.websocketService.messages.subscribe(msg => {
         const data = JSON.parse(JSON.stringify(msg));
         let message = "";
         message = "El jugador " + data.nickWinner + " ha ganado";
