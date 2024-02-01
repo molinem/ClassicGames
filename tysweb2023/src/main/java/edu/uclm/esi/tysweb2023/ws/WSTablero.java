@@ -42,6 +42,11 @@ public class WSTablero extends TextWebSocketHandler {
 				if (cadena.startsWith("JSESSIONID")) {
 					httpSessionId = cadena.substring(11);
 					break;
+				}else if(cadena.contains("JSESSIONID")) {
+					int pos = cadena.indexOf("JSESSIONID");
+					httpSessionId = cadena.subSequence(pos, cadena.length()).toString();
+					httpSessionId = httpSessionId.substring(11);
+					break;
 				}
 			}
 			if (httpSessionId!=null)
@@ -53,7 +58,12 @@ public class WSTablero extends TextWebSocketHandler {
 	@Override
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception{				
 		String httpSessionId = obtenerHttpId(session);
-		ManagerWS.get().setWebsocketSession(httpSessionId, session);
+		if (httpSessionId != null) {
+			System.out.println("Id http-->"+httpSessionId);
+			ManagerWS.get().setWebsocketSession(httpSessionId, session);
+		}else {
+			System.out.printf("%s \n","No se pudo obtener el httpId");
+		}
 		/*
 		HttpSession hs =  UserController.httpSessions.get(httpSessionId);
 		User user = (User) hs.getAttribute("user");
