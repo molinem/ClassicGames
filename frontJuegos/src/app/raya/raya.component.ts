@@ -73,12 +73,12 @@ export class RayaComponent implements AfterViewInit {
       this.nick_jugador = estado['nick_jugador'];
       this.dataService.compartirNickJugador(this.nick_jugador);
       this.dataService.compartirMatchId(this.id_partida_curso);
-      this.websocketService.connect("ws://localhost:8080/wsTablero");
     }
   }
 
   public desconectar() {
     this.websocketService.disconnect();
+    this.dataService.inicializarMensajes();
     this.router.navigate(['/ElegirJuego']);
   }
 
@@ -156,6 +156,7 @@ export class RayaComponent implements AfterViewInit {
   }
 
   ngAfterViewInit() {
+    this.websocketService.connect("ws://localhost:8080/wsTablero");
     this.enviarElTiempo();
     this.websocketService.messages.subscribe(msg => {
       const data = JSON.parse(JSON.stringify(msg));
@@ -178,7 +179,7 @@ export class RayaComponent implements AfterViewInit {
           let nuevoMensaje: Mensaje = {
             autor: data.nombre,
             contenido: data.msg,
-            timestamp: new Date()
+            timestamp: new Date().toLocaleTimeString()
           };
           this.dataService.addMensaje(nuevoMensaje);
           break;

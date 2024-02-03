@@ -1,3 +1,8 @@
+#titulo{
+  font-size: 25px;
+  font-weight: 900;
+}
+
 .mensajes-container {
   max-height: 500px;
   overflow-y: auto;
@@ -8,15 +13,25 @@
   padding: 10px;
 }
 
-.mensaje-autor {
+.mensaje-autor p {
+  display: flex;
+}
+
+.autor, .contenido, .timestamp {
+  font-size: 16px;
+}
+
+.autor {
   font-weight: bold;
+  color: #8616e7;
 }
 
-.mensaje-contenido {
-  margin-left: 20px;
+.contenido, .timestamp {
+  color: black;
 }
 
-.mensaje-timestamp {
-  text-align: right;
-  font-size: 0.8em;
+.space10{
+  height: 10px;
+  clear: both;
 }
+

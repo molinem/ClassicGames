@@ -34,6 +34,7 @@ export class DataService {
   }
 
   inicializarMensajes() {
+    this.mensajes = [];
     this.mensajesActual = new BehaviorSubject<Mensaje[]>(this.mensajes);
   }
 

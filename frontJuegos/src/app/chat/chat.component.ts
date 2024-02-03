@@ -16,23 +16,15 @@ export class ChatComponent implements AfterViewInit {
   matchId: string;
 
   ngOnInit() : void {
-    
   }
 
   constructor(private chatService: ChatService, private websocketService: WebsocketService, private dataService: DataService){
     this.txtMessage = "";
     this.nickJugador = "";
     this.matchId = "";
-
   }
 
   ngAfterViewInit() {
-    let nuevoMensaje1: Mensaje = {
-      autor: "Nombre del Autor1",
-      contenido: "Este es el contenido del mensaje",
-      timestamp: new Date()
-    };
-
     this.dataService.nickJugadorActual.subscribe(nick => {
       this.nickJugador = nick;
     });
@@ -44,22 +36,6 @@ export class ChatComponent implements AfterViewInit {
     this.dataService.mensajesActual.subscribe(mensajes => {
       this.mensajes = mensajes;
     });
-    
-    /*
-    this.websocketService.messages.subscribe(msg => {
-      const data = JSON.parse(JSON.stringify(msg));
-      console.log(data.type);
-      switch (data.type) {
-        case "MSG":
-          let nuevoMensaje: Mensaje = {
-            autor: data.nombre,
-            contenido: data.msg,
-            timestamp: new Date()
-          };
-          this.mensajes.push(nuevoMensaje);
-          break;
-      }
-    });*/
   }
 
 
@@ -71,6 +47,7 @@ export class ChatComponent implements AfterViewInit {
       contenido: mensaje
     }
 
+    this.txtMessage = '';
     this.websocketService.sendMessage(msg);
   }
 
