@@ -10,19 +10,18 @@ import { Router } from '@angular/router';
   styleUrls: ['./elegir-juego.component.css']
 })
 export class ElegirJuegoComponent {
-
-
-  ws_tablero!: WebsocketService;
   id_partida: string="";
   http_id: string="";
   nick_jugador: string="";
 
-  constructor(private matchService : MatchService, private router: Router){
-    this.ws_tablero = new WebsocketService
+  constructor(private matchService : MatchService, private router: Router, private websocketService: WebsocketService){    
   }
 
   // get-> /start
   crearPartida4R():void{
+    //Conectar websocket
+    //this.websocketService.connect("ws://localhost:8080/wsTablero");
+  
     this.matchService.iniciarPartida4R().subscribe(
       result =>{
         const js = JSON.stringify(result)

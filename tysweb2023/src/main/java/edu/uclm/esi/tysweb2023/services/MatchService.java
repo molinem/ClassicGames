@@ -85,11 +85,11 @@ public class MatchService {
 		jso.put("playerWithTurn", tb.getJugadorConElTurno().getNombre());
 		
 		if (tipoMensaje.contentEquals("START")) {
-			try {
-				jugadoresPartida.get(0).sendMessage(jso);
+			/*try {
+				//jugadoresPartida.get(0).sendMessage(jso);
 			} catch (IOException e) {
 				e.printStackTrace();
-			}
+			}*/
 		}else {
 			difundirMsg(jso,jugadoresPartida);
 		}

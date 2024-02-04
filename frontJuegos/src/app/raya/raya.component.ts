@@ -157,7 +157,7 @@ export class RayaComponent implements AfterViewInit {
 
   ngAfterViewInit() {
     this.websocketService.connect("ws://localhost:8080/wsTablero");
-    this.enviarElTiempo();
+    //this.enviarElTiempo();
     this.websocketService.messages.subscribe(msg => {
       const data = JSON.parse(JSON.stringify(msg));
       console.log(msg);

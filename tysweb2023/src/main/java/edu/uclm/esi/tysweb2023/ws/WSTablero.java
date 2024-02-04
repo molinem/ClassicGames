@@ -60,9 +60,22 @@ public class WSTablero extends TextWebSocketHandler {
 		String httpSessionId = obtenerHttpId(session);
 		if (httpSessionId != null) {
 			ManagerWS.get().setWebsocketSession(httpSessionId, session);
+			/*
+			System.out.println(httpSessionId);
+			HttpSession httpSession = UserController.httpSessions.get(httpSessionId);
+			SesionWS sesionWs = new SesionWS(session,httpSession);
+			User user = (User) httpSession.getAttribute("user");
+			sesionWs.setNombre(user.getNombre());
+			user.setSesionWS(sesionWs);
+			
+			this.sessionsById.put(session.getId(), sesionWs);
+			this.sessions.add(session);
+			**/
 		}else {
 			System.out.printf("[AfterConnectionEstablished] >> %s \n","No se pudo obtener el httpId");
 		}
+		
+		
 	}
 	
 		
