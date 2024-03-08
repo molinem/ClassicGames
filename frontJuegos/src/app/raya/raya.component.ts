@@ -22,7 +22,7 @@ import { Mensaje } from '../models/mensaje.model';
   templateUrl: './raya.component.html',
   styleUrls: ['./raya.component.css']
 })
-export class RayaComponent implements AfterViewInit {
+export class RayaComponent{
 
   partida: raya
   columnaHover: number | null = null;
@@ -54,10 +54,11 @@ export class RayaComponent implements AfterViewInit {
     this.mensaje_tiempo = "";
     this.localStorageService = new LocalStorageService;
     this.mostrarChat = false;
+    this.websocketService.observador = this;
   }
 
   saveToLocalStorage(clave: string, valor: string) {
-    this.localStorageService.setItem(clave, valor);
+    //this.localStorageService.setItem(clave, valor);
   }
   getFromLocalStorage(clave: string){
     //this.localStorageService.getItem(clave);
@@ -77,7 +78,7 @@ export class RayaComponent implements AfterViewInit {
   }
 
   public desconectar() {
-    this.websocketService.disconnect();
+    this.websocketService.ws.close()
     this.dataService.inicializarMensajes();
     this.router.navigate(['/ElegirJuego']);
   }
@@ -119,7 +120,7 @@ export class RayaComponent implements AfterViewInit {
       user: this.nick_jugador,
       tiempo: this.mensaje_tiempo,
     }
-    this.websocketService.sendMessage(msg_weather);
+    this.websocketService.ws.send(JSON.stringify(msg_weather));
   }
 
 
@@ -155,13 +156,9 @@ export class RayaComponent implements AfterViewInit {
     });
   }
 
-  ngAfterViewInit() {
-    this.websocketService.connect("ws://localhost:8080/wsTablero");
-    //this.enviarElTiempo();
-    this.websocketService.messages.subscribe(msg => {
-      const data = JSON.parse(JSON.stringify(msg));
-      console.log(msg);
-      let message = "";
+  setMessage(data:any) {
+    console.log("entro aquí")
+      let message
       switch (data.type) {
         case "START":
           message = "El jugador " + data.player_2 + " ha entrado a la partida";
@@ -184,7 +181,6 @@ export class RayaComponent implements AfterViewInit {
           this.dataService.addMensaje(nuevoMensaje);
           break;
       }
-    });
     
     
   }
@@ -210,7 +206,7 @@ export class RayaComponent implements AfterViewInit {
                   col: this.columnaSeleccionada,
                   matchId: this.id_partida_curso
                 }
-                this.websocketService.sendMessage(msg_movimiento);
+                this.websocketService.ws.send(JSON.stringify(msg_movimiento));
               },
               error => {
                 console.log("[PonerFicha4R] Se ha producido el siguiente error: " + error);
@@ -233,11 +229,11 @@ export class RayaComponent implements AfterViewInit {
       );
     } else {
       this.mensaje_notificacion = "La partida ha finalizado";
-      this.websocketService.messages.subscribe(msg => {
+      /*this.websocketService.messages.subscribe(msg => {
         const data = JSON.parse(JSON.stringify(msg));
         let message = "";
         message = "El jugador " + data.nickWinner + " ha ganado";
-      });
+      });*/
     this.enviarNotificacion(this.mensaje_notificacion, 5000);
     }
 

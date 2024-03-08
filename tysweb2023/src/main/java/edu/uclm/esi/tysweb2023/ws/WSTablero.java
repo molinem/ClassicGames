@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.apache.catalina.Manager;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,9 +93,8 @@ public class WSTablero extends TextWebSocketHandler {
 				int columna = jso.getInt("col");
 				
 				//Sacar de la session el nombre del jugador
-				String httpSessionId = obtenerHttpId(session);
-				HttpSession hs =  UserController.httpSessions.get(httpSessionId);
-				User user = (User) hs.getAttribute("user");
+				User user = (User) ManagerWS.get().getSessionByWebSocketId(session.getId())
+					.getHttpSession().getAttribute("user");
 
 				String personaActualizarTablero = obtenerSiguienteNombre(ms.findMatch(matchId).getPlayers(),user.getNombre());
 				Tablero tb = ms.findMatch(matchId);
@@ -124,10 +124,9 @@ public class WSTablero extends TextWebSocketHandler {
 			case "MOVEMENTCARTA":
 				String matchId_Cartas = jso.getString("matchId");
 				
-				//Sacar de la session el nombre del jugador
-				String httpSessionIdCartas = obtenerHttpId(session);
-				HttpSession hsCartas =  UserController.httpSessions.get(httpSessionIdCartas);
-				User userCartas = (User) hsCartas.getAttribute("user");
+				//Sacar de la session el nombre del jugador				
+				User userCartas = (User) ManagerWS.get().getSessionByWebSocketId(session.getId())
+						.getHttpSession().getAttribute("user");
 
 				String personaActualizarTableroCartas = obtenerSiguienteNombre(ms.findMatch(matchId_Cartas).getPlayers(),userCartas.getNombre());
 				Tablero tbCartas = ms.findMatch(matchId_Cartas);
@@ -156,10 +155,11 @@ public class WSTablero extends TextWebSocketHandler {
 				String matchIdChat = jso.getString("matchId");
 				String msg = jso.getString("contenido");
 				Tablero game = ms.findMatch(matchIdChat);
-
-				jso.put("nombre", nombre);
-				jso.put("msg", msg);
-				ms.difundirMsg(jso, game.getPlayers());
+				if (game==null) {
+					jso.put("nombre", nombre);
+					jso.put("msg", msg);
+					ms.difundirMsg(jso, game.getPlayers());
+				}
 				break;
 		}
 	}
@@ -228,10 +228,8 @@ public class WSTablero extends TextWebSocketHandler {
 
 	@Override
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-		//SesionWS sesionWS = this.sessionsById.remove(session.getId());
-		//this.sessionsByNombre.remove(sesionWS.getNombre());
 		SesionWS hwSession = ManagerWS.get().getSessionByWebSocketId(session.getId());
-		//hwSession.setWebsocketSession(null);
+		System.out.println("Sesión cerrada");
 	}
 
 	@Override

@@ -109,7 +109,7 @@ export class ManoComponent implements OnInit{
                   type: "MOVEMENTCARTA",
                   matchId: this.id_partida_curso
                 }
-                this.websocketService.sendMessage(msg_movimiento);
+                this.websocketService.ws.send(JSON.stringify(msg_movimiento));
               },
               error => {
                 console.log("[PonerCarta] Se ha producido el siguiente error: " + error);
@@ -132,11 +132,11 @@ export class ManoComponent implements OnInit{
       );
     } else {
         this.mensaje_notificacion = "La partida ha finalizado";
-        this.websocketService.messages.subscribe((msg: any) => {
+        /*this.websocketService.messages.subscribe((msg: any) => {
           const data = JSON.parse(JSON.stringify(msg));
           let message = "";
           message = "El jugador " + data.nickWinner + " ha ganado";
-        });
+        });*/
       this.enviarNotificacion(this.mensaje_notificacion, 5000);
     }
 

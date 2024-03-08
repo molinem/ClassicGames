@@ -13,69 +13,32 @@ export interface Message {
 
 export class WebsocketService {
   
-  private subject!: AnonymousSubject<MessageEvent>;
-  public messages!: Subject<Message>;
-  private ws!: AnonymousSubject<MessageEvent>;
+ ws: WebSocket;
+ observador: any
   
-  constructor() { }
-
-    public connect(url: string): AnonymousSubject<MessageEvent> {
-        if (!this.subject) {
-            this.subject = this.create(url);
-            this.messages = <Subject<Message>>this.subject.pipe(
-                map(
-                    (response: MessageEvent): Message => {
-                        //console.log(response.data);
-                        const data = JSON.parse(response.data);
-                        return data;
-                    },
-                ),
-            );
-            console.log('Conexión realizada correctamente: ' + url);
-        }
-        this.ws = this.subject;
-        return this.subject;
+  constructor() {
+    let self = this
+    this.ws = new WebSocket("ws://localhost:8080/wsTablero")
+    
+    this.ws.onopen = function name(e) {
+        console.log("Websocket conectado")
     }
 
-    private create(url: string): AnonymousSubject<MessageEvent> {
-        const ws = new WebSocket(url);
-        const observable = new Observable((obs: Observer<MessageEvent>) => {
-            ws.onmessage = obs.next.bind(obs);
-            ws.onerror = obs.error.bind(obs);
-            ws.onclose = obs.complete.bind(obs);
-            return ws.close.bind(ws);
-        });
-        const observer = {
-            next: (data: Object) => {
-                console.log('Message sent to websocket: ', data);
-                if (ws.readyState === WebSocket.OPEN) {
-                    ws.send(JSON.stringify(data));
-                }
-            },
-            error: (err: any) => {
-              console.error('WebSocket error:', err);
-            },
-            complete: () => {
-                console.log('WebSocket connection completed');
-            },
-        };
-        return new AnonymousSubject<MessageEvent>(observer, observable);
+    this.ws.onmessage = function(e){
+       let data = e.data
+       console.log(data)
+       data = JSON.parse(e.data)
+       self.observador.setMessage(data)
     }
 
-    public sendMessage(message: any): void {
-        if (this.subject) {
-            this.subject.next(message);
-        } else {
-            console.warn('WebSocket not connected, cannot send message');
-        }
+    this.ws.onerror = function(e){
+        console.log("error en el websocket")
     }
 
-    public disconnect():void {
-        if (this.subject) {
-            this.subject.complete();
-            this.subject = new AnonymousSubject<MessageEvent>();
-        } else {
-            console.warn('WebSocket not connected, cannot disconnect');
-        }
+    this.ws.onclose = function(e){
+        console.log("websocket cerrado")
     }
+   }
+
+
 }

@@ -86,13 +86,13 @@ public class User implements Serializable {
 	public void sendMessage(JSONObject jso) throws IOException {
 		SesionWS ws = ManagerWS.get().getSessionByUserId(this.id);
 		
-		WebSocketSession wsSession = ws.getWebsocketSession();
+		WebSocketSession wsSession = ws.getWebsocketSession();///
 		if (wsSession != null) {
 			TextMessage message = new TextMessage(jso.toString());
 			try {
 				wsSession.sendMessage(message);
 			} catch (IOException e) {
-				System.err.println("In notify: " +	wsSession.getId() + "-> " + e.getMessage());
+				System.err.println("Notify: " +	wsSession.getId() + "-> " + e.getMessage());
 			} 
 			
 		}else {

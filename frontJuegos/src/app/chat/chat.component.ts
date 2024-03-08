@@ -48,7 +48,7 @@ export class ChatComponent implements AfterViewInit {
     }
 
     this.txtMessage = '';
-    this.websocketService.sendMessage(msg);
+    this.websocketService.ws.send(JSON.stringify(msg));
   }
 
 }

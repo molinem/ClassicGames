@@ -9,7 +9,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { LoginComponent } from './login/login.component';
 import { ElegirJuegoComponent } from './elegir-juego/elegir-juego.component';
-import { SalaDeEsperaComponent } from './sala-de-espera/sala-de-espera.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { FormsModule } from '@angular/forms';
@@ -26,7 +25,6 @@ import { CurrencyPipe, UpperCasePipe } from '@angular/common';
     RegisterComponent,
     LoginComponent,
     ElegirJuegoComponent,
-    SalaDeEsperaComponent,
     ChatComponent,
     MesaComponent,
     ManoComponent,

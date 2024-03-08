@@ -38,17 +38,14 @@ export class MesaComponent {
     if (!estado || !estado['id_partida']) {
       this.router.navigate(['/ElegirJuego']);
     }else{
-      this.websocketService.connect("ws://localhost:8080/wsTablero");
       this.id_partida_curso = estado['id_partida'];
       this.nick_jugador = estado['nick_jugador'];
       this.enviarDato();
     }
   }
 
-  ngAfterViewInit() {
-    this.websocketService.messages.subscribe(msg => {
-      const data = JSON.parse(JSON.stringify(msg));
-      console.log(msg);
+  setMessage(data:any) {
+
       let message = "";
       switch (data.type) {
         case "START":
@@ -58,7 +55,7 @@ export class MesaComponent {
           break;
         
       }
-    });
+    
     this.matchService.queJugadorSoy(this.id_partida_curso).subscribe(
       result => {
         if(result == 2){

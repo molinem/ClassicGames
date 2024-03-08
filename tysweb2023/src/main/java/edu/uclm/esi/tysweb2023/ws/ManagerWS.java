@@ -86,6 +86,13 @@ public class ManagerWS {
 		return this.sessionsByWsId.get(wsId);
 	}
 	
+	public SesionWS removeSessionByWSId(String wsId) {
+		SesionWS hwSession = this.sessionsByWsId.remove(wsId);
+		this.sessionsByUserId.remove(hwSession.getUserId());
+		this.sessionsByHttpId.remove(hwSession.getHttpSession().getId());
+		return hwSession;
+	}
+	
 	public SesionWS removeSessionByHttpId(String httpId) {
 		SesionWS hwSession = this.sessionsByHttpId.remove(httpId);
 		this.sessionsByUserId.remove(hwSession.getUserId());
