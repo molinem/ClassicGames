@@ -59,6 +59,7 @@ public class WSTablero extends TextWebSocketHandler {
 	@Override
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception{				
 		String httpSessionId = obtenerHttpId(session);
+		System.out.println(httpSessionId);
 		if (httpSessionId != null) {
 			ManagerWS.get().setWebsocketSession(httpSessionId, session);
 			/*

@@ -13,10 +13,14 @@ export interface Message {
 
 export class WebsocketService {
   
- ws: WebSocket;
- observador: any
+  ws!: WebSocket;
+  observador: any
   
   constructor() {
+    
+  }
+
+  inicializar(){
     let self = this
     this.ws = new WebSocket("ws://localhost:8080/wsTablero")
     
@@ -38,7 +42,7 @@ export class WebsocketService {
     this.ws.onclose = function(e){
         console.log("websocket cerrado")
     }
-   }
+  }
 
 
 }

@@ -54,7 +54,9 @@ public class MatchController {
 			
 			UserController.httpSessions.put(session.getId(), session);
 			System.out.println(session.getId());
+			
 			ManagerWS.get().addSessionByUserId(user.getId(), session);
+			
 			
 			ConcurrentHashMap<String, Object> result = new ConcurrentHashMap<>();
 			result.put("httpId", session.getId());
@@ -66,7 +68,7 @@ public class MatchController {
 			//¿Partida lista?
 			if (tableroJuego.checkPartidaLista()) {
 				//Avisamos a los jugadores
-				this.matchService.notificarEstado("START", tableroJuego.getId());
+				//this.matchService.notificarEstado("START", tableroJuego.getId());
 			}
 			return result;
 		} catch (Exception e) {

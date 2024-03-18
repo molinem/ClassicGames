@@ -55,6 +55,7 @@ export class RayaComponent{
     this.localStorageService = new LocalStorageService;
     this.mostrarChat = false;
     this.websocketService.observador = this;
+    this.websocketService.inicializar();
   }
 
   saveToLocalStorage(clave: string, valor: string) {
@@ -158,29 +159,29 @@ export class RayaComponent{
 
   setMessage(data:any) {
     console.log("entro aquí")
-      let message
-      switch (data.type) {
-        case "START":
-          message = "El jugador " + data.player_2 + " ha entrado a la partida";
+    let message
+    switch (data.type) {
+      case "START":
+        message = "El jugador " + data.player_2 + " ha entrado a la partida";
+        this.enviarNotificacion(message, 5000);
+        break;
+      case "MATCH UPDATE":
+        this.actualizarTablero(data);
+        if (data.winner !== undefined) {
+          this.partida_finalizada = true;
+          message = "El jugador " + data.nickWinner + " ha ganado";
           this.enviarNotificacion(message, 5000);
-          break;
-        case "MATCH UPDATE":
-          this.actualizarTablero(data);
-          if (data.winner !== undefined) {
-            this.partida_finalizada = true;
-            message = "El jugador " + data.nickWinner + " ha ganado";
-            this.enviarNotificacion(message, 5000);
-          }
-          break;
-        case "MSG":
-          let nuevoMensaje: Mensaje = {
-            autor: data.nombre,
-            contenido: data.msg,
-            timestamp: new Date().toLocaleTimeString()
-          };
-          this.dataService.addMensaje(nuevoMensaje);
-          break;
-      }
+        }
+        break;
+      case "MSG":
+        let nuevoMensaje: Mensaje = {
+          autor: data.nombre,
+          contenido: data.msg,
+          timestamp: new Date().toLocaleTimeString()
+        };
+        this.dataService.addMensaje(nuevoMensaje);
+        break;
+    }
     
     
   }
