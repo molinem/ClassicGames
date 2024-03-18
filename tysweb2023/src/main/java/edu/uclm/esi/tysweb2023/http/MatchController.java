@@ -68,7 +68,7 @@ public class MatchController {
 			//¿Partida lista?
 			if (tableroJuego.checkPartidaLista()) {
 				//Avisamos a los jugadores
-				//this.matchService.notificarEstado("START", tableroJuego.getId());
+				this.matchService.notificarEstado("START", tableroJuego.getId());
 			}
 			return result;
 		} catch (Exception e) {

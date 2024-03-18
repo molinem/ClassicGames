@@ -22,6 +22,7 @@ export class ChatComponent implements AfterViewInit {
     this.txtMessage = "";
     this.nickJugador = "";
     this.matchId = "";
+    //this.websocketService.observador = this;
   }
 
   ngAfterViewInit() {
@@ -39,7 +40,7 @@ export class ChatComponent implements AfterViewInit {
   }
 
 
-  enviarMensajeChat (mensaje: string):void {
+  setMessage(mensaje: string):void {
     let msg = {
       type : "MSG",
       nombre : this.nickJugador,
@@ -48,6 +49,7 @@ export class ChatComponent implements AfterViewInit {
     }
 
     this.txtMessage = '';
+    console.log(JSON.stringify(msg));
     this.websocketService.ws.send(JSON.stringify(msg));
   }
 

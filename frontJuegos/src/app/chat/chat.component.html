@@ -20,8 +20,8 @@
           <div class="space10"></div>
           <div class="type-msg">  
             <div class="input-msg-write ">  
-              <input type="text" [(ngModel)]="txtMessage" (keydown.enter)="enviarMensajeChat(txtMessage)" placeholder=""/>&nbsp;
-              <button class="msg-send-btn mr-4" type="button" (click)="enviarMensajeChat(txtMessage)" [disabled]="!txtMessage">
+              <input type="text" [(ngModel)]="txtMessage" (keydown.enter)="setMessage(txtMessage)" placeholder=""/>&nbsp;
+              <button class="msg-send-btn mr-4" type="button" (click)="setMessage(txtMessage)" [disabled]="!txtMessage">
                 <i class="fa fa-paper-plane-o" aria-hidden="true">Enviar 📩</i>
               </button>  
             </div>  

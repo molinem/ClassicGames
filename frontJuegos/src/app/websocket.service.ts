@@ -16,8 +16,7 @@ export class WebsocketService {
   ws!: WebSocket;
   observador: any
   
-  constructor() {
-    
+  constructor() {  
   }
 
   inicializar(){
