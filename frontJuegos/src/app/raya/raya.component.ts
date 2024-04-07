@@ -158,7 +158,6 @@ export class RayaComponent{
   }
 
   setMessage(data:any) {
-    console.log("entro aquí")
     let message
     switch (data.type) {
       case "START":

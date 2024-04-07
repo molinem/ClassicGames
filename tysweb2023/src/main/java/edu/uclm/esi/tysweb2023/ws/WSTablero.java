@@ -59,25 +59,11 @@ public class WSTablero extends TextWebSocketHandler {
 	@Override
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception{				
 		String httpSessionId = obtenerHttpId(session);
-		System.out.println(httpSessionId);
 		if (httpSessionId != null) {
 			ManagerWS.get().setWebsocketSession(httpSessionId, session);
-			/*
-			System.out.println(httpSessionId);
-			HttpSession httpSession = UserController.httpSessions.get(httpSessionId);
-			SesionWS sesionWs = new SesionWS(session,httpSession);
-			User user = (User) httpSession.getAttribute("user");
-			sesionWs.setNombre(user.getNombre());
-			user.setSesionWS(sesionWs);
-			
-			this.sessionsById.put(session.getId(), sesionWs);
-			this.sessions.add(session);
-			**/
 		}else {
 			System.out.printf("[AfterConnectionEstablished] >> %s \n","No se pudo obtener el httpId");
 		}
-		
-		
 	}
 	
 		
@@ -156,7 +142,7 @@ public class WSTablero extends TextWebSocketHandler {
 				String matchIdChat = jso.getString("matchId");
 				String msg = jso.getString("contenido");
 				Tablero game = ms.findMatch(matchIdChat);
-				if (game==null) {
+				if (game!=null) {
 					jso.put("nombre", nombre);
 					jso.put("msg", msg);
 					ms.difundirMsg(jso, game.getPlayers());
@@ -229,8 +215,8 @@ public class WSTablero extends TextWebSocketHandler {
 
 	@Override
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-		SesionWS hwSession = ManagerWS.get().getSessionByWebSocketId(session.getId());
-		System.out.println("Sesión cerrada");
+		//String httpSessionId = obtenerHttpId(session);
+		System.out.printf("[WebSocket] La Sesión se ha cerrado correctamente\n");
 	}
 
 	@Override

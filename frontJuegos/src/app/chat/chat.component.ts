@@ -22,7 +22,6 @@ export class ChatComponent implements AfterViewInit {
     this.txtMessage = "";
     this.nickJugador = "";
     this.matchId = "";
-    //this.websocketService.observador = this;
   }
 
   ngAfterViewInit() {

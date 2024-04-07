@@ -53,10 +53,8 @@ public class MatchController {
 			}
 			
 			UserController.httpSessions.put(session.getId(), session);
-			System.out.println(session.getId());
-			
+			//System.out.println(session.getId());
 			ManagerWS.get().addSessionByUserId(user.getId(), session);
-			
 			
 			ConcurrentHashMap<String, Object> result = new ConcurrentHashMap<>();
 			result.put("httpId", session.getId());
