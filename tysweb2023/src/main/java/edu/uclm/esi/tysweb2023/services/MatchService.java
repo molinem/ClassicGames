@@ -70,7 +70,12 @@ public class MatchService {
 	}
 
 	public Tablero findMatch(String id) {
-		return this.tableros.get(id);
+		Tablero t = this.tableros.get(id);
+		if(t!=null) {
+			return t;
+		}
+		t = this.tablerosPendientes.get(0);
+		return t;
 	}
 	
 	public void notificarEstado(String tipoMensaje, String idPartida) throws Exception {

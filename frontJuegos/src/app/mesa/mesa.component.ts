@@ -20,6 +20,8 @@ export class MesaComponent {
     this.id_partida_curso = "";
     this.nick_jugador = "";
     this.mostrarCartasMano = false;
+    this.websocketService.observador = this;
+    this.websocketService.inicializar();
   }
 
   enviarDato() {
