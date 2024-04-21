@@ -47,17 +47,17 @@ export class MesaComponent {
   }
 
   setMessage(data:any) {
+    let message = "";
+    switch (data.type) {
+      case "START":
+        message = "El jugador " + data.player_2 + " ha entrado a la partida";
+        this.enviarNotificacion(message, 5000);
+        this.mostrarCartasMano = true;
+        break;
+    }
+  }
 
-      let message = "";
-      switch (data.type) {
-        case "START":
-          message = "El jugador " + data.player_2 + " ha entrado a la partida";
-          this.enviarNotificacion(message, 5000);
-          this.mostrarCartasMano = true;
-          break;
-        
-      }
-    
+  ngAfterViewInit() {
     this.matchService.queJugadorSoy(this.id_partida_curso).subscribe(
       result => {
         if(result == 2){
