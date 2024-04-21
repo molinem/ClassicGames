@@ -46,17 +46,6 @@ export class MesaComponent {
     }
   }
 
-  setMessage(data:any) {
-    let message = "";
-    switch (data.type) {
-      case "START":
-        message = "El jugador " + data.player_2 + " ha entrado a la partida";
-        this.enviarNotificacion(message, 5000);
-        this.mostrarCartasMano = true;
-        break;
-    }
-  }
-
   ngAfterViewInit() {
     this.matchService.queJugadorSoy(this.id_partida_curso).subscribe(
       result => {
@@ -70,4 +59,22 @@ export class MesaComponent {
     )
   }
 
+  setMessage(data:any) {
+    let message = "";
+    switch (data.type) {
+      case "START":
+        message = "El jugador " + data.player_2 + " ha entrado a la partida";
+        this.enviarNotificacion(message, 5000);
+        this.mostrarCartasMano = true;
+        break;
+    }
+  }
+
+  public desconectar() {
+    this.websocketService.ws.close()
+    this.dataService.inicializarMensajes();
+    this.router.navigate(['/ElegirJuego']);
+  }
+
+  public verHistorialPartidas() {}
 }

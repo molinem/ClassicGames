@@ -72,11 +72,13 @@ export class MatchService {
     return this.client.get<any>("http://localhost:8080/matches/queJugadorSoy?id=" + info1.id, {withCredentials:true})
   }
 
-  ponerCarta(id_partida:string, miaC:Carta[], mesaC:Carta[]):Observable<any>{
+  ponerCarta(id_partida:string, miaC:Carta[], mesaC:Carta[], cartasMesaSeleccionadas:Carta[], cartasManoSeleccionadas:Carta[]):Observable<any>{
     let infoCarta = {
       id : id_partida,
       mia : miaC,
-      mesa: mesaC
+      mesa: mesaC,
+      cartasMesaSelecc: cartasMesaSeleccionadas,
+      cartasManoSelecc: cartasManoSeleccionadas
     }
 
     return this.client.post<any>("http://localhost:8080/matches/poner",infoCarta, {withCredentials:true})

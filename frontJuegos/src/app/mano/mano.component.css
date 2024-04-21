@@ -4,3 +4,7 @@
     padding: 10px;
     display: inline-block;
 }
+
+.carta.seleccionada {
+    border: 2px solid red;
+}

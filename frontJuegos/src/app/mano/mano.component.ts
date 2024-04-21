@@ -14,8 +14,9 @@ import { WebsocketService } from '../websocket.service';
   styleUrls: ['./mano.component.css']
 })
 export class ManoComponent implements OnInit{
-  cartas1: Carta[];
+  cartasMano: Carta[];
   cartasMesa: Carta[];
+  cartas1: Carta[];
   mia: Carta[];
   id_partida_curso: string;
   nickUsuario: string;
@@ -29,19 +30,25 @@ export class ManoComponent implements OnInit{
   constructor(private matchService : MatchService, private snackBar: MatSnackBar, private router: Router, private dataService: DataService, private websocketService: WebsocketService) {
     this.id_partida_curso = "";
     this.nickUsuario = "";
-    this.cartas1=[
-      { palo: 0, valor: 0 },
-      { palo: 0, valor: 0 },
-      { palo: 0, valor: 0 }
+    this.cartasMano=[
+      { palo: 0, valor: 0, seleccionada: false },
+      { palo: 0, valor: 0, seleccionada: false },
+      { palo: 0, valor: 0, seleccionada: false }
     ];
 
     this.cartasMesa=[
-      { palo: 0, valor: 0 },
-      { palo: 0, valor: 0 },
-      { palo: 0, valor: 0 }
+      { palo: 0, valor: 0, seleccionada: false },
+      { palo: 0, valor: 0, seleccionada: false },
+      { palo: 0, valor: 0, seleccionada: false }
     ];
 
-    this.mia=[{ palo: 0, valor: 0 }];
+    this.cartas1=[
+      { palo: 0, valor: 0, seleccionada: false },
+      { palo: 0, valor: 0, seleccionada: false },
+      { palo: 0, valor: 0, seleccionada: false }
+    ];
+
+    this.mia=[{ palo: 0, valor: 0, seleccionada: false }];
     this.partida_finalizada = false;
     this.es_mi_turno = 0;
     
@@ -66,7 +73,7 @@ export class ManoComponent implements OnInit{
   obtenerCartasMultiple():void{
     this.matchService.obtenerManoJugador(this.id_partida_curso).subscribe(
       result =>{             
-        this.cartas1 = JSON.parse(JSON.stringify(result));
+        this.cartasMano = JSON.parse(JSON.stringify(result));
       },
       error => {
         console.log("[ObtenerManoJugador] Se ha producido el siguiente error: " + error);
@@ -89,9 +96,7 @@ export class ManoComponent implements OnInit{
     });
   }
 
-  usarCarta(paloObtenido: number, valorObtenido: number) {
-    //miaC:Carta[], mesaC:Carta[]
-    this.mia=[{ palo: paloObtenido, valor: valorObtenido }];      
+  seleccionarCarta(carta: Carta) {
     if (!this.partida_finalizada) {
       this.matchService.obtenerTurnoPartida(this.id_partida_curso).subscribe(
         result => {
@@ -103,18 +108,7 @@ export class ManoComponent implements OnInit{
 
           //Es mi turno
           if (this.es_mi_turno == 0) {
-            this.matchService.ponerCarta(this.id_partida_curso, this.mia, this.cartasMesa).subscribe(
-              result => {
-                let msg_movimiento = {
-                  type: "MOVEMENTCARTA",
-                  matchId: this.id_partida_curso
-                }
-                this.websocketService.ws.send(JSON.stringify(msg_movimiento));
-              },
-              error => {
-                console.log("[PonerCarta] Se ha producido el siguiente error: " + error);
-              }
-            );
+            carta.seleccionada = !carta.seleccionada;
           } else {
             //No es mi turno
             if (this.es_mi_turno == 1) {
@@ -132,16 +126,34 @@ export class ManoComponent implements OnInit{
       );
     } else {
         this.mensaje_notificacion = "La partida ha finalizado";
-        /*this.websocketService.messages.subscribe((msg: any) => {
-          const data = JSON.parse(JSON.stringify(msg));
-          let message = "";
-          message = "El jugador " + data.nickWinner + " ha ganado";
-        });*/
-      this.enviarNotificacion(this.mensaje_notificacion, 5000);
+        this.enviarNotificacion(this.mensaje_notificacion, 5000);
     }
-
-
-
-
   }
+
+  contarCartasSeleccionadas() {
+    return [...this.cartasMano, ...this.cartasMesa].filter(carta => carta.seleccionada).length;
+  }
+
+  confirmarSeleccion() {
+    const cartasManoSeleccionadas = this.cartasMano.filter(c => c.seleccionada);
+    const cartasMesaSeleccionadas = this.cartasMesa.filter(c => c.seleccionada);
+
+    console.log("Cartas mano "+ cartasManoSeleccionadas);
+    console.log("Cartas mesa "+ cartasMesaSeleccionadas);
+
+    this.matchService.ponerCarta(this.id_partida_curso, this.mia, this.cartasMesa, cartasMesaSeleccionadas, cartasManoSeleccionadas).subscribe(
+      result => {
+        let msg_movimiento = {
+          type: "MOVEMENTCARTA",
+          matchId: this.id_partida_curso
+        }
+        this.websocketService.ws.send(JSON.stringify(msg_movimiento));
+      },
+      error => {
+        console.log("[PonerCarta] Se ha producido el siguiente error: " + error);
+      }
+    );
+  }
+
+
 }
