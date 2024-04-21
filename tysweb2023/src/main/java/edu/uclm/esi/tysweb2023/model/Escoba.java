@@ -50,13 +50,15 @@ public class Escoba extends Tablero {
 		System.out.println(cartasMesa.toString());
 		Carta cartaQuitada = this.quitar(idUser, mia);
 		ArrayList<Carta> cartasQuitadasDeMesa = this.quitarDeMesa(cartasMesa);
-
+		
+		/*
 		if (cartasQuitadasDeMesa.isEmpty()) {
 			this.mesa.add(cartaQuitada);
 
 		} else {
 			this.actualizarCuentas(idUser, cartaQuitada, cartasQuitadasDeMesa);
 		}
+		*/
 	}
 	
 	public static Map<String, Object> convertirListaAMap(ArrayList<Map<String, Object>> lista) {

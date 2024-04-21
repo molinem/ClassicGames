@@ -130,8 +130,12 @@ export class ManoComponent implements OnInit{
     }
   }
 
-  contarCartasSeleccionadas() {
-    return [...this.cartasMano, ...this.cartasMesa].filter(carta => carta.seleccionada).length;
+  contarCartasManoSeleccionadas() {
+    return this.cartasMano.filter(carta => carta.seleccionada).length;
+  }
+  
+  contarCartasMesaSeleccionadas() {
+    return this.cartasMesa.filter(carta => carta.seleccionada).length;
   }
 
   confirmarSeleccion() {
