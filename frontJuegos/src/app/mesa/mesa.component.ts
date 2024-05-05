@@ -5,6 +5,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { DataService } from '../data.service';
 import { BehaviorSubject } from 'rxjs';
+import { Mensaje } from '../models/mensaje.model';
 
 @Component({
   selector: 'app-mesa',
@@ -24,11 +25,6 @@ export class MesaComponent {
     this.websocketService.inicializar();
   }
 
-  enviarDato() {
-    this.dataService.cambiarDato(this.id_partida_curso);
-    
-  }
-
   enviarNotificacion(message: string, viewTime: number): void {
     this.snackBar.open(message, '', {
       duration: viewTime,
@@ -42,7 +38,9 @@ export class MesaComponent {
     }else{
       this.id_partida_curso = estado['id_partida'];
       this.nick_jugador = estado['nick_jugador'];
-      this.enviarDato();
+      this.dataService.compartirNickJugador(this.nick_jugador);
+      this.dataService.compartirMatchId(this.id_partida_curso);
+      this.dataService.cambiarDato(this.id_partida_curso);
     }
   }
 
@@ -66,6 +64,14 @@ export class MesaComponent {
         message = "El jugador " + data.player_2 + " ha entrado a la partida";
         this.enviarNotificacion(message, 5000);
         this.mostrarCartasMano = true;
+        break;
+      case "MSG":
+        let nuevoMensaje: Mensaje = {
+          autor: data.nombre,
+          contenido: data.msg,
+          timestamp: new Date().toLocaleTimeString()
+        };
+        this.dataService.addMensaje(nuevoMensaje);
         break;
     }
   }
