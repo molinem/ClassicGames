@@ -47,18 +47,19 @@ public class Escoba extends Tablero {
 
 		Map<String, Object> mia = convertirListaAMap((ArrayList<Map<String, Object>>)movimiento.get("mia"));
 		List<Map<String, Object>> cartasMesa = (List<Map<String, Object>>) movimiento.get("mesa");
-		System.out.println(cartasMesa.toString());
+		
+		
 		Carta cartaQuitada = this.quitar(idUser, mia);
 		ArrayList<Carta> cartasQuitadasDeMesa = this.quitarDeMesa(cartasMesa);
 		
-		/*
+		
 		if (cartasQuitadasDeMesa.isEmpty()) {
 			this.mesa.add(cartaQuitada);
 
 		} else {
 			this.actualizarCuentas(idUser, cartaQuitada, cartasQuitadasDeMesa);
 		}
-		*/
+		
 	}
 	
 	public static Map<String, Object> convertirListaAMap(ArrayList<Map<String, Object>> lista) {
@@ -128,24 +129,26 @@ public class Escoba extends Tablero {
 	}
 
 	private ArrayList<Carta> quitarDeMesa(List<Map<String, Object>> cartasElegidas) {
+	    ArrayList<Carta> cartasQuitadas = new ArrayList<>();
+	    for (int i = 0; i < cartasElegidas.size(); i++) {
+	        Map<String, Object> cartaElegida = cartasElegidas.get(i);
+	        int palo = (int) cartaElegida.get("palo");
+	        int valor = (int) cartaElegida.get("valor");
+	        boolean seleccionada = cartaElegida.containsKey("seleccionada") && (boolean) cartaElegida.get("seleccionada");
 
-		ArrayList<Carta> cartasQuitadas = new ArrayList<>();
-		for (int i = 0; i < cartasElegidas.size(); i++) {
-			Map<String, Object> cartaElegida = cartasElegidas.get(i);
-			int palo = (int) cartaElegida.get("palo");
-			int valor = (int) cartaElegida.get("valor");
-
-			for (int j = 0; j < this.mesa.size(); j++) {
-				Carta cartaMesa = this.mesa.get(j);
-				if (cartaMesa.getPalo() == palo && cartaMesa.getValor() == valor) {
-					cartasQuitadas.add(this.mesa.remove(j));
-					break;
-				}
-			}
-		}
-		System.out.println(cartasQuitadas.toString());
-		return cartasQuitadas;
+	        for (int j = 0; j < this.mesa.size(); j++) {
+	            Carta cartaMesa = this.mesa.get(j);
+	
+	            if (cartaMesa.getPalo() == palo && cartaMesa.getValor() == valor && seleccionada) {
+	                cartasQuitadas.add(this.mesa.remove(j));
+	                break;
+	            }
+	        }
+	    }
+	    System.out.println("Cartas quitadas: " + cartasQuitadas.toString());
+	    return cartasQuitadas;
 	}
+
 
 	private Carta quitar(String idUser, Map<String, Object> mia) {
 
@@ -162,12 +165,15 @@ public class Escoba extends Tablero {
 
 		int palo = (int) mia.get("palo");
 		int valor = (int) mia.get("valor");
+		
+		boolean seleccionada = mia.containsKey("seleccionada") && (boolean) mia.get("seleccionada");
 
 		for (int i = 0; i < cartas.size(); i++) {
-			if (cartas.get(i).getPalo() == palo && cartas.get(i).getValor() == valor) {
-				return cartas.remove(i);
-			}
-		}
+	        Carta carta = cartas.get(i);
+	        if (carta.getPalo() == palo && carta.getValor() == valor && seleccionada) {
+	            return cartas.remove(i);
+	        }
+	    }
 		return null;
 	}
 

@@ -142,9 +142,6 @@ export class ManoComponent implements OnInit{
     const cartasManoSeleccionadas = this.cartasMano.filter(c => c.seleccionada);
     const cartasMesaSeleccionadas = this.cartasMesa.filter(c => c.seleccionada);
 
-    console.log("Cartas mano "+ cartasManoSeleccionadas);
-    console.log("Cartas mesa "+ cartasMesaSeleccionadas);
-
     this.matchService.ponerCarta(this.id_partida_curso, this.mia, this.cartasMesa, cartasMesaSeleccionadas, cartasManoSeleccionadas).subscribe(
       result => {
         let msg_movimiento = {
