@@ -48,10 +48,11 @@ public class Escoba extends Tablero {
 		Map<String, Object> mia = convertirListaAMap((ArrayList<Map<String, Object>>)movimiento.get("mia"));
 		List<Map<String, Object>> cartasMesa = (List<Map<String, Object>>) movimiento.get("mesa");
 		
+		System.out.println("Cartas mano --> " + (ArrayList<Map<String, Object>>)movimiento.get("mia"));
+		System.out.println("Cartas mesa --> " + (List<Map<String, Object>>) movimiento.get("mesa"));
 		
 		Carta cartaQuitada = this.quitar(idUser, mia);
 		ArrayList<Carta> cartasQuitadasDeMesa = this.quitarDeMesa(cartasMesa);
-		
 		
 		if (cartasQuitadasDeMesa.isEmpty()) {
 			this.mesa.add(cartaQuitada);
@@ -145,7 +146,7 @@ public class Escoba extends Tablero {
 	            }
 	        }
 	    }
-	    System.out.println("Cartas quitadas: " + cartasQuitadas.toString());
+	    System.out.println("Cartas quitadas mesa: " + cartasQuitadas.toString());
 	    return cartasQuitadas;
 	}
 
