@@ -61,6 +61,8 @@ public class Escoba extends Tablero {
 			this.actualizarCuentas(idUser, cartaQuitada, cartasQuitadasDeMesa);
 		}
 		
+		anadirCartaAMano(idUser);
+		rellenarCartasMesa();
 	}
 	
 	public static Map<String, Object> convertirListaAMap(ArrayList<Map<String, Object>> lista) {
@@ -178,7 +180,35 @@ public class Escoba extends Tablero {
 	    }
 		return null;
 	}
+	
+	private void anadirCartaAMano(String idUser) {
+	    Carta nuevaCarta = this.baraja.pop();
+	    if (nuevaCarta == null) {
+	        System.out.println("No hay más cartas en la baraja.");
+	        return;
+	    }
 
+	    if (idUser.equals(this.players.get(0).getId())) {
+	        this.cartas1.add(nuevaCarta);
+	    } else if (idUser.equals(this.players.get(1).getId())) {
+	        this.cartas2.add(nuevaCarta);
+	    } else {
+	        System.out.println("ID de usuario no reconocido.");
+	    }
+	}
+	
+	public void rellenarCartasMesa() {
+	    int cartasNecesarias = 4 - this.mesa.size();
+	    for (int i = 0; i < cartasNecesarias; i++) {
+	        Carta nuevaCarta = this.baraja.pop();
+	        if (nuevaCarta != null) {
+	            this.mesa.add(nuevaCarta);
+	        } else {
+	            System.out.println("No hay más cartas en la baraja para añadir a la mesa.");
+	            break;
+	        }
+	    }
+	}
 
 	public List<Carta> getCartas1() {
 		return cartas1;
