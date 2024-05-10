@@ -48,8 +48,8 @@ public class Escoba extends Tablero {
 		Map<String, Object> mia = convertirListaAMap((ArrayList<Map<String, Object>>)movimiento.get("mia"));
 		List<Map<String, Object>> cartasMesa = (List<Map<String, Object>>) movimiento.get("mesa");
 		
-		System.out.println("Cartas mano --> " + (ArrayList<Map<String, Object>>)movimiento.get("mia"));
-		System.out.println("Cartas mesa --> " + (List<Map<String, Object>>) movimiento.get("mesa"));
+		//System.out.println("Cartas mano --> " + (ArrayList<Map<String, Object>>)movimiento.get("mia"));
+		//System.out.println("Cartas mesa --> " + (List<Map<String, Object>>) movimiento.get("mesa"));
 		
 		Carta cartaQuitada = this.quitar(idUser, mia);
 		ArrayList<Carta> cartasQuitadasDeMesa = this.quitarDeMesa(cartasMesa);
@@ -64,12 +64,13 @@ public class Escoba extends Tablero {
 	}
 	
 	public static Map<String, Object> convertirListaAMap(ArrayList<Map<String, Object>> lista) {
-        if (lista != null && !lista.isEmpty()) {
-            return lista.get(0);
-        } else {
-            return new HashMap<>();
-        }
-    }
+	    for (Map<String, Object> item : lista) {
+	        if (item.containsKey("seleccionada") && (boolean) item.get("seleccionada")) {
+	            return item;
+	        }
+	    }
+	    return new HashMap<>();
+	}
 
 	private int numeroDeOros(Carta cartaQuitada, ArrayList<Carta> cartasQuitadasDeMesa) {
 		int contadorOros = 0;
@@ -152,7 +153,7 @@ public class Escoba extends Tablero {
 
 
 	private Carta quitar(String idUser, Map<String, Object> mia) {
-
+		//System.out.println("Datos recibidos en 'mia': " + mia);
 		User player;
 		List<Carta> cartas;
 
