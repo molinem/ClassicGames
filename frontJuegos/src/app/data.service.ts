@@ -19,6 +19,9 @@ export class DataService {
   private mensajes: Mensaje[] = [];
   mensajesActual = new BehaviorSubject<Mensaje[]>(this.mensajes);
 
+  private numJugador = new BehaviorSubject<number>(0);
+  num = this.numJugador.asObservable();
+
   constructor() { }
 
   cambiarDato(dato: string) {
@@ -31,6 +34,10 @@ export class DataService {
 
   compartirMatchId(id: string) {
     this.matchIdSource.next(id);
+  }
+
+  compartirNumJugador(numero: number){
+    this.numJugador.next(numero);
   }
 
   inicializarMensajes() {

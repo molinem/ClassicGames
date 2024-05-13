@@ -23,6 +23,7 @@ export class ManoComponent implements OnInit{
   partida_finalizada: boolean;
   es_mi_turno: number;
   mensaje_notificacion: string = "";
+  numero_jugador: number;
   
   localStorageService: LocalStorageService;
   public dataRow!:IRow[];
@@ -30,6 +31,7 @@ export class ManoComponent implements OnInit{
   constructor(private matchService : MatchService, private snackBar: MatSnackBar, private router: Router, private dataService: DataService, private websocketService: WebsocketService) {
     this.id_partida_curso = "";
     this.nickUsuario = "";
+    this.numero_jugador = 0;
     this.cartasMano=[
       { palo: 0, valor: 0, seleccionada: false },
       { palo: 0, valor: 0, seleccionada: false },
@@ -55,11 +57,17 @@ export class ManoComponent implements OnInit{
     this.localStorageService = new LocalStorageService;
   }
 
-
   ngOnInit(): void {
     this.dataService.datoActual.subscribe(dato => this.id_partida_curso = dato);
-    //this.dataService.wsTablero$.subscribe(data => this.ws_tablero = data);
+    this.dataService.num.subscribe(dato => this.numero_jugador = dato);
     this.obtenerCartasMultiple();
+
+    this.websocketService.ws.onmessage = (event) => {
+      let data = JSON.parse(event.data);
+      if (data.type == "MATCH UPDATE") {
+        this.obtenerCartasMultiple();
+      }
+    }
   }
 
   saveToLocalStorage(clave: string, valor: string) {
@@ -137,6 +145,7 @@ export class ManoComponent implements OnInit{
   contarCartasMesaSeleccionadas() {
     return this.cartasMesa.filter(carta => carta.seleccionada).length;
   }
+
 
   confirmarSeleccion() {
     const cartasManoSeleccionadas = this.cartasMano.filter(c => c.seleccionada);

@@ -16,10 +16,12 @@ export class MesaComponent {
   id_partida_curso: string;
   nick_jugador: string;
   mostrarCartasMano: boolean;
+  num_jugador: number;
 
   constructor(private matchService : MatchService, private snackBar: MatSnackBar, private router: Router, private dataService: DataService, private websocketService: WebsocketService){
     this.id_partida_curso = "";
     this.nick_jugador = "";
+    this.num_jugador = 0;
     this.mostrarCartasMano = false;
     this.websocketService.observador = this;
     this.websocketService.inicializar();
@@ -47,6 +49,8 @@ export class MesaComponent {
   ngAfterViewInit() {
     this.matchService.queJugadorSoy(this.id_partida_curso).subscribe(
       result => {
+        this.num_jugador = result;
+        this.dataService.compartirNumJugador(this.num_jugador);
         if(result == 2){
           this.mostrarCartasMano = true;
         }
@@ -59,6 +63,7 @@ export class MesaComponent {
 
   setMessage(data:any) {
     let message = "";
+    
     switch (data.type) {
       case "START":
         message = "El jugador " + data.player_2 + " ha entrado a la partida";
