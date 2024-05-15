@@ -24,7 +24,6 @@ export class ManoComponent implements OnInit{
   es_mi_turno: number;
   mensaje_notificacion: string = "";
   numero_jugador: number;
-  
   localStorageService: LocalStorageService;
   public dataRow!:IRow[];
 
@@ -53,11 +52,11 @@ export class ManoComponent implements OnInit{
     this.mia=[{ palo: 0, valor: 0, seleccionada: false }];
     this.partida_finalizada = false;
     this.es_mi_turno = 0;
-    
     this.localStorageService = new LocalStorageService;
   }
 
   ngOnInit(): void {
+    let message;
     this.dataService.datoActual.subscribe(dato => this.id_partida_curso = dato);
     this.dataService.num.subscribe(dato => this.numero_jugador = dato);
     this.obtenerCartasMultiple();
@@ -66,6 +65,12 @@ export class ManoComponent implements OnInit{
       let data = JSON.parse(event.data);
       if (data.type == "MATCH UPDATE") {
         this.obtenerCartasMultiple();
+        console.log(data);//-------------------------------------------------------------
+        if (data.winner !== undefined) {
+          this.partida_finalizada = true;
+          message = "El jugador " + data.nickWinner + " ha ganado";
+          this.enviarNotificacion(message, 5000);
+        }
       }
     }
   }

@@ -234,7 +234,7 @@ export class RayaComponent{
         let message = "";
         message = "El jugador " + data.nickWinner + " ha ganado";
       });*/
-    this.enviarNotificacion(this.mensaje_notificacion, 5000);
+      this.enviarNotificacion(this.mensaje_notificacion, 5000);
     }
 
   }

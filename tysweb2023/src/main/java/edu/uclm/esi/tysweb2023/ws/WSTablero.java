@@ -126,6 +126,21 @@ public class WSTablero extends TextWebSocketHandler {
 				jso.put("cartas2", tbCartas.getCartas2());
 				jso.put("cartasMesa", tbCartas.getCartasMesa());
 				
+				//Verificar ganador
+				if (ms.findMatch(matchId_Cartas).getGanador() != Character.MIN_VALUE) {
+					char ganador = ms.findMatch(matchId_Cartas).getGanador();
+					jso.put("winner", ganador);
+					List<User> jugadoresPartida = tbCartas.getPlayers();
+					String nick_ganador="";
+					
+					if (ganador == '1') {
+						nick_ganador = jugadoresPartida.get(0).getNombre();
+					}else {
+						nick_ganador = jugadoresPartida.get(1).getNombre();
+					}
+					jso.put("nickWinner", nick_ganador);
+				}
+				
 				ms.notificarMovimiento(matchId_Cartas, jso);
 				break;
 			case "WEATHER":

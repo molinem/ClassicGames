@@ -18,7 +18,8 @@ public class Escoba extends Tablero {
 	private List<Carta> cartas1, cartas2, mesa;
 	private int oros1, numCartas1, sietes1, sieteOros1, escobas1;
 	private int oros2, numCartas2, sietes2, sieteOros2, escobas2;
-
+	public int puntosJugador1, puntosJugador2; 
+	public char ganador;
 	public final static int OROS = 0, COPAS = 1, ESPADAS = 2, BASTOS = 3;
 
 	@Override
@@ -39,30 +40,42 @@ public class Escoba extends Tablero {
 			this.mesa.add(this.baraja.pop());
 
 		this.jugadorConElTurno = this.players.get(0);
-
+		this.puntosJugador1 = 0;
+		this.puntosJugador2 = 0;
 	}
 
 	@Override
 	public void poner(Map<String, Object> movimiento, String idUser) throws MovimientoIlegalException {
-
-		Map<String, Object> mia = convertirListaAMap((ArrayList<Map<String, Object>>)movimiento.get("mia"));
-		List<Map<String, Object>> cartasMesa = (List<Map<String, Object>>) movimiento.get("mesa");
 		
-		//System.out.println("Cartas mano --> " + (ArrayList<Map<String, Object>>)movimiento.get("mia"));
-		//System.out.println("Cartas mesa --> " + (List<Map<String, Object>>) movimiento.get("mesa"));
-		
-		Carta cartaQuitada = this.quitar(idUser, mia);
-		ArrayList<Carta> cartasQuitadasDeMesa = this.quitarDeMesa(cartasMesa);
-		
-		if (cartasQuitadasDeMesa.isEmpty()) {
-			this.mesa.add(cartaQuitada);
-
-		} else {
-			this.actualizarCuentas(idUser, cartaQuitada, cartasQuitadasDeMesa);
+		if(!this.baraja.isEmpty() || this.baraja.size() == 4) {
+			Map<String, Object> mia = convertirListaAMap((ArrayList<Map<String, Object>>)movimiento.get("mia"));
+			List<Map<String, Object>> cartasMesa = (List<Map<String, Object>>) movimiento.get("mesa");
+			
+			//System.out.println("Cartas mano --> " + (ArrayList<Map<String, Object>>)movimiento.get("mia"));
+			//System.out.println("Cartas mesa --> " + (List<Map<String, Object>>) movimiento.get("mesa"));
+			
+			Carta cartaQuitada = this.quitar(idUser, mia);
+			ArrayList<Carta> cartasQuitadasDeMesa = this.quitarDeMesa(cartasMesa);
+			
+			if (!cartasQuitadasDeMesa.isEmpty()) {
+		        this.actualizarCuentas(idUser, cartaQuitada, cartasQuitadasDeMesa);
+		    } else {
+		        this.mesa.add(cartaQuitada);
+		    }
+			
+			anadirCartaAMano(idUser);
+			rellenarCartasMesa();
+			
+			if (this.jugadorConElTurno == this.players.get(0)) {
+			    this.jugadorConElTurno = this.players.get(1);
+			} else {
+			    this.jugadorConElTurno = this.players.get(0);
+			}
+		}else {
+			obtenerGanador();
 		}
 		
-		anadirCartaAMano(idUser);
-		rellenarCartasMesa();
+		
 	}
 	
 	public static Map<String, Object> convertirListaAMap(ArrayList<Map<String, Object>> lista) {
@@ -109,27 +122,29 @@ public class Escoba extends Tablero {
 	}
 
 	private void actualizarCuentas(String idUser, Carta cartaQuitada, ArrayList<Carta> cartasQuitadasDeMesa) {
-
 		if (idUser.equals(this.players.get(0).getId())) {
-
 			this.oros1 = this.oros1 + this.numeroDeOros(cartaQuitada, cartasQuitadasDeMesa);
 			this.sietes1 = this.sietes1 + this.numeroDeSietes(cartaQuitada, cartasQuitadasDeMesa);
 			this.numCartas1 = this.numCartas1 + 1 + cartasQuitadasDeMesa.size();
-
-			// 7 de oros
-			if (mesa.isEmpty() && !this.baraja.isEmpty())
-				this.escobas1++;
-
 		} else {
 			this.oros2 = this.oros2 + this.numeroDeOros(cartaQuitada, cartasQuitadasDeMesa);
 			this.sietes2 = this.sietes2 + this.numeroDeSietes(cartaQuitada, cartasQuitadasDeMesa);
 			this.numCartas2 = this.numCartas2 + 1 + cartasQuitadasDeMesa.size();
-
-			// 7 de oros
-			if (mesa.isEmpty() && !this.baraja.isEmpty())
-				this.escobas2++;
 		}
-
+		
+		if(this.baraja.isEmpty()) {
+			obtenerGanador();
+		}
+	}
+	
+	private void obtenerGanador() {
+		//Comprobar ganador
+		//El que tenga más oros  y más sietes
+		if(this.oros1 > this.oros2 || this.sietes1 > this.sietes2) {
+			this.ganador = '1'; //jugador 1
+		}else if(this.oros2 > this.oros1 || this.sietes2 > this.sietes1) {
+			this.ganador = '2'; //jugador 2
+		}
 	}
 
 	private ArrayList<Carta> quitarDeMesa(List<Map<String, Object>> cartasElegidas) {
@@ -149,7 +164,7 @@ public class Escoba extends Tablero {
 	            }
 	        }
 	    }
-	    System.out.println("Cartas quitadas mesa: " + cartasQuitadas.toString());
+	    //System.out.println("Cartas quitadas mesa: " + cartasQuitadas.toString());
 	    return cartasQuitadas;
 	}
 
@@ -210,6 +225,7 @@ public class Escoba extends Tablero {
 	    }
 	}
 
+	
 	public List<Carta> getCartas1() {
 		return cartas1;
 	}
@@ -243,8 +259,7 @@ public class Escoba extends Tablero {
 
 	@Override
 	public char getGanador() {
-		// TODO Auto-generated method stub
-		return 0;
+		return this.ganador;
 	}
 
 	@Override

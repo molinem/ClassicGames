@@ -13,41 +13,27 @@ public class Baraja {
 	public Baraja() {
 
 		for (int palo = OROS; palo <= BASTOS; palo++) {
-
 			for (int valor = 1; valor <= 10; valor++) {
-
 				Carta carta = new Carta();
-
 				carta.setPalo(palo);
-
 				carta.setValor(valor);
-
 				this.cartas.add(carta);
-
 			}
-
 		}
-
 	}
 
 	public void barajar() {
-
 		Random dado = new Random();
-
 		for (int i = 0; i < 100; i++) {
 
 			int a = dado.nextInt(this.cartas.size());
-
 			int b = dado.nextInt(this.cartas.size());
 
 			Carta aux = this.cartas.get(a);
 
 			this.cartas.set(a, this.cartas.get(b));
-
 			this.cartas.set(b, aux);
-
 		}
-
 	}
 
 	public Carta pop() {
@@ -56,6 +42,8 @@ public class Baraja {
 
 	public boolean isEmpty() {
 		return this.cartas.isEmpty();
-
+	}
+	public int size() {
+		return this.cartas.size();
 	}
 }
