@@ -7,6 +7,7 @@ import { DataService } from '../data.service';
 import { LocalStorageService } from '../local-storage.service';
 import { IRow } from '../irow';
 import { WebsocketService } from '../websocket.service';
+import { Mensaje } from '../models/mensaje.model';
 
 @Component({
   selector: 'app-mano',
@@ -63,15 +64,26 @@ export class ManoComponent implements OnInit{
 
     this.websocketService.ws.onmessage = (event) => {
       let data = JSON.parse(event.data);
-      if (data.type == "MATCH UPDATE") {
-        this.obtenerCartasMultiple();
-        console.log(data);//-------------------------------------------------------------
-        if (data.winner !== undefined) {
-          this.partida_finalizada = true;
-          message = "El jugador " + data.nickWinner + " ha ganado";
-          this.enviarNotificacion(message, 5000);
-        }
+      switch (data.type) {
+        case "MATCH UPDATE":
+          this.obtenerCartasMultiple();
+          console.log(data);
+          if (data.winner !== undefined) {
+            this.partida_finalizada = true;
+            message = "El jugador " + data.nickWinner + " ha ganado";
+            this.enviarNotificacion(message, 5000);
+          }
+          break;
+        case "MSG":
+          let nuevoMensaje: Mensaje = {
+            autor: data.nombre,
+            contenido: data.msg,
+            timestamp: new Date().toLocaleTimeString()
+          };
+          this.dataService.addMensaje(nuevoMensaje);
+          break;
       }
+
     }
   }
 
