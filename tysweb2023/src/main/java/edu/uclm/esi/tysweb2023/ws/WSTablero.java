@@ -63,8 +63,7 @@ public class WSTablero extends TextWebSocketHandler {
 		if (httpSessionId != null) {
 			ManagerWS.get().setWebsocketSession(httpSessionId, session);
 		}else {
-			//System.out.printf("[AfterConnectionEstablished] >> %s \n","No se pudo obtener el httpId");
-			ManagerWS.get().setWebsocketSession(generateHttpId(), session); //Lo inventamos para el robot
+			System.out.printf("[AfterConnectionEstablished] >> %s \n","No se pudo obtener el httpId");
 		}
 	}
 	
