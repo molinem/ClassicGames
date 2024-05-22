@@ -55,7 +55,8 @@ public class Reloj implements Runnable {
 	                	//No hay ganador
 	                	if (this.matchService.findMatch(tablero_id).getGanador() == Character.MIN_VALUE) {
 	                		if (tablero.getJugadorConElTurno().getId().equals("j23jh4h5")) {
-	                			int col = (int)(Math.random() * 7);
+	                			//int col = (int)(Math.random() * 7);
+	                			int col = elegirColumnaParaGanar(tablero.mostrarCasillas());
 	                            Map<String, Object> movimiento = new HashMap<>();
 	                            movimiento.put("col", col);
 	                            Tablero tbUpdate = this.matchService.poner(tablero_id, movimiento, "j23jh4h5");
@@ -78,10 +79,10 @@ public class Reloj implements Runnable {
         					List<User> jugadoresPartida = tablero.getPlayers();
         					String nick_ganador="";
         					
-        					if (ganador == 'R') {
-        						nick_ganador = jugadoresPartida.get(0).getNombre();
-        					}else {
+        					if (ganador == 65) {
         						nick_ganador = jugadoresPartida.get(1).getNombre();
+        					}else {
+        						nick_ganador = jugadoresPartida.get(0).getNombre();
         					}
         					jso.put("nickWinner", nick_ganador);
 	        				
@@ -104,5 +105,65 @@ public class Reloj implements Runnable {
         }
     }
     
+    private int elegirColumnaParaGanar(JSONArray casillas) {
+        int rows = casillas.length();
+        int cols = casillas.getJSONArray(0).length();
+        char[][] board = new char[rows][cols];
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                board[i][j] = casillas.getJSONArray(i).getString(j).charAt(0);
+            }
+        }
+
+        // Intentar encontrar una columna para ganar
+        for (int col = 0; col < cols; col++) {
+            for (int row = rows - 1; row >= 0; row--) {
+                if (board[row][col] == '\u0000') {
+                    board[row][col] = 'R';
+                    if (esGanador(board, row, col, 'R')) {
+                        return col;
+                    }
+                    board[row][col] = '\u0000';
+                    break;
+                }
+            }
+        }
+
+        // Si no hay una columna ganadora, elegir aleatoriamente
+        return (int) (Math.random() * cols);
+    }
+
+    private boolean esGanador(char[][] board, int row, int col, char player) {
+        // Comprobación horizontal
+        if (checkDirection(board, row, col, player, 1, 0) + checkDirection(board, row, col, player, -1, 0) >= 3)
+            return true;
+
+        // Comprobación vertical
+        if (checkDirection(board, row, col, player, 0, 1) + checkDirection(board, row, col, player, 0, -1) >= 3)
+            return true;
+
+        // Comprobación diagonal (de abajo-izquierda a arriba-derecha)
+        if (checkDirection(board, row, col, player, 1, 1) + checkDirection(board, row, col, player, -1, -1) >= 3)
+            return true;
+
+        // Comprobación diagonal (de arriba-izquierda a abajo-derecha)
+        if (checkDirection(board, row, col, player, 1, -1) + checkDirection(board, row, col, player, -1, 1) >= 3)
+            return true;
+
+        return false;
+    }
+
+    private int checkDirection(char[][] board, int row, int col, char player, int deltaRow, int deltaCol) {
+        int count = 0;
+        int r = row + deltaRow;
+        int c = col + deltaCol;
+        while (r >= 0 && r < board.length && c >= 0 && c < board[0].length && board[r][c] == player) {
+            count++;
+            r += deltaRow;
+            c += deltaCol;
+        }
+        return count;
+    }
     
 }
