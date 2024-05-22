@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.catalina.Manager;
@@ -62,10 +63,14 @@ public class WSTablero extends TextWebSocketHandler {
 		if (httpSessionId != null) {
 			ManagerWS.get().setWebsocketSession(httpSessionId, session);
 		}else {
-			System.out.printf("[AfterConnectionEstablished] >> %s \n","No se pudo obtener el httpId");
+			//System.out.printf("[AfterConnectionEstablished] >> %s \n","No se pudo obtener el httpId");
+			ManagerWS.get().setWebsocketSession(generateHttpId(), session); //Lo inventamos para el robot
 		}
 	}
 	
+	public static String generateHttpId() {
+        return UUID.randomUUID().toString();
+    }
 		
 	@Override
 	protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {

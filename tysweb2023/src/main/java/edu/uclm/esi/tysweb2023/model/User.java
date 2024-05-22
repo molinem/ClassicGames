@@ -85,8 +85,8 @@ public class User implements Serializable {
 	
 	public void sendMessage(JSONObject jso) throws IOException {
 		SesionWS ws = ManagerWS.get().getSessionByUserId(this.id);
-		
-		WebSocketSession wsSession = ws.getWebsocketSession();///
+		WebSocketSession wsSession;
+		wsSession = ws.getWebsocketSession();
 		if (wsSession != null) {
 			TextMessage message = new TextMessage(jso.toString());
 			try {
@@ -95,8 +95,9 @@ public class User implements Serializable {
 				System.err.println("Notify: " +	wsSession.getId() + "-> " + e.getMessage());
 			} 
 			
-		}else {
+		}else if(!this.nombre.equals("Robot")) {
 			System.out.println("User -> SendMessage: WebSocketSession nula");
+			System.out.println(this.nombre);	
 		}	
 	}
 

@@ -5,7 +5,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,12 +26,14 @@ import org.springframework.web.socket.WebSocketSession;
 import edu.uclm.esi.tysweb2023.dao.UserDAO;
 import edu.uclm.esi.tysweb2023.model.AnonymousUser;
 import edu.uclm.esi.tysweb2023.model.Carta;
+import edu.uclm.esi.tysweb2023.model.Reloj;
 import edu.uclm.esi.tysweb2023.model.Tablero;
 import edu.uclm.esi.tysweb2023.model.User;
 import edu.uclm.esi.tysweb2023.services.MatchService;
 import edu.uclm.esi.tysweb2023.ws.ManagerWS;
 import edu.uclm.esi.tysweb2023.ws.SesionWS;
 import edu.uclm.esi.tysweb2023.ws.WSTablero;
+import edu.uclm.esi.tysweb2023.ws.WebSocketClient;
 import jakarta.servlet.http.HttpSession;
 
 
@@ -38,6 +44,9 @@ public class MatchController {
 	
 	@Autowired
 	private MatchService matchService;
+	
+	@Autowired
+    private WebSocketClient webSocketClient;
 	
 	@Autowired
 	private UserDAO userDAO;
@@ -53,7 +62,6 @@ public class MatchController {
 			}
 			
 			UserController.httpSessions.put(session.getId(), session);
-			//System.out.println(session.getId());
 			ManagerWS.get().addSessionByUserId(user.getId(), session);
 			
 			ConcurrentHashMap<String, Object> result = new ConcurrentHashMap<>();
@@ -63,11 +71,19 @@ public class MatchController {
 			result.put("tablero", tableroJuego);
 			result.put("nickJugador", user.getNombre());
 	
-			//¿Partida lista?
-			if (tableroJuego.checkPartidaLista()) {
-				//Avisamos a los jugadores
-				this.matchService.notificarEstado("START", tableroJuego.getId());
+			//ROBOT 4 en raya
+			if(juego.equals("Tablero4R")) {
+				Reloj reloj = new Reloj(tableroJuego, matchService, session);
+				Thread relojThread = new Thread(reloj);
+		        relojThread.start();
+			}else {
+				//¿Partida lista?
+				if (tableroJuego.checkPartidaLista()) {
+					//Avisamos a los jugadores
+					this.matchService.notificarEstado("START", tableroJuego.getId());
+				}
 			}
+			
 			return result;
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,e.getMessage());
