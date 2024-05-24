@@ -36,6 +36,8 @@ public class User implements Serializable {
 	@Transient
 	private SesionWS sesionWs;
 	
+	private char color;
+	
 	public User() {
 		this.id = UUID.randomUUID().toString();
 	}
@@ -100,5 +102,13 @@ public class User implements Serializable {
 			System.out.println(this.nombre);	
 		}	
 	}
+	
+	public char getColor() {
+	        return color;
+    }
+
+    public void setColor(char color) {
+        this.color = color;
+    }
 
 }

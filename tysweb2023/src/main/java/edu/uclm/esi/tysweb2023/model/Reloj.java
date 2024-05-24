@@ -55,7 +55,6 @@ public class Reloj implements Runnable {
 	                	//No hay ganador
 	                	if (this.matchService.findMatch(tablero_id).getGanador() == Character.MIN_VALUE) {
 	                		if (tablero.getJugadorConElTurno().getId().equals("j23jh4h5")) {
-	                			//int col = (int)(Math.random() * 7);
 	                			int col = elegirColumnaParaGanar(tablero.mostrarCasillas());
 	                            Map<String, Object> movimiento = new HashMap<>();
 	                            movimiento.put("col", col);
@@ -116,12 +115,12 @@ public class Reloj implements Runnable {
             }
         }
 
-        // Intentar encontrar una columna para ganar
+        // Intentar encontrar una columna para ganar (prioridad máxima)
         for (int col = 0; col < cols; col++) {
             for (int row = rows - 1; row >= 0; row--) {
                 if (board[row][col] == '\u0000') {
-                    board[row][col] = 'R';
-                    if (esGanador(board, row, col, 'R')) {
+                    board[row][col] = 'A';
+                    if (esGanador(board, row, col, 'A')) {
                         return col;
                     }
                     board[row][col] = '\u0000';
@@ -130,8 +129,32 @@ public class Reloj implements Runnable {
             }
         }
 
-        // Si no hay una columna ganadora, elegir aleatoriamente
-        return (int) (Math.random() * cols);
+        // Intentar bloquear al oponente (prioridad secundaria)
+        for (int col = 0; col < cols; col++) {
+            for (int row = rows - 1; row >= 0; row--) {
+                if (board[row][col] == '\u0000') {
+                    board[row][col] = 'R';
+                    if (esGanador(board, row, col, 'R')) {
+                        board[row][col] = '\u0000'; // Deshacer la jugada de prueba
+                        return col;
+                    }
+                    board[row][col] = '\u0000';
+                    break;
+                }
+            }
+        }
+
+        // Si no hay una jugada ganadora ni de bloqueo, elegir la primera columna disponible
+        for (int col = 0; col < cols; col++) {
+            for (int row = rows - 1; row >= 0; row--) {
+                if (board[row][col] == '\u0000') {
+                    return col;
+                }
+            }
+        }
+
+        // En caso de que todas las columnas estén llenas
+        return 0;
     }
 
     private boolean esGanador(char[][] board, int row, int col, char player) {
