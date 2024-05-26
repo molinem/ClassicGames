@@ -167,6 +167,10 @@ public class WSTablero extends TextWebSocketHandler {
 					ms.difundirMsg(jso, game.getPlayers());
 				}
 				break;
+			//Para pruebas Jmeter
+			case "PRUEBA":
+				jso.put("msg", "Hola");
+				break;
 		}
 	}
 	
