@@ -26,6 +26,7 @@ import org.springframework.web.socket.WebSocketSession;
 import edu.uclm.esi.tysweb2023.dao.UserDAO;
 import edu.uclm.esi.tysweb2023.model.AnonymousUser;
 import edu.uclm.esi.tysweb2023.model.Carta;
+import edu.uclm.esi.tysweb2023.model.Historial;
 import edu.uclm.esi.tysweb2023.model.Reloj;
 import edu.uclm.esi.tysweb2023.model.Tablero;
 import edu.uclm.esi.tysweb2023.model.User;
@@ -110,11 +111,14 @@ public class MatchController {
 		int control = 2;
 		User user = (User) session.getAttribute("user");
 		Tablero result = this.matchService.findMatch(id);
+		
 		if(result != null) {
-			if(result.getJugadorConElTurno().getId().equals(user.getId())) {
-				control = 0;
-			}else {
-				control = 1;
+			if(result.getPlayers().size() == 2) {
+				if(result.getJugadorConElTurno().getId().equals(user.getId())) {
+					control = 0;
+				}else {
+					control = 1;
+				}
 			}
 		}
 		return control;
@@ -159,5 +163,8 @@ public class MatchController {
 		return jugador;
 	}
 	
-	
+	@GetMapping("/history")
+    public List<Historial> getHistorial() {
+        return matchService.getHistorial();
+    }
 }

@@ -9,11 +9,15 @@ import java.util.List;
 import java.util.Map;
 
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import edu.uclm.esi.tysweb2023.dao.HistorialDAO;
+import edu.uclm.esi.tysweb2023.dao.UserDAO;
 import edu.uclm.esi.tysweb2023.exceptions.MovimientoIlegalException;
+import edu.uclm.esi.tysweb2023.model.Historial;
 import edu.uclm.esi.tysweb2023.model.Tablero;
 import edu.uclm.esi.tysweb2023.model.User;
 
@@ -23,6 +27,9 @@ public class MatchService {
 	private Map<String,Tablero> tableros = new HashMap<>();
 	private List<Tablero> tablerosPendientes = new ArrayList<>();
 	private boolean partidaLista;
+	
+	@Autowired
+	private HistorialDAO historialDAO;
 		
 	public Tablero newMatch(User user,String juego) throws Exception {
 		Tablero tablero = null;
@@ -121,6 +128,22 @@ public class MatchService {
 			}
 		}	
 	}
+	
+	public void almacenarEstadistica(String idPartida, String juego, String nickJugador, String mensaje) {
+		Historial h = new Historial();
+		h.setIdPartida(idPartida);
+		h.setJuego(juego);
+		h.setNickUsuario(nickJugador);
+		h.setMensaje(mensaje);
+		this.historialDAO.save(h);
+	}
+	
+	public List<Historial> getHistorial() {
+        List<Historial> historialList = new ArrayList<>();
+        historialDAO.findAll().forEach(historialList::add);
+        return historialList;
+    }
+
 	
 	
 }

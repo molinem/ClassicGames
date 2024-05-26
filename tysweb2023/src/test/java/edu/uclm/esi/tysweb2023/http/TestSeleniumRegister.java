@@ -22,7 +22,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @AutoConfigureMockMvc
 @TestInstance(Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class TestDirectorioUCLM {
+public class TestSeleniumRegister {
 	private FirefoxDriver driver;
 	
 	@BeforeAll
@@ -33,20 +33,31 @@ public class TestDirectorioUCLM {
 	}
 	
 	@Test
-	public void buscarAlRector() {
-		driver.get("https://directorio.uclm.es");
-		WebElement caja = driver.findElement(By.id("CPH_CajaCentro_HF_ItemSelected"));
-		caja.click();
-		caja.sendKeys("garde");
+	public void registrarUsuario() {
+		driver.get("http://localhost:4200/Register");
 		
-		WebElement boton = driver.findElement(By.xpath("/html/body/form/div[3]/div[2]/div[2]/div/div[1]/div[2]/div[2]/a"));
-		boton.click();
-
-		//Código de la foto
+		WebElement cajaNombre = driver.findElement(By.xpath("/html/body/app-root/app-register/div/div/div[1]/div[2]/div/form/div[1]/div/input"));
+		cajaNombre.click();
+		cajaNombre.sendKeys("Pepe");
+		
+		WebElement cajaEmail = driver.findElement(By.xpath("/html/body/app-root/app-register/div/div/div[1]/div[2]/div/form/div[3]/div/input"));
+		cajaEmail.click();
+		cajaEmail.sendKeys("angel.villafranca@alu.uclm.es");
+		
+		WebElement cajaPassword = driver.findElement(By.xpath("/html/body/app-root/app-register/div/div/div[1]/div[2]/div/form/div[5]/div/input"));
+		cajaPassword.click();
+		cajaPassword.sendKeys("1234567890");
+		
+		WebElement cajaValidarPassword = driver.findElement(By.xpath("/html/body/app-root/app-register/div/div/div[1]/div[2]/div/form/div[7]/div/input"));
+		cajaValidarPassword.click();
+		cajaValidarPassword.sendKeys("1234567890");
+		
+		WebElement boton = driver.findElement(By.xpath("/html/body/app-root/app-register/div/div/div[1]/div[2]/div/form/div[9]/div/button"));
+		//boton.click();
 	}
 	
 	@AfterEach
 	public void teardown() {
-		driver.quit();
+		//driver.quit();
 	}
 }

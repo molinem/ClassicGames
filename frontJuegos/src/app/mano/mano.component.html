@@ -28,7 +28,11 @@
                 </button>
             </div>
         </div>
-        <button [disabled]="contarCartasManoSeleccionadas() > 1 || contarCartasMesaSeleccionadas() < 1 || contarCartasMesaSeleccionadas() > 4" (click)="confirmarSeleccion()">Confirmar selección</button>       
-    </div>
+    </div><br>
+    <div class="row">
+        <div class="col-12">
+            <button [disabled]="contarCartasManoSeleccionadas() > 1 || contarCartasManoSeleccionadas() < 1 || contarCartasMesaSeleccionadas() < 1 || contarCartasMesaSeleccionadas() > 2" (click)="confirmarSeleccion()">Confirmar selección</button>    
+        </div>
+    </div>  
 </div>
 

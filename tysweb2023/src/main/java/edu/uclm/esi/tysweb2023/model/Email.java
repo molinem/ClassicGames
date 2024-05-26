@@ -19,7 +19,7 @@ public class Email {
 
 	public static void main(String[] args) {
 		Email e = new Email();
-		e.send("Luis.Molina1@alu.uclm.es","AsuntoDesdeMain", "hola desde main");
+		//e.send("prueba@gmail.com","AsuntoDesdeMain", "hola desde main");
 
 	}
 	
@@ -27,11 +27,11 @@ public class Email {
 		try {
 			this.setConfiguration(read("./parametros.txt"));
 		} catch (Exception e) {
-			//Error
+			System.out.println("Se ha producido un error al obtener los datos de parametros.txt: "+e.getMessage());
 		}
 		
 		//formatear json brevo
-		/**
+	
 		JSONObject jEmail = getConfiguration().getJSONObject("email");
 		
 		JSONArray jsaHeaders = new JSONArray().
@@ -53,9 +53,9 @@ public class Email {
 		        put("url", jEmail.getString("endpoint")).
 		        put("headers", jsaHeaders).
 		        put("data", jsoData);
-		**/
-		//Client client = new Client();
-		//client.sendCurlPost(payload, body);
+
+		Client client = new Client();
+		client.sendCurlPost(jEmail.getString("endpoint"), jEmail.getString("api-key"), jsoData);
 		
 	}
 

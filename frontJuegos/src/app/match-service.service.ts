@@ -84,4 +84,9 @@ export class MatchService {
     return this.client.post<any>("http://localhost:8080/matches/poner",infoCarta, {withCredentials:true})
   }
   
+  //Historial de partidas
+  obtenerhistorialPartidas():Observable<any>{
+    return this.client.get<any>("http://localhost:8080/matches/history", {withCredentials:true})
+  }
+
 }

@@ -22,7 +22,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @AutoConfigureMockMvc
 @TestInstance(Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class TestDirectorioUCLM {
+public class TestSeleniumVerHistorial {
 	private FirefoxDriver driver;
 	
 	@BeforeAll
@@ -33,20 +33,15 @@ public class TestDirectorioUCLM {
 	}
 	
 	@Test
-	public void buscarAlRector() {
-		driver.get("https://directorio.uclm.es");
-		WebElement caja = driver.findElement(By.id("CPH_CajaCentro_HF_ItemSelected"));
-		caja.click();
-		caja.sendKeys("garde");
-		
-		WebElement boton = driver.findElement(By.xpath("/html/body/form/div[3]/div[2]/div[2]/div/div[1]/div[2]/div[2]/a"));
+	public void VerHistorialPartida() {
+		driver.get("http://localhost:4200");
+				
+		WebElement boton = driver.findElement(By.xpath("//*[@id=\"navbarNavDropdown\"]/ul/li[4]/a"));
 		boton.click();
-
-		//Código de la foto
 	}
 	
 	@AfterEach
 	public void teardown() {
-		driver.quit();
+		//driver.quit();
 	}
 }

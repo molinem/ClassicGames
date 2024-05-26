@@ -24,8 +24,8 @@ public class UserService {
 		user.setPwd(pwd1);
 		
 		this.userDAO.save(user);
-		//Email smtp = new Email();
-		//smtp.send("Luis.Molina1@alu.uclm.es","Asunto","Hola");
+		Email smtp = new Email();
+		smtp.send(user.getEmail(),"Nuevo registro usuario","Se ha registrado correctamente en la aplicación");
 	}
 
 	public User login(String email, String pwd) {

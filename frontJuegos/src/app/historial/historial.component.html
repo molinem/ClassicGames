@@ -1,15 +1,22 @@
-<div class="container">
-    <p>holaaaaa</p>
-<div>
-    <!-- The AG Grid component, with Dimensions, CSS Theme, Row Data, and Column Definition -->
-    <ag-grid-angular
-      style="width: 100%; height: 350px;"
-      [class]="themeClass"
-      [rowData]="rowData"
-      [columnDefs]="colDefs"
-    >
-    </ag-grid-angular>
-
-    
-  </div>
+<div class="table-responsive">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>ID PARTIDA</th>
+        <th>FECHA</th>
+        <th>JUEGO</th>
+        <th>NICK USUARIO</th>
+        <th>ACCIÓN</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let game of history">
+        <td>{{ game.id_partida }}</td>
+        <td>{{ game.fecha | date:'short' }}</td>
+        <td>{{ game.juego }}</td>
+        <td>{{ game.nickUsuario }}</td>
+        <td>{{ game.mensaje }}</td>
+      </tr>
+    </tbody>
+  </table>
 </div>

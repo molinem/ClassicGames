@@ -78,5 +78,4 @@ export class MesaComponent {
     this.router.navigate(['/ElegirJuego']);
   }
 
-  public verHistorialPartidas() {}
 }

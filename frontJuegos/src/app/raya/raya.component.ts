@@ -84,18 +84,6 @@ export class RayaComponent{
     this.router.navigate(['/ElegirJuego']);
   }
 
-  public verHistorialPartidas() {
-    this.router.navigate(
-      ['Historial'], 
-      { 
-        state: { 
-          ganador: this.getFromLocalStorage("Ganador"),
-          listado:this.dataRow
-        } 
-      }
-    );
-  }
-
   public enviarElTiempo() {
     this.weath.obtenerCiudad().subscribe({
       next: (resultadoDeCiudad) => {

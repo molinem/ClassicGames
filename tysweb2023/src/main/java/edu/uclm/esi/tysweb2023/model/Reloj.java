@@ -86,6 +86,7 @@ public class Reloj implements Runnable {
         					jso.put("nickWinner", nick_ganador);
 	        				
 	                		this.matchService.notificarMovimiento(tablero_id, jso);
+	                		this.matchService.almacenarEstadistica(tablero_id, "Tablero4R", nick_ganador, "Gana la partida");
 	                		scheduler.shutdown();
 	                	}
 	                	
