@@ -45,6 +45,7 @@ public class UserController {
 		if (user==null) 
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Credenciales inválidas");
 		session.setAttribute("user", user);
+		session.setAttribute("userId", user.getId());
 		Map<String, Object> result = new HashMap<>();
 		result.put("httpId", session.getId());
 		httpSessions.put(session.getId(),session);

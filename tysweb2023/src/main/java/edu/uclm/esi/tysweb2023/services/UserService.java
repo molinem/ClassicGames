@@ -37,7 +37,7 @@ public class UserService {
 		this.userDAO.deleteById(userId);
 	}
 	
-	public Optional<User> obtenerInformacion(Long idUser) {
+	public Optional<User> obtenerInformacion(String idUser) {
 		return this.userDAO.findById(idUser);
 	}
 	

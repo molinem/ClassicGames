@@ -65,10 +65,12 @@ public class PaymentController {
 					.build();
 			
 			PaymentIntent intent = PaymentIntent.create(createParams);
-			JSONObject jso = new JSONObject(intent.toJson());
-			String clientSecret = jso.getString("client_secret");
+			JSONObject jso = new JSONObject();
+			jso.put("client_secret", intent.getClientSecret());
+
+			session.setAttribute("client_secret", intent.getClientSecret());
 			session.setAttribute("matches", matches);
-			return clientSecret;
+			return jso.toString();
 
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
@@ -82,7 +84,7 @@ public class PaymentController {
 				|| session.getAttribute("matches")==null
 				|| session.getAttribute("user")==null)
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-		String userId = session.getAttribute("user").toString();
+		String userId = session.getAttribute("userId").toString();
 		this.userService.addMatches(userId, (Integer) session.getAttribute("matches"));
 	}	
 }

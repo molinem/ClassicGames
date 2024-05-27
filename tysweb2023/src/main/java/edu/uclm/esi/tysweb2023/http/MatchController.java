@@ -63,9 +63,12 @@ public class MatchController {
 			}
 			
 			//Comprobación pagos //usuarios logeados
-			Integer numberOfMatches = user.getPaidMatches();
-			if (numberOfMatches==null || numberOfMatches==0) {
-				throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "No hay créditos para jugar");
+			if(!user.getNombre().contains("Invitado")) {
+				Integer numberOfMatches = user.getPaidMatches();
+				System.out.println(numberOfMatches);
+				if (numberOfMatches==null || numberOfMatches==0) {
+					throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "No hay créditos para jugar");
+				}
 			}
 			
 			UserController.httpSessions.put(session.getId(), session);

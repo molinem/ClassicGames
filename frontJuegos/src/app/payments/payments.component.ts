@@ -22,11 +22,11 @@ export class PaymentsComponent {
   requestPrepayment() {
     this.paymentService.prepay(this.amount).subscribe({
       next : (response : any) => {
-        this.transactionId = response.body
+        this.transactionId = response.client_secret
         this.showForm()
       },
       error : (response : any) => {
-        alert(response)
+        console.log(response)
       }
     })
     
@@ -80,10 +80,10 @@ export class PaymentsComponent {
           alert("Pago exitoso");
           self.paymentService.confirm().subscribe({
             next : (response : any) => {
-              alert(response)
+              console.log(response)
             },
             error : (response : any) => {
-              alert(response)
+              console.log(response)
             }
           })
         }
