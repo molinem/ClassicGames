@@ -17,6 +17,7 @@ import { MesaComponent } from './mesa/mesa.component';
 import { ManoComponent } from './mano/mano.component';
 import { HistorialComponent } from './historial/historial.component';
 import { CurrencyPipe, UpperCasePipe } from '@angular/common';
+import { PaymentsComponent } from './payments/payments.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import { CurrencyPipe, UpperCasePipe } from '@angular/common';
     ChatComponent,
     MesaComponent,
     ManoComponent,
-    HistorialComponent
+    HistorialComponent,
+    PaymentsComponent
   ],
   imports: [
     BrowserModule,

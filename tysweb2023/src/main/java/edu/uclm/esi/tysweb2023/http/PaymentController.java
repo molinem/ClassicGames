@@ -40,39 +40,49 @@ public class PaymentController {
 	
 	@Autowired
 	private UserService userService;
+	
 	public static ConcurrentHashMap<String, HttpSession> httpSessions = new ConcurrentHashMap<>();
+	
 	static {
-		Stripe.apiKey="";
+		Stripe.apiKey="sk_test_51OMogvF1fgtfUhRcy5yWIO44NdLcTD5gE1746960vlBd87VjnzCDz2q20Scr60YimG6bwOpKxAMS6OIBJK8vhULT0043akQdCE";
 	}
 	
-	@PostMapping("/autorizarPago")
-	public String prepay(HttpSession session, int matches) {
+	@GetMapping("/autorizarPago")
+	public String prepay(HttpSession session, @RequestParam int matches) {
 		try {
 			if (session.getAttribute("user")==null) {
 				throw new ResponseStatusException(HttpStatus.FORBIDDEN,"Tienes que estar logado para comprar partidas");
 			}
-			if (matches!=10) {
-				
-			}
+			if (matches!=10 && matches!=20)
+				throw new ResponseStatusException(HttpStatus.CONFLICT,"You can only buy either 10 or 20 matches");
 			
 			long total = matches==10 ? 10 : 15;
 			total = total * 100;
 			
 			PaymentIntentCreateParams createParams = new PaymentIntentCreateParams.Builder()
 					.setCurrency("eur")
-					.setAmount((long) total)
+					.setAmount(total)
 					.build();
 			
 			PaymentIntent intent = PaymentIntent.create(createParams);
-			JSONObject jso = new JSONObject();
-			jso.put("client_secret", intent.getClientSecret());
-			
-			return jso.toString();
+			JSONObject jso = new JSONObject(intent.toJson());
+			String clientSecret = jso.getString("client_secret");
+			session.setAttribute("matches", matches);
+			return clientSecret;
+
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
 		}
 	}
 	
-	//Añadir confirmarPago
-	
+
+	@GetMapping("/confirmarPago")
+	public void confirm(HttpSession session) {
+		if (session.getAttribute("client_secret")==null
+				|| session.getAttribute("matches")==null
+				|| session.getAttribute("user")==null)
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+		String userId = session.getAttribute("user").toString();
+		this.userService.addMatches(userId, (Integer) session.getAttribute("matches"));
+	}	
 }

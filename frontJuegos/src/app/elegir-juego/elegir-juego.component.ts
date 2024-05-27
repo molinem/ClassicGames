@@ -18,10 +18,7 @@ export class ElegirJuegoComponent {
   }
 
   // get-> /start
-  crearPartida4R():void{
-    //Conectar websocket
-    //this.websocketService.connect("ws://localhost:8080/wsTablero");
-  
+  crearPartida4R():void{  
     this.matchService.iniciarPartida4R().subscribe(
       result =>{
         const js = JSON.stringify(result)
@@ -43,7 +40,13 @@ export class ElegirJuegoComponent {
 
       },
       error => {
-        console.log("[CrearPartida4R] -> Se ha producido un error al crear la partida: "+error);
+        if(error.status == 400){
+          console.log("[CrearPartida4R] -> No hay créditos suficientes para jugar");
+          this.router.navigate(['/Payments']);
+        }else{
+          console.log("[CrearPartida4R] -> Se ha producido un error al crear la partida: "+error);
+        }
+        
       },
     );
   }

@@ -40,4 +40,13 @@ public class UserService {
 	public Optional<User> obtenerInformacion(Long idUser) {
 		return this.userDAO.findById(idUser);
 	}
+	
+	public void addMatches(String userId, Integer matches) {
+		User user = this.userDAO.findById(userId).get();
+		Integer paidMatches = user.getPaidMatches();
+		if (paidMatches==null)
+			paidMatches = 0;
+		user.setPaidMatches(paidMatches + matches);
+		this.userDAO.save(user);
+	}
 }

@@ -36,6 +36,9 @@ public class User implements Serializable {
 	@Transient
 	private SesionWS sesionWs;
 	
+	private Integer paidMatches;
+
+
 	private char color;
 	
 	public User() {
@@ -111,4 +114,11 @@ public class User implements Serializable {
         this.color = color;
     }
 
+	public Integer getPaidMatches() {
+		return paidMatches;
+	}
+
+	public void setPaidMatches(Integer paidMatches) {
+		this.paidMatches = paidMatches;
+	}
 }

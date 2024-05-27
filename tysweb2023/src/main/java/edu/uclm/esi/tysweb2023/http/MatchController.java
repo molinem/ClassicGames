@@ -62,6 +62,12 @@ public class MatchController {
 				session.setAttribute("user", user);
 			}
 			
+			//Comprobación pagos //usuarios logeados
+			Integer numberOfMatches = user.getPaidMatches();
+			if (numberOfMatches==null || numberOfMatches==0) {
+				throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "No hay créditos para jugar");
+			}
+			
 			UserController.httpSessions.put(session.getId(), session);
 			ManagerWS.get().addSessionByUserId(user.getId(), session);
 			
