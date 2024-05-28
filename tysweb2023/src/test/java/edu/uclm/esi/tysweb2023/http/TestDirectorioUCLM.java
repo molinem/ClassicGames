@@ -27,7 +27,7 @@ public class TestDirectorioUCLM {
 	
 	@BeforeAll
 	public void setUo() {
-		String ruta_driver = "C://repositorio//tyweb2023//geckodriver.exe";
+		String ruta_driver = "C:\\Repositorios\\tyweb2023\\geckodriver.exe";
 		System.setProperty("webdriver.gecko.driver", ruta_driver);
 		driver = new FirefoxDriver();
 	}

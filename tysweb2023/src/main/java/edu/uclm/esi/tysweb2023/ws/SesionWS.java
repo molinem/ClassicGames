@@ -60,8 +60,6 @@ public class SesionWS {
 		return websocketSession;
 	}
 	
-	
-	/*REVISAR VARIABLE*/
 	public String getUserId() {
 		return this.httpSession.getAttribute("user").toString();
 	}	

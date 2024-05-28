@@ -1,0 +1,21 @@
+.chat {
+    background-color: #007BFF !important;
+    border: 15px solid #0056b3;
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 40px;
+    padding: 20px;
+    width: 560px;
+    height: 500px;
+}
+
+.chat{
+    background-color: #44A1F2 !important;
+}
+
+.ng-star-inserted{
+    background-color: white !important;
+}

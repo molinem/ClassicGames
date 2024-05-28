@@ -24,8 +24,8 @@ public class UserService {
 		user.setPwd(pwd1);
 		
 		this.userDAO.save(user);
-		//Email smtp = new Email();
-		//smtp.send("Luis.Molina1@alu.uclm.es","Asunto","Hola");
+		Email smtp = new Email();
+		smtp.send(user.getEmail(),"Nuevo registro usuario","Se ha registrado correctamente en la aplicación");
 	}
 
 	public User login(String email, String pwd) {
@@ -37,7 +37,16 @@ public class UserService {
 		this.userDAO.deleteById(userId);
 	}
 	
-	public Optional<User> obtenerInformacion(Long idUser) {
+	public Optional<User> obtenerInformacion(String idUser) {
 		return this.userDAO.findById(idUser);
+	}
+	
+	public void addMatches(String userId, Integer matches) {
+		User user = this.userDAO.findById(userId).get();
+		Integer paidMatches = user.getPaidMatches();
+		if (paidMatches==null)
+			paidMatches = 0;
+		user.setPaidMatches(paidMatches + matches);
+		this.userDAO.save(user);
 	}
 }

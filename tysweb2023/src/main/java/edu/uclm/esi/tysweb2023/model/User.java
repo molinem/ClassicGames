@@ -36,6 +36,11 @@ public class User implements Serializable {
 	@Transient
 	private SesionWS sesionWs;
 	
+	private Integer paidMatches;
+
+
+	private char color;
+	
 	public User() {
 		this.id = UUID.randomUUID().toString();
 	}
@@ -85,17 +90,35 @@ public class User implements Serializable {
 	
 	public void sendMessage(JSONObject jso) throws IOException {
 		SesionWS ws = ManagerWS.get().getSessionByUserId(this.id);
-		WebSocketSession wsSession = ws.getWebsocketSession();
-		
-		synchronized (wsSession) {
+		WebSocketSession wsSession;
+		wsSession = ws.getWebsocketSession();
+		if (wsSession != null) {
 			TextMessage message = new TextMessage(jso.toString());
 			try {
 				wsSession.sendMessage(message);
 			} catch (IOException e) {
-				System.err.println("In notify: " +	wsSession.getId() + "-> " + e.getMessage());
+				System.err.println("Notify: " +	wsSession.getId() + "-> " + e.getMessage());
 			} 
-		}
+			
+		}else if(!this.nombre.equals("Robot")) {
+			System.out.println("User -> SendMessage: WebSocketSession nula");
+			System.out.println(this.nombre);	
+		}	
 	}
 	
+	public char getColor() {
+	        return color;
+    }
 
+    public void setColor(char color) {
+        this.color = color;
+    }
+
+	public Integer getPaidMatches() {
+		return paidMatches;
+	}
+
+	public void setPaidMatches(Integer paidMatches) {
+		this.paidMatches = paidMatches;
+	}
 }

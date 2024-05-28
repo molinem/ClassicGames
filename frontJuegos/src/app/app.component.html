@@ -1,11 +1,25 @@
-
-La temperatura donde estás hoy será entre {{position?.coords?.latitude}} TemperaturaMax y TemperaturaMin <br>
-<a routerLink="4EnRaya">Jugar al 4 en raya</a>
-<br>
-<a routerLink="Register">Registrarse</a>
-<br>
-<a routerLink="Login">Login</a>
-<br>
-<a routerLink="ElegirJuego">Elegir Juego</a>
-
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid px-0">
+      <a class="navbar-brand" routerLink="ElegirJuego">ClassicGames</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavDropdown">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" routerLink="Login">Login</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="Register">Registro</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="ElegirJuego">Elegir Juego</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="Historial">Historial Partidas</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+</nav>
 <router-outlet></router-outlet>

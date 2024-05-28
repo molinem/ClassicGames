@@ -1,0 +1,38 @@
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div *ngFor="let carta of cartasMano" class="carta">
+                <button type="button" class="btn btn-primary" disabled>
+                    Palo: {{ "**" }}, Valor: {{ "**" }}
+                </button>
+            </div>
+        </div>
+    </div><br>
+    <div class="row">
+        <div class="col-12">
+            <!-- Cartas Mesa -->
+            <div *ngFor="let cartaM of cartasMesa" class="carta" [class.seleccionada]="cartaM.seleccionada" (click)="seleccionarCarta(cartaM)" >
+                <button type="button" class="btn btn-secondary">
+                    Palo: {{ cartaM.palo }}, Valor: {{ cartaM.valor }}
+                </button>
+            </div>
+        </div>
+    </div><br>
+    <div class="row">
+        <div class="col-12">
+            <!-- Cartas Mano -->
+            <div *ngFor="let cartaMano of cartasMano" class="carta" [class.seleccionada]="cartaMano.seleccionada" (click)="seleccionarCarta(cartaMano)">
+                <button type="button" class="btn btn-success">
+                    Palo: {{ cartaMano.palo }}, Valor: {{ cartaMano.valor }}
+                </button>
+            </div>
+        </div>
+    </div><br>
+    <div class="row">
+        <div class="col-12">
+            <button [disabled]="contarCartasManoSeleccionadas() > 1 || contarCartasManoSeleccionadas() < 1 || contarCartasMesaSeleccionadas() < 1 || contarCartasMesaSeleccionadas() > 2" (click)="confirmarSeleccion()">Confirmar selección</button>    
+        </div>
+    </div>  
+</div>
+

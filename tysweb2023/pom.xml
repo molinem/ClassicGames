@@ -121,5 +121,11 @@
 	    <version>22.5.1</version>
 	</dependency>
 	
+	<dependency>
+    	<groupId>org.glassfish.tyrus.bundles</groupId>
+    	<artifactId>tyrus-standalone-client</artifactId>
+    	<version>1.17</version>
+	</dependency>
+	
   </dependencies>	
 </project>

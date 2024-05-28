@@ -1,0 +1,10 @@
+.carta {
+    border: 1px solid black;
+    margin: 5px;
+    padding: 10px;
+    display: inline-block;
+}
+
+.carta.seleccionada {
+    border: 2px solid red;
+}

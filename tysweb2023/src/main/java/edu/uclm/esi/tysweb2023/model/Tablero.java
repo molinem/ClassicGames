@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import org.json.JSONArray;
+
 import edu.uclm.esi.tysweb2023.exceptions.MovimientoIlegalException;
 import jakarta.persistence.Transient;
 
@@ -48,7 +50,6 @@ public abstract class Tablero {
 		return players;
 	}
 
-	
 	public User getJugadorConElTurno() {
 		return jugadorConElTurno;
 	}
@@ -56,4 +57,13 @@ public abstract class Tablero {
 	protected abstract void comprobarListo();
 	
 	public abstract void poner(Map<String,Object> movimiento, String idUser) throws MovimientoIlegalException;
+	public abstract char[][] getCasillas();
+	public abstract JSONArray mostrarCasillas();
+	public abstract char getGanador();
+	public abstract char getUltimoColor();
+	
+	public abstract List<Carta> getCartas1();
+	public abstract List<Carta> getCartas2();
+	public abstract List<Carta> getCartasMesa();
+	
 }

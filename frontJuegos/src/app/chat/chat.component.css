@@ -1,0 +1,37 @@
+#titulo{
+  font-size: 25px;
+  font-weight: 900;
+}
+
+.mensajes-container {
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.mensaje {
+  border-bottom: 1px solid #ccc;
+  padding: 10px;
+}
+
+.mensaje-autor p {
+  display: flex;
+}
+
+.autor, .contenido, .timestamp {
+  font-size: 16px;
+}
+
+.autor {
+  font-weight: bold;
+  color: #8616e7;
+}
+
+.contenido, .timestamp {
+  color: black;
+}
+
+.space10{
+  height: 10px;
+  clear: both;
+}
+

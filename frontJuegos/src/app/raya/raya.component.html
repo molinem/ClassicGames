@@ -1,22 +1,31 @@
-<div class="container">
-    <div class="row">
-        <div class="col-12 col-md-6">
-            <div class="chat">
-
+<input type="text" [(ngModel)]="id_partida_curso" style="display: none;"/>
+<input type="text" [(ngModel)]="nick_jugador" style="display: none;"/>
+<div class="row mt-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-6 d-flex justify-content-around">
+                <button type="button" class="btn btn-primary mb-3" (click)="desconectar()">Desconectar</button>
             </div>
         </div>
-        <div class="col-12 col-md-6">           
-            <div class="tablero" id="tablero">
-                <div *ngFor="let fila of partida.celdas; let i = index" class="fila">
-                  <div *ngFor="let celda of fila; let j = index" 
-                       class="celda" 
-                       [class]="celda"
-                       [class.hover]="columnaHover === j"
-                       (click)="seleccionarColumna(j)"
-                       (mouseover)="mouseOverColumna(j)">
-                  </div>
+        <div class="row">
+            <div class="col-12 col-md-6 d-flex justify-content-around">
+                <div class="chat" >
+                    <app-chat></app-chat>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 d-flex justify-content-around">           
+                <div class="tablero" id="tablero">
+                    <div *ngFor="let fila of partida.celdas; let i = index" class="fila">
+                      <div *ngFor="let celda of fila; let j = index" 
+                           class="celda" 
+                           [class]="celda"
+                           [class.hover]="columnaHover === j"
+                           (click)="seleccionarColumna(j)"
+                           (mouseover)="mouseOverColumna(j)">
+                      </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    </div>    
 </div>

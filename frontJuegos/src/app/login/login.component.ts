@@ -30,16 +30,7 @@ export class LoginComponent {
     this.usuario.datosLogin(this.loginForm.controls['Email'].value,this.loginForm.controls['Pwd'].value);
     this.userService.logearUsuario(this.usuario).subscribe(
       result =>{
-
-        const resultString = JSON.stringify(result) as string;
-        const resultObj = JSON.parse(resultString);
-
-        const httpId = resultObj.httpId;
-
-        this.ws = new WebSocket("ws://localhost:8080/wsGames?httpId="+ httpId);
-        console.log(JSON.stringify(result));
-
-        this.router.navigate(['/4EnRaya']);
+        this.router.navigate(['/ElegirJuego']);
       },
       error => {
         console.log("[Login] -> Se ha producido un error al iniciar sesión: "+error);
