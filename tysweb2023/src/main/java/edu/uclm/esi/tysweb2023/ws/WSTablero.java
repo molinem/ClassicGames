@@ -109,6 +109,7 @@ public class WSTablero extends TextWebSocketHandler {
 						nick_ganador = jugadoresPartida.get(1).getNombre();
 					}
 					jso.put("nickWinner", nick_ganador);
+					ms.almacenarEstadistica(matchId, "4 en raya", nick_ganador, "Gana la partida");
 				}
 				ms.notificarMovimiento(matchId, jso);
 				break;
@@ -143,6 +144,7 @@ public class WSTablero extends TextWebSocketHandler {
 						nick_ganador = jugadoresPartida.get(1).getNombre();
 					}
 					jso.put("nickWinner", nick_ganador);
+					ms.almacenarEstadistica(matchId_Cartas, "La escoba", nick_ganador, "Gana la partida");
 				}
 				
 				ms.notificarMovimiento(matchId_Cartas, jso);

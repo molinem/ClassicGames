@@ -64,10 +64,14 @@ public class MatchController {
 			
 			//Comprobación pagos //usuarios logeados
 			if(!user.getNombre().contains("Invitado")) {
-				Integer numberOfMatches = user.getPaidMatches();
-				System.out.println(numberOfMatches);
+				User usuLog = this.userDAO.findById(user.getId()).get();
+				Integer numberOfMatches = usuLog.getPaidMatches();
 				if (numberOfMatches==null || numberOfMatches==0) {
 					throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "No hay créditos para jugar");
+				}
+				if(numberOfMatches > 1 || numberOfMatches == 1) {
+					usuLog.setPaidMatches(numberOfMatches - 1);
+					this.userDAO.save(usuLog);
 				}
 			}
 			
@@ -82,10 +86,16 @@ public class MatchController {
 			result.put("nickJugador", user.getNombre());
 	
 			//ROBOT 4 en raya
-			if(juego.equals("Tablero4R")) {
-				Reloj reloj = new Reloj(tableroJuego, matchService, session);
-				Thread relojThread = new Thread(reloj);
-		        relojThread.start();
+			if (juego.equals("Tablero4R")) {
+	            ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+	            scheduler.schedule(() -> {
+	                if (tableroJuego.getPlayers().size() == 1) {
+	                    Reloj reloj = new Reloj(tableroJuego, matchService, session);
+	                    System.out.println("Ejecutando comprobación de 30 segundos y un jugador.");
+	                    Thread relojThread = new Thread(reloj);
+	                    relojThread.start();
+	                }
+	            }, 30, TimeUnit.SECONDS);
 			}else {
 				//¿Partida lista?
 				if (tableroJuego.checkPartidaLista()) {

@@ -77,7 +77,7 @@ export class PaymentsComponent {
         alert(response.error.message);
       } else {
         if (response.paymentIntent.status === 'succeeded') {
-          alert("Pago exitoso");
+          console.log("El pago se ha realizado con éxito");
           self.paymentService.confirm().subscribe({
             next : (response : any) => {
               console.log(response)
