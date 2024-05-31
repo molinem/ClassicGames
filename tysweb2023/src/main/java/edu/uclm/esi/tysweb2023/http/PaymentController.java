@@ -50,9 +50,17 @@ public class PaymentController {
 	@GetMapping("/autorizarPago")
 	public String prepay(HttpSession session, @RequestParam int matches) {
 		try {
-			if (session.getAttribute("user")==null) {
+			
+			if (session.getAttribute("user") == null) {
 				throw new ResponseStatusException(HttpStatus.FORBIDDEN,"Tienes que estar logado para comprar partidas");
+			}else {
+				User us = (User) session.getAttribute("user");
+				if(us.getNombre().contains("Invitado")) {
+					throw new ResponseStatusException(HttpStatus.FORBIDDEN,"Tienes que estar logado para comprar partidas");
+				}
 			}
+
+			
 			if (matches != 1 && matches != 10 && matches != 20)
 				throw new ResponseStatusException(HttpStatus.CONFLICT,"Solo puedes comprar una partida");
 			
@@ -88,10 +96,8 @@ public class PaymentController {
 	
 
 	@GetMapping("/confirmarPago")
-	public void confirm(HttpSession session) {
-		if (session.getAttribute("client_secret")==null
-				|| session.getAttribute("matches")==null
-				|| session.getAttribute("user")==null)
+	public void confirm(HttpSession session) {		
+		if (session.getAttribute("client_secret") == null || session.getAttribute("matches") == null || session.getAttribute("user") == null)
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN);
 		String userId = session.getAttribute("userId").toString();
 		this.userService.addMatches(userId, (Integer) session.getAttribute("matches"));

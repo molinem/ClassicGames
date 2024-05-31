@@ -104,4 +104,9 @@ public class UserController {
 			session.removeAttribute("userId");
 		}
 	}
+	
+	@GetMapping("/logout")
+	public void cerrarSesion(HttpSession session){
+		session.removeAttribute("user");
+	}
 }

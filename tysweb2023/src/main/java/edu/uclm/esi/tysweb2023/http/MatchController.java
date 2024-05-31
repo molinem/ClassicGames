@@ -195,8 +195,7 @@ public class MatchController {
 			User us = (User) session.getAttribute("user");
 			Tablero tbd = this.matchService.findMatch(id);
 			tbd.getPlayers().remove(us);
-
-			session.removeAttribute("user");
 		}
 	}
+	
 }

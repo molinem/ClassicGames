@@ -4,6 +4,7 @@ import { raya } from '../raya/raya';
 import { WebsocketService } from '../websocket.service';
 import { Router } from '@angular/router';
 import { UserSService } from '../user-s.service';
+import { user } from '../user/user';
 
 @Component({
   selector: 'app-elegir-juego',
@@ -15,19 +16,35 @@ export class ElegirJuegoComponent {
   http_id: string="";
   nick_jugador: string="";
   nick?: string;
+  user?: user;
 
   constructor(private matchService : MatchService, private router: Router, private websocketService: WebsocketService, private userService: UserSService){  
   }
 
   ngOnInit() {
-    const storedNick = localStorage.getItem('nick');
-    if (storedNick) {
-      this.nick = storedNick;
+    const user = localStorage.getItem('user');
+    if (user) {
+      const storedNick = localStorage.getItem('nick');
+      if (storedNick) {
+        this.nick = storedNick;
+      }
     }
+    
   }
 
   logout() {
     localStorage.removeItem('nick');
+    localStorage.removeItem('user');
+
+    this.userService.cerrarSesion().subscribe(
+      result => {
+        console.log("[Logout] -> Sesión cerrada correctamente");
+      },
+      error => {
+        console.log("[Logout] -> Se ha producido un error al cerrar sesión: "+error);
+      }
+    );
+
     location.reload();
   }
 

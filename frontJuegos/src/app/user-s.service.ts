@@ -38,4 +38,8 @@ export class UserSService {
 
     return this.client.post<any>("http://localhost:8080/users/login",info,{withCredentials:true})
   }
+
+  cerrarSesion():Observable<undefined>{
+    return this.client.get<any>("http://localhost:8080/users/logout", {withCredentials:true})
+  }
 }

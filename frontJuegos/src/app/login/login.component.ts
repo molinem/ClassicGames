@@ -35,6 +35,7 @@ export class LoginComponent {
 
         this.usuario.nombre = jsonObj.nick;
         localStorage.setItem('nick', jsonObj.nick);
+        localStorage.setItem('user', jsonObj);
         this.userService.changeNick(this.usuario.nombre);
         this.router.navigate(['/ElegirJuego']);
       },
