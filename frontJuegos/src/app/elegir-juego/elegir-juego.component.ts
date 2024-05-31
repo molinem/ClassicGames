@@ -40,7 +40,7 @@ export class ElegirJuegoComponent {
 
       },
       error => {
-        if(error.status == 400){
+        if(error.status == 406){
           console.log("[CrearPartida4R] -> No hay créditos suficientes para jugar");
           this.router.navigate(['/Payments']);
         }else{

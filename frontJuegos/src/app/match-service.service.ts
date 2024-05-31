@@ -89,4 +89,7 @@ export class MatchService {
     return this.client.get<any>("http://localhost:8080/matches/history", {withCredentials:true})
   }
 
+  desconectar(id_partida:string):Observable<any>{
+    return this.client.get<any>("http://localhost:8080/matches/desconectar?id="+ id_partida, {withCredentials:true})
+  }
 }

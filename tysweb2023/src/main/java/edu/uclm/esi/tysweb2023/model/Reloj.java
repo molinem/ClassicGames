@@ -34,7 +34,7 @@ public class Reloj implements Runnable {
     @Override
     public void run() {
         try {
-            Thread.sleep(30000);
+            //Thread.sleep(30000);
             tablero_id = tablero.getId();
             
             if (!tablero.checkPartidaLista()) {
@@ -44,8 +44,10 @@ public class Reloj implements Runnable {
                 UserController.httpSessions.put(session.getId(), session);
                 ManagerWS.get().addSessionByUserId(robot.getId(), session);
 
-                this.matchService.newMatch(robot,"Tablero4R");
-                this.matchService.notificarEstado("START", tablero.getId());
+                
+            	this.matchService.newMatch(robot,"Tablero4R");
+            	this.matchService.notificarEstado("START", tablero.getId());
+                
             }
             
 	     
@@ -89,8 +91,6 @@ public class Reloj implements Runnable {
 	                		this.matchService.almacenarEstadistica(tablero_id, "4 en raya", nick_ganador, "Gana la partida");
 	                		scheduler.shutdown();
 	                	}
-	                	
-	                    
 	                }
 	                
 	                

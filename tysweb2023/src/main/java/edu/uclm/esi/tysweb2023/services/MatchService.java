@@ -93,7 +93,9 @@ public class MatchService {
 		jso.put("type", tipoMensaje);
 		jso.put("matchId", idPartida);
 		jso.put("player_1", jugadoresPartida.get(0).getNombre());
-		jso.put("player_2", jugadoresPartida.get(1).getNombre());
+		if(jugadoresPartida.size() == 2) {
+			jso.put("player_2", jugadoresPartida.get(1).getNombre());
+		}
 		jso.put("playerWithTurn", tb.getJugadorConElTurno().getNombre());
 		
 		if (tipoMensaje.contentEquals("START")) {
