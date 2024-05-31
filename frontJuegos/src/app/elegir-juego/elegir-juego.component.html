@@ -1,7 +1,16 @@
 <div class="container-fluid">
     <div class="row mt-5">
+        <div class="container" *ngIf="nick">
+            <div class="row justify-content-center align-items-center">
+                <div class="col-md-6 d-flex justify-content-center flex-column align-items-center" style="margin-top: 80px;">
+                    <p style="font-size: 20px !important;">Bienvenido <b>{{ nick }}</b></p>
+                    <button class="btn btn-primary mt-2" (click)="logout()">Salir</button>
+                </div>
+            </div>
+        </div>
+
         <div class="container">
-            <div class="row justify-content-center align-items-center" style="margin-top: 200px;">
+            <div class="row justify-content-center align-items-center" style="margin-top: 70px;">
                 <div class="col-md-6 d-flex justify-content-center">
                     <a class="btn btn-primary" (click)="crearPartida4R()">
                         <img src="../../assets/4_en_raya.png" class="img-fluid w-50 rounded" alt="Juego de las 4 en raya">

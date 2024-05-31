@@ -3,6 +3,7 @@ import { MatchService } from '../match-service.service';
 import { raya } from '../raya/raya';
 import { WebsocketService } from '../websocket.service';
 import { Router } from '@angular/router';
+import { UserSService } from '../user-s.service';
 
 @Component({
   selector: 'app-elegir-juego',
@@ -13,8 +14,21 @@ export class ElegirJuegoComponent {
   id_partida: string="";
   http_id: string="";
   nick_jugador: string="";
+  nick?: string;
 
-  constructor(private matchService : MatchService, private router: Router, private websocketService: WebsocketService){    
+  constructor(private matchService : MatchService, private router: Router, private websocketService: WebsocketService, private userService: UserSService){  
+  }
+
+  ngOnInit() {
+    const storedNick = localStorage.getItem('nick');
+    if (storedNick) {
+      this.nick = storedNick;
+    }
+  }
+
+  logout() {
+    localStorage.removeItem('nick');
+    location.reload();
   }
 
   // get-> /start
