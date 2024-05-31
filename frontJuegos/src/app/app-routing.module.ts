@@ -15,7 +15,7 @@ const routes: Routes = [
   {path:'ElegirJuego',component:ElegirJuegoComponent},
   {path:'Escoba', component:MesaComponent},
   {path:'Historial', component:HistorialComponent},
-  {path:'Payments', component:PaymentsComponent}
+  {path:'RecargarCreditos', component:PaymentsComponent}
 ];
 
 @NgModule({

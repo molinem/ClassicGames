@@ -34,66 +34,59 @@ public class Reloj implements Runnable {
     @Override
     public void run() {
         try {
-            //Thread.sleep(30000);
             tablero_id = tablero.getId();
             
             if (!tablero.checkPartidaLista()) {
                 Robot robot = new Robot();
-                session.getAttribute("user");
 
                 UserController.httpSessions.put(session.getId(), session);
                 ManagerWS.get().addSessionByUserId(robot.getId(), session);
 
-                
             	this.matchService.newMatch(robot,"Tablero4R");
             	this.matchService.notificarEstado("START", tablero.getId());
-                
             }
             
 	     
 	        scheduler.scheduleAtFixedRate(() -> {
 	            try {
-	                if (tablero.checkPartidaLista()) {
-	                	//No hay ganador
-	                	if (this.matchService.findMatch(tablero_id).getGanador() == Character.MIN_VALUE) {
-	                		if (tablero.getJugadorConElTurno().getId().equals("j23jh4h5")) {
-	                			int col = elegirColumnaParaGanar(tablero.mostrarCasillas());
-	                            Map<String, Object> movimiento = new HashMap<>();
-	                            movimiento.put("col", col);
-	                            Tablero tbUpdate = this.matchService.poner(tablero_id, movimiento, "j23jh4h5");
-	                            
-	                            JSONArray casillas = tbUpdate.mostrarCasillas();
-	                            jso = new JSONObject();
-	            				jso.put("type", "MATCH UPDATE");
-	            				jso.put("player", tablero.getPlayers().get(0).getNombre().toString());
-	            				jso.put("matchId", tablero_id);
-	            				jso.put("board", casillas);
-	                            
-	                            this.matchService.notificarMovimiento(tablero_id, jso);
-	                		}
-	                	}else {
-	                		//Si hay ganador
-	                		jso = new JSONObject();
-	                		
-        					char ganador = this.matchService.findMatch(tablero_id).getGanador();
-        					jso.put("winner", ganador);
-        					List<User> jugadoresPartida = tablero.getPlayers();
-        					String nick_ganador="";
-        					
-        					if (ganador == 65) {
-        						nick_ganador = jugadoresPartida.get(1).getNombre();
-        					}else {
-        						nick_ganador = jugadoresPartida.get(0).getNombre();
-        					}
-        					jso.put("nickWinner", nick_ganador);
-	        				
-	                		this.matchService.notificarMovimiento(tablero_id, jso);
-	                		this.matchService.almacenarEstadistica(tablero_id, "4 en raya", nick_ganador, "Gana la partida");
-	                		scheduler.shutdown();
-	                	}
+	            	if (!tablero.checkPartidaLista()) {
+	                    return;
 	                }
-	                
-	                
+
+	            	// Comprobar si hay un ganador
+	                char ganador = this.matchService.findMatch(tablero_id).getGanador();
+	                if (ganador != Character.MIN_VALUE) {
+	                    // Si hay ganador
+	                    JSONObject jso = new JSONObject();
+	                    jso.put("winner", ganador);
+
+	                    List<User> jugadoresPartida = tablero.getPlayers();
+	                    String nick_ganador = (ganador == 65) ? jugadoresPartida.get(1).getNombre() : jugadoresPartida.get(0).getNombre();
+	                    jso.put("nickWinner", nick_ganador);
+
+	                    this.matchService.notificarMovimiento(tablero_id, jso);
+	                    //this.matchService.almacenarEstadistica(tablero_id, "4 en raya", nick_ganador, "Gana la partida");
+	                    scheduler.shutdown();
+	                    return;
+	                }
+
+	                // Si no hay ganador, comprobar si es el turno del robot
+	                if (tablero.getJugadorConElTurno().getId().equals("j23jh4h5")) {
+	                    int col = elegirColumnaParaGanar(tablero.mostrarCasillas());
+	                    Map<String, Object> movimiento = new HashMap<>();
+	                    movimiento.put("col", col);
+
+	                    Tablero tbUpdate = this.matchService.poner(tablero_id, movimiento, "j23jh4h5");
+	                    JSONArray casillas = tbUpdate.mostrarCasillas();
+
+	                    JSONObject jso = new JSONObject();
+	                    jso.put("type", "MATCH UPDATE");
+	                    jso.put("player", tablero.getPlayers().get(0).getNombre().toString());
+	                    jso.put("matchId", tablero_id);
+	                    jso.put("board", casillas);
+
+	                    this.matchService.notificarMovimiento(tablero_id, jso);
+	                }
 	            } catch (Exception e) {
 	                e.printStackTrace();
 	            }

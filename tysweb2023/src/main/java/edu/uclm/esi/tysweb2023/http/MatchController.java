@@ -91,7 +91,7 @@ public class MatchController {
 	            scheduler.schedule(() -> {
 	                if (tableroJuego.getPlayers().size() == 1) {
 	                    Reloj reloj = new Reloj(tableroJuego, matchService, session);
-	                    System.out.println("[Robot] Esperando 30 segundos a que entre otro jugador.");
+	                    System.out.println("[Robot] Está entrando en la partida.");
 	                    Thread relojThread = new Thread(reloj);
 	                    relojThread.start();
 	                }
