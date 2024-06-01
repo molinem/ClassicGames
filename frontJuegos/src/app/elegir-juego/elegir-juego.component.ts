@@ -3,6 +3,8 @@ import { MatchService } from '../match-service.service';
 import { raya } from '../raya/raya';
 import { WebsocketService } from '../websocket.service';
 import { Router } from '@angular/router';
+import { UserSService } from '../user-s.service';
+import { user } from '../user/user';
 
 @Component({
   selector: 'app-elegir-juego',
@@ -13,8 +15,37 @@ export class ElegirJuegoComponent {
   id_partida: string="";
   http_id: string="";
   nick_jugador: string="";
+  nick?: string;
+  user?: user;
 
-  constructor(private matchService : MatchService, private router: Router, private websocketService: WebsocketService){    
+  constructor(private matchService : MatchService, private router: Router, private websocketService: WebsocketService, private userService: UserSService){  
+  }
+
+  ngOnInit() {
+    const user = localStorage.getItem('user');
+    if (user) {
+      const storedNick = localStorage.getItem('nick');
+      if (storedNick) {
+        this.nick = storedNick;
+      }
+    }
+    
+  }
+
+  logout() {
+    localStorage.removeItem('nick');
+    localStorage.removeItem('user');
+
+    this.userService.cerrarSesion().subscribe(
+      result => {
+        console.log("[Logout] -> Sesión cerrada correctamente");
+      },
+      error => {
+        console.log("[Logout] -> Se ha producido un error al cerrar sesión: "+error);
+      }
+    );
+
+    location.reload();
   }
 
   // get-> /start
@@ -40,9 +71,9 @@ export class ElegirJuegoComponent {
 
       },
       error => {
-        if(error.status == 400){
+        if(error.status == 406){
           console.log("[CrearPartida4R] -> No hay créditos suficientes para jugar");
-          this.router.navigate(['/Payments']);
+          this.router.navigate(['/RecargarCreditos']);
         }else{
           console.log("[CrearPartida4R] -> Se ha producido un error al crear la partida: "+error);
         }

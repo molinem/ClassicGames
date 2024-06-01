@@ -1,6 +1,8 @@
 package edu.uclm.esi.tysweb2023.model;
 
 import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
 import jakarta.persistence.Column;
@@ -30,8 +32,19 @@ public class Historial implements Serializable{
 	
 	public Historial() {
 		this.id = UUID.randomUUID().toString();
-		this.fecha = new Date();
-	}
+	    this.fecha = formatDate(new Date());
+	}   
+
+	private Date formatDate(Date date) {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        try {
+            String dateStr = sdf.format(date);
+            return sdf.parse(dateStr);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
 	public String getId() {
 		return id;

@@ -48,6 +48,7 @@ public class UserController {
 		session.setAttribute("userId", user.getId());
 		Map<String, Object> result = new HashMap<>();
 		result.put("httpId", session.getId());
+		result.put("nick", user.getNombre());
 		httpSessions.put(session.getId(),session);
 		return result;
 	}
@@ -102,5 +103,10 @@ public class UserController {
 		}else {
 			session.removeAttribute("userId");
 		}
+	}
+	
+	@GetMapping("/logout")
+	public void cerrarSesion(HttpSession session){
+		session.removeAttribute("user");
 	}
 }

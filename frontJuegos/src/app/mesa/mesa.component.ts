@@ -74,8 +74,16 @@ export class MesaComponent {
 
   public desconectar() {
     this.websocketService.ws.close()
+    this.matchService.desconectar(this.id_partida_curso).subscribe({
+      next: (result) => {
+        console.log("Desconectado");
+      },
+      error: (error) => {
+        console.error(error);
+      }
+    });
+
     this.dataService.inicializarMensajes();
     this.router.navigate(['/ElegirJuego']);
   }
-
 }

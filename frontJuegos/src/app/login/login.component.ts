@@ -30,6 +30,13 @@ export class LoginComponent {
     this.usuario.datosLogin(this.loginForm.controls['Email'].value,this.loginForm.controls['Pwd'].value);
     this.userService.logearUsuario(this.usuario).subscribe(
       result =>{
+        const js = JSON.stringify(result)
+        const jsonObj = JSON.parse(js);
+
+        this.usuario.nombre = jsonObj.nick;
+        localStorage.setItem('nick', jsonObj.nick);
+        localStorage.setItem('user', jsonObj);
+        this.userService.changeNick(this.usuario.nombre);
         this.router.navigate(['/ElegirJuego']);
       },
       error => {

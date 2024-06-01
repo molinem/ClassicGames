@@ -12,7 +12,7 @@
     <tbody>
       <tr *ngFor="let game of history">
         <td>{{ game.id_partida }}</td>
-        <td>{{ game.fecha | date:'short' }}</td>
+        <td>{{ game.fecha | date:'dd/MM/yyyy HH:mm' }}</td>
         <td>{{ game.juego }}</td>
         <td>{{ game.nickUsuario }}</td>
         <td>{{ game.mensaje }}</td>

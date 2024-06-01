@@ -63,7 +63,7 @@ public class MatchController {
 			}
 			
 			//Comprobación pagos //usuarios logeados
-			if(!user.getNombre().contains("Invitado")) {
+			if(!user.getNombre().contains("Invitado") && juego.equals("Tablero4R")) {
 				User usuLog = this.userDAO.findById(user.getId()).get();
 				Integer numberOfMatches = usuLog.getPaidMatches();
 				if (numberOfMatches==null || numberOfMatches==0) {
@@ -91,23 +91,25 @@ public class MatchController {
 	            scheduler.schedule(() -> {
 	                if (tableroJuego.getPlayers().size() == 1) {
 	                    Reloj reloj = new Reloj(tableroJuego, matchService, session);
-	                    System.out.println("Ejecutando comprobación de 30 segundos y un jugador.");
+	                    System.out.println("[Robot] Está entrando en la partida.");
 	                    Thread relojThread = new Thread(reloj);
 	                    relojThread.start();
 	                }
 	            }, 30, TimeUnit.SECONDS);
-			}else {
-				//¿Partida lista?
-				if (tableroJuego.checkPartidaLista()) {
-					//Avisamos a los jugadores
-					this.matchService.notificarEstado("START", tableroJuego.getId());
-				}
+			}
+			
+			//¿Partida lista?
+			if (tableroJuego.checkPartidaLista()) {
+				//Avisamos a los jugadores
+				this.matchService.notificarEstado("START", tableroJuego.getId());
 			}
 			
 			return result;
-		} catch (Exception e) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,e.getMessage());
-		}
+		} catch (ResponseStatusException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
 	}
 	
 	@PostMapping("/poner")
@@ -186,4 +188,14 @@ public class MatchController {
     public List<Historial> getHistorial() {
         return matchService.getHistorial();
     }
+	
+	@GetMapping("/desconectar")
+	public void desconectar(HttpSession session, @RequestParam String id){
+		if(session.getAttribute("user") != null) {
+			User us = (User) session.getAttribute("user");
+			Tablero tbd = this.matchService.findMatch(id);
+			tbd.getPlayers().remove(us);
+		}
+	}
+	
 }

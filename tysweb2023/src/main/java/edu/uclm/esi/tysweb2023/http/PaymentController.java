@@ -50,14 +50,29 @@ public class PaymentController {
 	@GetMapping("/autorizarPago")
 	public String prepay(HttpSession session, @RequestParam int matches) {
 		try {
-			if (session.getAttribute("user")==null) {
-				throw new ResponseStatusException(HttpStatus.FORBIDDEN,"Tienes que estar logado para comprar partidas");
-			}
-			if (matches!=10 && matches!=20)
-				throw new ResponseStatusException(HttpStatus.CONFLICT,"You can only buy either 10 or 20 matches");
 			
-			long total = matches==10 ? 10 : 15;
-			total = total * 100;
+			if (session.getAttribute("user") == null) {
+				throw new ResponseStatusException(HttpStatus.FORBIDDEN,"Tienes que estar logado para comprar partidas");
+			}else {
+				User us = (User) session.getAttribute("user");
+				if(us.getNombre().contains("Invitado")) {
+					throw new ResponseStatusException(HttpStatus.FORBIDDEN,"Un usuario invitado no puede comprar partidas");
+				}
+			}
+
+			
+			if (matches != 1 && matches != 10 && matches != 20)
+				throw new ResponseStatusException(HttpStatus.CONFLICT,"Solo puedes comprar una partida");
+			
+			long total;
+            if (matches == 1) {
+                total = 1;
+            } else if (matches == 10) {
+                total = 10;
+            } else {
+                total = 15;
+            }
+			total = total * 100; //Por políticas de stripe 
 			
 			PaymentIntentCreateParams createParams = new PaymentIntentCreateParams.Builder()
 					.setCurrency("eur")
@@ -72,17 +87,17 @@ public class PaymentController {
 			session.setAttribute("matches", matches);
 			return jso.toString();
 
-		} catch (Exception e) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
-		}
+		} catch (ResponseStatusException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
 	}
 	
 
 	@GetMapping("/confirmarPago")
-	public void confirm(HttpSession session) {
-		if (session.getAttribute("client_secret")==null
-				|| session.getAttribute("matches")==null
-				|| session.getAttribute("user")==null)
+	public void confirm(HttpSession session) {		
+		if (session.getAttribute("client_secret") == null || session.getAttribute("matches") == null || session.getAttribute("user") == null)
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN);
 		String userId = session.getAttribute("userId").toString();
 		this.userService.addMatches(userId, (Integer) session.getAttribute("matches"));

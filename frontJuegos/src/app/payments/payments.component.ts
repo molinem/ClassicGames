@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { PaymentsService } from '../payments.service';
+import { Router } from '@angular/router';
 
 declare let Stripe : any;
 
@@ -10,23 +11,32 @@ declare let Stripe : any;
 })
 
 export class PaymentsComponent {
-  amount : number = 10;
+  amount : number = 1;
   transactionId? : string
   stripe = Stripe("pk_test_51OMogvF1fgtfUhRcaoBSEBydP5c1O1M3V7aVjaznscIR54sbUl9gj2R7GsedypiwDbUOk6CUuN2VDUNrhdlx9KR9005NuU6DBb")
+  paymentSucceeded?: boolean
+  showPaymentForm?: boolean;
 
 
-  constructor(private paymentService: PaymentsService) {
+  constructor(private paymentService: PaymentsService, private router: Router) {
+    this.showPaymentForm = true;
+    this.paymentSucceeded = false;
 
   }
 
   requestPrepayment() {
     this.paymentService.prepay(this.amount).subscribe({
       next : (response : any) => {
-        this.transactionId = response.client_secret
+        this.transactionId = response.client_secret;
+        this.showPaymentForm = false;
         this.showForm()
       },
       error : (response : any) => {
-        console.log(response)
+        if (response.status === 403) {
+          this.router.navigate(['Login']);
+        } else {
+          console.log(response);
+        }
       }
     })
     
@@ -36,17 +46,18 @@ export class PaymentsComponent {
     let elements = this.stripe.elements()
     let style = {
       base: {
-        color: "#32325d", fontFamily: 'Arial, sans-serif',
-        fontSmoothing: "antialiased", fontSize: "16px",
+        color: "#32325d",
+        fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+        fontSmoothing: "antialiased",
+        fontSize: "18px",
         "::placeholder": {
-        color: "#32325d"
+          color: "#aab7c4"
         }
       },
-
       invalid: {
-        fontFamily: 'Arial, sans-serif', color: "#fa755a",
+        color: "#fa755a",
         iconColor: "#fa755a"
-        }
+      }
     }
 
     let card = elements.create("card", { style : style })
@@ -78,9 +89,11 @@ export class PaymentsComponent {
       } else {
         if (response.paymentIntent.status === 'succeeded') {
           console.log("El pago se ha realizado con éxito");
+          self.paymentSucceeded = true;
           self.paymentService.confirm().subscribe({
             next : (response : any) => {
               console.log(response)
+              self.router.navigate(['/ElegirJuego']);
             },
             error : (response : any) => {
               console.log(response)

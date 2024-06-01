@@ -1,15 +1,22 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import { user } from './user/user';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserSService {
 
+  private userNick = new BehaviorSubject<string>('');
+  currentNick = this.userNick.asObservable();
+  
   constructor(private client : HttpClient) {
 
+  }
+
+  changeNick(nick: string) {
+    this.userNick.next(nick);
   }
 
   registrarUsuario(usuario:user):Observable<undefined>{
@@ -30,5 +37,9 @@ export class UserSService {
     }
 
     return this.client.post<any>("http://localhost:8080/users/login",info,{withCredentials:true})
+  }
+
+  cerrarSesion():Observable<undefined>{
+    return this.client.get<any>("http://localhost:8080/users/logout", {withCredentials:true})
   }
 }
