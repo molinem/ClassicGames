@@ -2,9 +2,9 @@
     <div class="row mt-5">
         <div class="container">
             <div class="row justify-content-center align-items-center">
-                <div class="col-md-6 d-flex justify-content-center flex-column align-items-center" style="margin-top: 80px;">
-                    <p style="font-size: 20px !important;" *ngIf="nick" >Bienvenido <b>{{ nick }}</b></p>
-                    <button class="btn btn-primary mt-2" *ngIf="nick" (click)="logout()">Salir</button>
+                <div class="col-md-6 d-flex justify-content-center flex-column align-items-center" style="margin-top: 80px;" *ngIf="nick">
+                    <p style="font-size: 20px !important; color: black !important;" >Bienvenido <b>{{ nick }}</b></p>
+                    <button class="btn btn-primary mt-2" (click)="logout()">Salir</button>
                 </div>
             </div>
         </div>

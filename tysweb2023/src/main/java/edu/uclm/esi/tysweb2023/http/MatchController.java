@@ -63,7 +63,7 @@ public class MatchController {
 			}
 			
 			//Comprobación pagos //usuarios logeados
-			if(!user.getNombre().contains("Invitado")) {
+			if(!user.getNombre().contains("Invitado") && juego.equals("Tablero4R")) {
 				User usuLog = this.userDAO.findById(user.getId()).get();
 				Integer numberOfMatches = usuLog.getPaidMatches();
 				if (numberOfMatches==null || numberOfMatches==0) {

@@ -56,7 +56,7 @@ public class PaymentController {
 			}else {
 				User us = (User) session.getAttribute("user");
 				if(us.getNombre().contains("Invitado")) {
-					throw new ResponseStatusException(HttpStatus.FORBIDDEN,"Tienes que estar logado para comprar partidas");
+					throw new ResponseStatusException(HttpStatus.FORBIDDEN,"Un usuario invitado no puede comprar partidas");
 				}
 			}
 
