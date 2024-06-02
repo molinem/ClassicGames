@@ -34,6 +34,27 @@ Se desea desarrollar una aplicación web para jugar a juegos de tablero de dos j
 | Adición de un chat de texto                                                                               |    ✅    |
 | Servicio de pagos: las partidas de 4 en raya cuestan 1 euro cada una, con lo que habrá que usar un proveedor de pagos. |    ✅    |
 ***
+### Imágenes
+
+![image](https://github.com/molinem/tyweb2023/assets/47080025/a1ed4834-e756-4953-a921-2785decd1c11)
+
+<br>
+
+![image](https://github.com/molinem/tyweb2023/assets/47080025/491512d9-d257-44d3-b717-592ca72bc390)
+
+<br>
+
+![image](https://github.com/molinem/tyweb2023/assets/47080025/c8cb74b9-80c3-4f72-b9d5-9ae6c5d27ae5)
+
+<br>
+
+![image](https://github.com/molinem/tyweb2023/assets/47080025/c651cb49-c85d-4550-b7d8-e6a5785d42f8)
+
+<br>
+
+![image](https://github.com/molinem/tyweb2023/assets/47080025/7df947ed-da33-4e9f-99b6-aa91d3bdd5f1)
+
+***
 
 ### Instalación y Ejecución
 #### Requisitos Previos
@@ -51,4 +72,5 @@ Se desea desarrollar una aplicación web para jugar a juegos de tablero de dos j
 1. Navegar al directorio del backend: `cd tysweb2023`
 2. Inicializar la base de datos con los parámetros del backend. Esto puede implicar configurar las propiedades de la base de datos en `application.properties`.
 4. Ejecutar la aplicación: `Hacer click sobre el botón de Play en el entorno de desarrollo Eclipse`
+5. Podemos abrir cualquier navegador para introducir la url `localhost:4200` y nos llevará al frontend de la aplicación.
 
