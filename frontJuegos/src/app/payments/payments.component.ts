@@ -64,7 +64,11 @@ export class PaymentsComponent {
     card.mount("#card-element")
     card.on("change", function(event : any) {
       document.querySelector("button")!.disabled = event.empty;
-      document.querySelector("#card-error")!.textContent = event.error ? event.error.message : "";
+      let cardErrorElement = document.querySelector("#card-error") as HTMLElement;
+      cardErrorElement!.textContent = event.error ? event.error.message : "";
+      if (event.error) {
+        cardErrorElement!.style.setProperty('color', 'black', 'important');
+      }
     });
 
     let self = this

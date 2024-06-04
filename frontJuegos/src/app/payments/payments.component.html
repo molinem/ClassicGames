@@ -1,16 +1,16 @@
 <div class="d-flex justify-content-center align-items-center flex-column mt-5">
-    <p style="font-size: 14px !important;">Adquiere créditos para jugar a las <b>4 en raya :)</b></p>
+    <p style="font-size: 14px !important; color: black !important;">Adquiere créditos para jugar a las <b>4 en raya :)</b></p>
     <br>
     <div class="form-check">
-      <input class="form-check-input" (change)="amount=10" type="radio" name="option" value="1" checked>
-      <label class="form-check-label">1 € por partida</label>
+      <input class="form-check-input" style="color: black !important;" (change)="amount=10" type="radio" name="option" value="1" checked>
+      <label class="form-check-label" style="color: black !important;">1 € por partida</label>
     </div>
     <br>
     <button class="btn btn-primary" *ngIf="showPaymentForm" (click)="requestPrepayment()">Ir al pago</button>
     <div class="col-md-6">
       <form id="payment-form" style="display:none" class="text-center">
         <div class="form-group">
-          <label for="card-element" style="font-size: 15px;">Introduce los datos de tu tarjeta</label><br><br>
+          <label for="card-element" style="font-size: 15px; color: black !important;">Introduce los datos de tu tarjeta</label><br><br>
           <div id="card-element" class="form-control"></div>
         </div>
         <button id="submit" class="btn btn-primary mt-3">
@@ -18,7 +18,7 @@
           <span id="button-text">Pagar</span>
         </button>
         <p id="card-error" role="alert" class="mt-3"></p>
-        <p class="result-message hidden" *ngIf="paymentSucceeded" class="mt-3">
+        <p class="result-message hidden" style="color: black !important;" *ngIf="paymentSucceeded" class="mt-3">
           El <b>pago</b> se ha realizado de forma correcta.
         </p>
       </form>
