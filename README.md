@@ -1,5 +1,8 @@
 # ClassicGames
 
+### ⚠️ Importante
+Hay que tener en cuenta que las `claves públicas/privadas` usadas para [Brevo](https://www.brevo.com/es/) y [Stripe](https://stripe.com/es) han sido revocadas debido a que solo han sido usadas para realizar pruebas. Por ello, si quieres reutilizar algún componente desarrollado, debes de generar las tuyas propias :)
+***
 
 ### Descripción del Proyecto
 Se desea desarrollar una aplicación web para jugar a juegos de tablero de dos jugadores. El sistema ofrecerá a los usuarios al menos dos juegos: "Las Cuatro en Raya" y otro juego a elegir por el grupo, en nuestro caso el juego de la escoba.
